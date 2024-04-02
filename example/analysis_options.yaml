@@ -1,0 +1,24 @@
+include: package:lint/analysis_options.yaml
+
+analyzer:
+  language:
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
+  exclude:
+    - "lib/generated/**"
+    - "lib/generated_*"
+    - "lib/i18n/messages_*.dart"
+    - "lib/gen-l10n/**"
+    - "lib/gen/**"
+    - "**/*.freezed.dart"
+    - "**/*.g.dart"
+    - "**/*.graphql.dart"
+    - "**/*.mocks.dart"
+    - "/pubspec.lock"
+  errors:
+    deprecated_member_use: info
+
+linter:
+  rules:
+    depend_on_referenced_packages: false
