@@ -10,13 +10,16 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       home: Scaffold(
+        backgroundColor: Colors.grey,
         body: Center(
           child: Column(
             children: [
-              Text('Hello World!'),
-              MoonCoreButton(),
+              MoonRawButton(
+                height: 40,
+                style: Style($box.borderRadius.all(16)),
+              ),
             ],
           ),
         ),
