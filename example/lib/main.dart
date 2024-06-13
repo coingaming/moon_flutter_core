@@ -12,18 +12,27 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        backgroundColor: Colors.grey,
-        body: Center(
-          child: Column(
-            children: [
-              MoonRawButton(
-                height: 40,
-                style: Style($box.borderRadius.all(16)),
-              ),
-            ],
+        backgroundColor: Colors.grey.shade200,
+        body: const Center(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextDivider(text: 'MoonRawAlert'),
+                StyledAlert(),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 }
+
+//
+// TextDivider(text: 'MoonRawButton'),
+// StyledButton(),
+// TextDivider(text: 'MoonRawTag'),
+// StyledTag(),
+// TextDivider(text: 'MoonRawAvatar'),
+// StyledAvatar(),
