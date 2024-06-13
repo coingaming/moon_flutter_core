@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:moon_core/moon_core.dart';
+import 'package:mix/mix.dart';
 
 BoxSpecAttribute decorationToAttribute(Decoration decoration) {
   if (decoration is BoxDecoration) {

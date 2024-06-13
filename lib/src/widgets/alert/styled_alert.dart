@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:mix/mix.dart';
 
-import 'package:moon_core/moon_core.dart';
-import 'package:moon_core/src/utils/base_layout_widget.dart';
-import 'package:moon_core/src/utils/methods.dart';
+import 'package:moon_core/src/widgets/alert/alert.dart';
+import 'package:moon_core/src/widgets/common/base_layout_widget/base_layout_utility.dart';
+import 'package:moon_core/src/widgets/common/base_layout_widget/base_layout_widget.dart';
 
 class StyledAlert extends StatelessWidget {
   const StyledAlert({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final Style iconStyle = Style(
-      $icon.size(16),
-    );
+    final $baseLayout = BaseLayoutUtility(MixUtility.selfBuilder);
 
     return Column(
       children: List.generate(
@@ -35,33 +34,41 @@ class StyledAlert extends StatelessWidget {
                 style: Style(
                   $box.padding(16.0),
                   $box.width(400.0),
-                  decorationToAttribute(
-                    BoxDecoration(
-                      color: bgColor,
-                      borderRadius: BorderRadius.circular(8.0),
-                      border: index == 2 ? Border.all(color: themeColor) : null,
-                    ),
-                  ),
+                  $box.color(bgColor),
+                  $box.borderRadius(8.0),
+                  index == 2 ? $box.border(color: themeColor) : null,
                 ),
                 child: BaseLayoutWidget(
-                  defaultIconStyle: IconThemeData(color: themeColor),
-                  defaultTextStyle: TextStyle(color: themeColor),
-                  headerStyle: Style(
-                    $flex.gap(12.0),
+                  style: Style(
+                    $baseLayout.horizontalGap(12),
+                    $baseLayout.verticalGap(8),
+                    $baseLayout.labelTextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black,
+                    ),
+                    $baseLayout.contentTextStyle(
+                      fontSize: 12,
+                      color: Colors.grey,
+                    ),
+                    // Applies to regular icons
+                    $baseLayout.defaultIconStyle(
+                      IconThemeData(
+                        color: themeColor,
+                        size: 24,
+                      ),
+                    ),
+                    // Applies to styled icons
+                    $icon.size(16),
+                    $icon.color(themeColor),
                   ),
-                  verticalGapStyle: Style(
-                    $box.height(12.0),
-                  ),
-                  leading: StyledIcon(
-                    style: iconStyle,
-                    Icons.info_outline,
-                  ),
+                  leading: const Icon(Icons.info_outline),
                   label: const Text("MoonAlert"),
-                  trailing: StyledIcon(
-                    style: iconStyle,
-                    Icons.close,
+                  trailing: const StyledIcon(Icons.close),
+                  content: const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text("This is a MoonAlert widget."),
                   ),
-                  content: const Text("This is a MoonAlert widget."),
                 ),
               ),
               const SizedBox(height: 8.0),

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mix/mix.dart';
 
 import 'package:moon_core/moon_core.dart';
-import 'package:moon_core/src/utils/base_layout_widget.dart';
+import 'package:moon_core/src/widgets/common/base_layout_widget/base_layout_widget.dart';
 
 class MoonRawAlert extends StatefulWidget {
   /// Whether to show the alert.
@@ -45,8 +46,7 @@ class MoonRawAlert extends StatefulWidget {
   State<MoonRawAlert> createState() => _MoonRawAlertState();
 }
 
-class _MoonRawAlertState extends State<MoonRawAlert>
-    with SingleTickerProviderStateMixin {
+class _MoonRawAlertState extends State<MoonRawAlert> with SingleTickerProviderStateMixin {
   bool _isVisible = true;
 
   AnimationController? _animationController;
