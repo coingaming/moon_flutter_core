@@ -3,6 +3,7 @@ library moon_core;
 
 export 'package:mix/mix.dart';
 
+export 'package:moon_core/src/utils/base_layout_widget.dart';
 export 'package:moon_core/src/utils/text_divider.dart';
 
 export 'package:moon_core/src/widgets/alert/alert.dart';
