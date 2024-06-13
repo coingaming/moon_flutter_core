@@ -39,21 +39,29 @@ class BaseLayoutWidget extends StyledWidget {
                     leading!,
                     SizedBox(width: baseLayoutStyle.horizontalGap),
                   ],
-                  switch (label != null) {
-                    _ when baseLayoutStyle.labelTextStyle != null => DefaultTextStyle(
-                        style: baseLayoutStyle.labelTextStyle!,
-                        child: Expanded(child: label!),
-                      ),
-                    _ => Expanded(child: label!),
-                  },
-                  if (trailing != null) ...[SizedBox(width: baseLayoutStyle.horizontalGap), trailing!],
+                  if (label != null)
+                    Expanded(
+                      child: switch (baseLayoutStyle.labelTextStyle != null) {
+                        true => DefaultTextStyle(
+                            style: baseLayoutStyle.labelTextStyle!,
+                            child: label!,
+                          ),
+                        _ => label!,
+                      },
+                    ),
+                  if (trailing != null) ...[
+                    SizedBox(width: baseLayoutStyle.horizontalGap),
+                    trailing!,
+                  ],
                 ],
               ),
               if (content != null) ...[
                 SizedBox(height: baseLayoutStyle.verticalGap),
-                switch (content != null) {
-                  _ when baseLayoutStyle.contentTextStyle != null =>
-                    DefaultTextStyle(style: baseLayoutStyle.contentTextStyle!, child: content!),
+                switch (baseLayoutStyle.contentTextStyle != null) {
+                  true => DefaultTextStyle(
+                      style: baseLayoutStyle.contentTextStyle!,
+                      child: content!,
+                    ),
                   _ => content!,
                 },
               ],
