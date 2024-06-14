@@ -27,47 +27,51 @@ class BaseLayoutWidget extends StyledWidget {
       builder: (context) {
         final baseLayoutStyle = BaseLayoutSpec.of(context);
 
-        return IconTheme(
-          data: baseLayoutStyle.defaultIconStyle ?? const IconThemeData(),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  if (leading != null) ...[
-                    leading!,
-                    SizedBox(width: baseLayoutStyle.horizontalGap),
-                  ],
-                  if (label != null)
-                    Expanded(
-                      child: switch (baseLayoutStyle.labelTextStyle != null) {
-                        true => DefaultTextStyle(
-                            style: baseLayoutStyle.labelTextStyle!,
-                            child: label!,
-                          ),
-                        _ => label!,
-                      },
-                    ),
-                  if (trailing != null) ...[
-                    SizedBox(width: baseLayoutStyle.horizontalGap),
-                    trailing!,
-                  ],
+        final child = Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                if (leading != null) ...[
+                  leading!,
+                  SizedBox(width: baseLayoutStyle.horizontalGap),
                 ],
-              ),
-              if (content != null) ...[
-                SizedBox(height: baseLayoutStyle.verticalGap),
-                switch (baseLayoutStyle.contentTextStyle != null) {
-                  true => DefaultTextStyle(
-                      style: baseLayoutStyle.contentTextStyle!,
-                      child: content!,
-                    ),
-                  _ => content!,
-                },
+                if (label != null)
+                  Expanded(
+                    child: switch (baseLayoutStyle.labelTextStyle != null) {
+                      true => DefaultTextStyle(
+                          style: baseLayoutStyle.labelTextStyle!,
+                          child: label!,
+                        ),
+                      _ => label!,
+                    },
+                  ),
+                if (trailing != null) ...[
+                  SizedBox(width: baseLayoutStyle.horizontalGap),
+                  trailing!,
+                ],
               ],
+            ),
+            if (content != null) ...[
+              SizedBox(height: baseLayoutStyle.verticalGap),
+              switch (baseLayoutStyle.contentTextStyle != null) {
+                true => DefaultTextStyle(
+                    style: baseLayoutStyle.contentTextStyle!,
+                    child: content!,
+                  ),
+                _ => content!,
+              },
             ],
-          ),
+          ],
         );
+
+        return baseLayoutStyle.defaultIconStyle != null
+            ? IconTheme(
+                data: baseLayoutStyle.defaultIconStyle!,
+                child: child,
+              )
+            : child;
       },
     );
   }

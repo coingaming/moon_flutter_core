@@ -1,7 +1,8 @@
 import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
+
 import 'package:moon_core/src/widgets/common/base_layout_widget/base_layout_spec_attribute.dart';
 
 class BaseLayoutSpec extends Spec<BaseLayoutSpec> {
