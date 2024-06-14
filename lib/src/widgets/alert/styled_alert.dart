@@ -12,70 +12,72 @@ class StyledAlert extends StatelessWidget {
   Widget build(BuildContext context) {
     final $baseLayout = BaseLayoutUtility(MixUtility.selfBuilder);
 
-    return Column(
-      children: List.generate(
-        3,
-        (index) {
-          final Color themeColor = index == 0
-              ? Colors.black
-              : index == 1
-                  ? Colors.red
-                  : Colors.green;
+    return ListView.separated(
+      shrinkWrap: true,
+      itemCount: 3,
+      itemBuilder: (BuildContext _, int index) {
+        final Color themeColor = index == 0
+            ? Colors.black
+            : index == 1
+                ? Colors.red
+                : Colors.green;
 
-          final Color bgColor = index == 0
-              ? Colors.white
-              : index == 1
-                  ? Colors.red.shade50
-                  : Colors.transparent;
+        final Color bgColor = index == 0
+            ? Colors.white
+            : index == 1
+                ? Colors.red.shade50
+                : Colors.transparent;
 
-          return Column(
-            children: [
-              MoonRawAlert(
+        return Column(
+          children: [
+            MoonRawAlert(
+              style: Style(
+                $box.padding(16.0),
+                $box.width(400.0),
+                $box.color(bgColor),
+                $box.borderRadius(8.0),
+                index == 2 ? $box.border(color: themeColor) : null,
+              ),
+              child: BaseLayoutWidget(
                 style: Style(
-                  $box.padding(16.0),
-                  $box.width(400.0),
-                  $box.color(bgColor),
-                  $box.borderRadius(8.0),
-                  index == 2 ? $box.border(color: themeColor) : null,
+                  $baseLayout.horizontalGap(12),
+                  $baseLayout.verticalGap(8),
+                  $baseLayout.labelTextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black,
+                  ),
+                  $baseLayout.contentTextStyle(
+                    fontSize: 12,
+                    color: Colors.grey,
+                  ),
+                  // Applies to regular icons
+                  $baseLayout.defaultIconStyle(
+                    IconThemeData(
+                      color: themeColor,
+                      size: 24,
+                    ),
+                  ),
+                  // Applies to styled icons
+                  $icon.size(16),
+                  $icon.color(themeColor),
                 ),
-                child: BaseLayoutWidget(
-                  style: Style(
-                    $baseLayout.horizontalGap(12),
-                    $baseLayout.verticalGap(8),
-                    $baseLayout.labelTextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black,
-                    ),
-                    $baseLayout.contentTextStyle(
-                      fontSize: 12,
-                      color: Colors.grey,
-                    ),
-                    // Applies to regular icons
-                    $baseLayout.defaultIconStyle(
-                      IconThemeData(
-                        color: themeColor,
-                        size: 24,
-                      ),
-                    ),
-                    // Applies to styled icons
-                    $icon.size(16),
-                    $icon.color(themeColor),
-                  ),
-                  leading: const Icon(Icons.info_outline),
-                  label: const Text("MoonAlert"),
-                  trailing: const StyledIcon(Icons.close),
-                  content: const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text("This is a MoonAlert widget."),
-                  ),
+                leading: const Icon(Icons.info_outline),
+                label: const Expanded(
+                  child: Text("MoonAlert"),
+                ),
+                trailing: const StyledIcon(Icons.close),
+                content: const Expanded(
+                  child: Text("This is a MoonAlert widget."),
                 ),
               ),
-              const SizedBox(height: 8.0),
-            ],
-          );
-        },
-      ),
+            ),
+          ],
+        );
+      },
+      separatorBuilder: (BuildContext _, int __) {
+        return const SizedBox(height: 16.0);
+      },
     );
   }
 }

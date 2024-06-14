@@ -24,29 +24,27 @@ class BaseLayoutWidget extends StyledWidget {
     return SpecBuilder(
       style: style,
       orderOfModifiers: orderOfModifiers,
-      builder: (context) {
+      builder: (BuildContext context) {
         final baseLayoutStyle = BaseLayoutSpec.of(context);
 
         final child = Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            HBox(
+              style: style,
               children: [
                 if (leading != null) ...[
                   leading!,
                   SizedBox(width: baseLayoutStyle.horizontalGap),
                 ],
                 if (label != null)
-                  Expanded(
-                    child: switch (baseLayoutStyle.labelTextStyle != null) {
-                      true => DefaultTextStyle(
-                          style: baseLayoutStyle.labelTextStyle!,
-                          child: label!,
-                        ),
-                      _ => label!,
-                    },
-                  ),
+                  switch (baseLayoutStyle.labelTextStyle != null) {
+                    true => DefaultTextStyle(
+                        style: baseLayoutStyle.labelTextStyle!,
+                        child: label!,
+                      ),
+                    _ => label!,
+                  },
                 if (trailing != null) ...[
                   SizedBox(width: baseLayoutStyle.horizontalGap),
                   trailing!,
@@ -55,13 +53,17 @@ class BaseLayoutWidget extends StyledWidget {
             ),
             if (content != null) ...[
               SizedBox(height: baseLayoutStyle.verticalGap),
-              switch (baseLayoutStyle.contentTextStyle != null) {
-                true => DefaultTextStyle(
-                    style: baseLayoutStyle.contentTextStyle!,
-                    child: content!,
-                  ),
-                _ => content!,
-              },
+              Row(
+                children: [
+                  switch (baseLayoutStyle.contentTextStyle != null) {
+                    true => DefaultTextStyle(
+                        style: baseLayoutStyle.contentTextStyle!,
+                        child: content!,
+                      ),
+                    _ => content!,
+                  },
+                ],
+              ),
             ],
           ],
         );

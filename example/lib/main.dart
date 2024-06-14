@@ -1,3 +1,4 @@
+import 'package:example/text_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:moon_core/moon_core.dart';
 
@@ -15,6 +16,7 @@ class MainApp extends StatelessWidget {
         backgroundColor: Colors.grey.shade200,
         body: const Center(
           child: SingleChildScrollView(
+            padding: EdgeInsets.all(16.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [

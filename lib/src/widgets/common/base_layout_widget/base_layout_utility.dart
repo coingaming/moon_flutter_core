@@ -3,7 +3,8 @@ import 'package:mix/mix.dart';
 
 import 'package:moon_core/src/widgets/common/base_layout_widget/base_layout_spec_attribute.dart';
 
-class BaseLayoutUtility<T extends Attribute> extends SpecUtility<T, BaseLayoutSpecAttribute> {
+class BaseLayoutUtility<T extends Attribute>
+    extends SpecUtility<T, BaseLayoutSpecAttribute> {
   BaseLayoutUtility(super.builder);
 
   @override
@@ -30,9 +31,14 @@ class BaseLayoutUtility<T extends Attribute> extends SpecUtility<T, BaseLayoutSp
 
   T verticalGap(double verticalGap) => only(verticalGap: verticalGap);
 
-  T defaultIconStyle(IconThemeData defaultIconStyle) => only(defaultIconStyle: defaultIconStyle);
+  T defaultIconStyle(IconThemeData defaultIconStyle) =>
+      only(defaultIconStyle: defaultIconStyle);
 
-  late final labelTextStyle = TextStyleUtility((textStyleDto) => only(labelTextStyle: textStyleDto));
+  late final labelTextStyle = TextStyleUtility(
+    (textStyleDto) => only(labelTextStyle: textStyleDto),
+  );
 
-  late final contentTextStyle = TextStyleUtility((textStyleDto) => only(contentTextStyle: textStyleDto));
+  late final contentTextStyle = TextStyleUtility(
+    (textStyleDto) => only(contentTextStyle: textStyleDto),
+  );
 }

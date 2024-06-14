@@ -30,7 +30,8 @@ class BaseLayoutSpec extends Spec<BaseLayoutSpec> {
 
   static BaseLayoutSpec of(BuildContext context) {
     final mix = Mix.of(context);
-    return mix.attributeOf<BaseLayoutSpecAttribute>()?.resolve(mix) ?? const BaseLayoutSpec.empty();
+    return mix.attributeOf<BaseLayoutSpecAttribute>()?.resolve(mix) ??
+        const BaseLayoutSpec.empty();
   }
 
   @override
@@ -38,9 +39,11 @@ class BaseLayoutSpec extends Spec<BaseLayoutSpec> {
     return BaseLayoutSpec(
       horizontalGap: lerpDouble(horizontalGap, other?.horizontalGap, t),
       verticalGap: lerpDouble(verticalGap, other?.verticalGap, t),
-      defaultIconStyle: IconThemeData.lerp(defaultIconStyle, other?.defaultIconStyle, t),
+      defaultIconStyle:
+          IconThemeData.lerp(defaultIconStyle, other?.defaultIconStyle, t),
       labelTextStyle: TextStyle.lerp(labelTextStyle, other?.labelTextStyle, t),
-      contentTextStyle: TextStyle.lerp(contentTextStyle, other?.contentTextStyle, t),
+      contentTextStyle:
+          TextStyle.lerp(contentTextStyle, other?.contentTextStyle, t),
     );
   }
 
@@ -62,7 +65,7 @@ class BaseLayoutSpec extends Spec<BaseLayoutSpec> {
   }
 
   @override
-  get props => [
+  List<Object?> get props => [
         horizontalGap,
         verticalGap,
         defaultIconStyle,

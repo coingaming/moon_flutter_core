@@ -43,7 +43,7 @@ class BaseLayoutSpecAttribute extends SpecAttribute<BaseLayoutSpec> {
   }
 
   @override
-  get props => [
+  List<Object?> get props => [
         horizontalGap,
         verticalGap,
         defaultIconStyle,
