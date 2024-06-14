@@ -67,8 +67,12 @@ class StyledAlert extends StatelessWidget {
                   child: Text("MoonAlert"),
                 ),
                 trailing: const StyledIcon(Icons.close),
-                content: const Expanded(
-                  child: Text("This is a MoonAlert widget."),
+                content: const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "This is a MoonAlert widget.",
+                    textAlign: TextAlign.right,
+                  ),
                 ),
               ),
             ),

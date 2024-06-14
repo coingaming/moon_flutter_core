@@ -53,17 +53,13 @@ class BaseLayoutWidget extends StyledWidget {
             ),
             if (content != null) ...[
               SizedBox(height: baseLayoutStyle.verticalGap),
-              Row(
-                children: [
-                  switch (baseLayoutStyle.contentTextStyle != null) {
-                    true => DefaultTextStyle(
-                        style: baseLayoutStyle.contentTextStyle!,
-                        child: content!,
-                      ),
-                    _ => content!,
-                  },
-                ],
-              ),
+              switch (baseLayoutStyle.contentTextStyle != null) {
+                true => DefaultTextStyle(
+                    style: baseLayoutStyle.contentTextStyle!,
+                    child: content!,
+                  ),
+                _ => content!,
+              },
             ],
           ],
         );
