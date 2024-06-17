@@ -5,8 +5,7 @@ import 'package:moon_core/src/widgets/common/base_layout_widget/base_layout_spec
 import 'package:moon_core/src/widgets/common/base_layout_widget/base_layout_spec_attribute.dart';
 import 'package:moon_core/src/widgets/common/base_layout_widget/base_layout_utility.dart';
 
-BaseLayoutUtility<BaseLayoutSpecAttribute> $baseLayout =
-    BaseLayoutUtility(MixUtility.selfBuilder);
+BaseLayoutUtility<BaseLayoutSpecAttribute> $baseLayout = BaseLayoutUtility(MixUtility.selfBuilder);
 
 class BaseLayoutWidget extends StyledWidget {
   final Widget? leading;
@@ -18,6 +17,7 @@ class BaseLayoutWidget extends StyledWidget {
     super.key,
     super.style,
     super.orderOfModifiers = const [],
+    super.inherit = false,
     this.leading,
     this.label,
     this.trailing,
@@ -28,14 +28,15 @@ class BaseLayoutWidget extends StyledWidget {
   Widget build(BuildContext context) {
     return SpecBuilder(
       style: style,
+      inherit: inherit,
       orderOfModifiers: orderOfModifiers,
       builder: (BuildContext context) {
         final baseLayoutStyle = BaseLayoutSpec.of(context);
 
-        final child = VBox(
+        final child = StyledColumn(
           inherit: true,
           children: [
-            HBox(
+            StyledRow(
               inherit: true,
               children: [
                 if (leading != null) ...[

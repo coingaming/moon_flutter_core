@@ -34,37 +34,36 @@ class StyledAlert extends StatelessWidget {
                 $box.color(bgColor),
                 $box.borderRadius(8.0),
                 index == 2 ? $box.border(color: themeColor) : null,
-              ),
-              child: BaseLayoutWidget(
-                style: Style(
-                  $baseLayout.horizontalGap(12),
-                  $baseLayout.verticalGap(8),
-                  $baseLayout.labelTextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black,
-                  ),
-                  $baseLayout.contentTextStyle(
-                    fontSize: 12,
-                    color: Colors.grey,
-                  ),
-                  // Applies to regular icons
-                  $baseLayout.defaultIconStyle(
-                    IconThemeData(
-                      color: themeColor,
-                      size: 24,
-                    ),
-                  ),
-                  // Applies to styled icons
-                  $icon.size(16),
-                  $icon.color(themeColor),
+                // Applies to styled icons
+                $icon.size(16),
+                $icon.color(themeColor),
+                $baseLayout.horizontalGap(12),
+                $baseLayout.verticalGap(8),
+                $baseLayout.labelTextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black,
                 ),
-                leading: const Icon(Icons.info_outline),
-                label: const Expanded(
+                $baseLayout.contentTextStyle(
+                  fontSize: 12,
+                  color: Colors.grey,
+                ),
+                // Applies to regular icons
+                $baseLayout.defaultIconStyle(
+                  IconThemeData(
+                    color: themeColor,
+                    size: 24,
+                  ),
+                ),
+              ),
+              child: const BaseLayoutWidget(
+                inherit: true,
+                leading: Icon(Icons.info_outline),
+                label: Expanded(
                   child: Text("MoonAlert"),
                 ),
-                trailing: const StyledIcon(Icons.close),
-                content: const Align(
+                trailing: StyledIcon(Icons.close),
+                content: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
                     "This is a MoonAlert widget.",
