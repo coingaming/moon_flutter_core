@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 
 import 'package:moon_core/src/widgets/alert/alert.dart';
-import 'package:moon_core/src/widgets/common/base_layout_widget/base_layout_utility.dart';
 import 'package:moon_core/src/widgets/common/base_layout_widget/base_layout_widget.dart';
 
 class StyledAlert extends StatelessWidget {
@@ -10,8 +9,6 @@ class StyledAlert extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final $baseLayout = BaseLayoutUtility(MixUtility.selfBuilder);
-
     return ListView.separated(
       shrinkWrap: true,
       itemCount: 3,

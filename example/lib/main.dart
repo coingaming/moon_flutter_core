@@ -22,6 +22,8 @@ class MainApp extends StatelessWidget {
               children: [
                 TextDivider(text: 'MoonRawAlert'),
                 StyledAlert(),
+                TextDivider(text: 'MoonRawTag'),
+                StyledTag(),
               ],
             ),
           ),
