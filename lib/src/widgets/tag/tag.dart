@@ -49,7 +49,10 @@ class MoonRawTag extends StatelessWidget {
   /// and false when the [Focus] node loses focus.
   final dynamic Function(bool)? onFocusChange;
 
-  /// The child of the tag widget.
+  /// The main content of the tag widget.
+  ///
+  /// The [BaseLayoutWidget] can be used as a convenience widget which has
+  /// already pre-defined layout.
   final Widget child;
 
   const MoonRawTag({
@@ -83,8 +86,8 @@ class MoonRawTag extends StatelessWidget {
           hitTestBehavior: hitTestBehavior,
           unpressDelay: unpressDelay,
           onFocusChange: onFocusChange,
-          onPress: onPress != null ? () => onPress : null,
-          onLongPress: onLongPress != null ? () => onLongPress : null,
+          onPress: onPress,
+          onLongPress: onLongPress,
           style: style,
           child: child,
         ),
