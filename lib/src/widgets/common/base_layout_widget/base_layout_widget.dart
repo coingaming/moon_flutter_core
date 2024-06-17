@@ -5,7 +5,8 @@ import 'package:moon_core/src/widgets/common/base_layout_widget/base_layout_spec
 import 'package:moon_core/src/widgets/common/base_layout_widget/base_layout_spec_attribute.dart';
 import 'package:moon_core/src/widgets/common/base_layout_widget/base_layout_utility.dart';
 
-BaseLayoutUtility<BaseLayoutSpecAttribute> $baseLayout = BaseLayoutUtility(MixUtility.selfBuilder);
+BaseLayoutUtility<BaseLayoutSpecAttribute> $baseLayout =
+    BaseLayoutUtility(MixUtility.selfBuilder);
 
 class BaseLayoutWidget extends StyledWidget {
   final Widget? leading;
