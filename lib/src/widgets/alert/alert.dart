@@ -23,7 +23,7 @@ class MoonRawAlert extends StatefulWidget {
   /// The style of the alert.
   final Style? style;
 
-  /// The main content of the alert widget.
+  /// The main content of the alert.
   ///
   /// The [BaseLayoutWidget] can be used as a convenience widget which has
   /// already pre-defined layout.

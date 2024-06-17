@@ -49,7 +49,7 @@ class MoonRawTag extends StatelessWidget {
   /// and false when the [Focus] node loses focus.
   final dynamic Function(bool)? onFocusChange;
 
-  /// The main content of the tag widget.
+  /// The main content of the tag.
   ///
   /// The [BaseLayoutWidget] can be used as a convenience widget which has
   /// already pre-defined layout.
