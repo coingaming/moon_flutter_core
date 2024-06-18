@@ -7,5 +7,9 @@
     // Remove from file watching
     "files.watcherExclude": {
       "**/.fvm": true
-    }
+    },
+    "dart.lineLength": 80,
+    "[dart]": {
+      "editor.rulers": [80],    
+    },
   }

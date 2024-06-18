@@ -18,6 +18,7 @@ class BaseLayoutWidget extends StyledWidget {
     super.key,
     super.style,
     super.orderOfModifiers = const [],
+    super.inherit = false,
     this.leading,
     this.label,
     this.trailing,
@@ -28,14 +29,15 @@ class BaseLayoutWidget extends StyledWidget {
   Widget build(BuildContext context) {
     return SpecBuilder(
       style: style,
+      inherit: inherit,
       orderOfModifiers: orderOfModifiers,
       builder: (BuildContext context) {
         final baseLayoutStyle = BaseLayoutSpec.of(context);
 
-        final child = VBox(
+        final child = StyledColumn(
           inherit: true,
           children: [
-            HBox(
+            StyledRow(
               inherit: true,
               children: [
                 if (leading != null) ...[

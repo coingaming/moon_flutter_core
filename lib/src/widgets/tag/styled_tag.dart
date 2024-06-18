@@ -14,16 +14,15 @@ class StyledTag extends StatelessWidget {
         $box.color(Colors.white),
         $box.borderRadius(4.0),
         $box.padding(4.0, 8.0),
+        $flex.mainAxisSize.min(),
+        $text.style.fontSize(12),
+        $icon.size(12),
+        $baseLayout.horizontalGap(2),
       ),
-      child: BaseLayoutWidget(
-        style: Style(
-          $flex.mainAxisSize.min(),
-          $text.style.fontSize(12),
-          $icon.size(12),
-          $baseLayout.horizontalGap(2),
-        ),
-        label: const StyledText("MoonTag"),
-        trailing: const StyledIcon(Icons.close),
+      child: const BaseLayoutWidget(
+        inherit: true,
+        label: StyledText("MoonTag"),
+        trailing: StyledIcon(Icons.close),
       ),
     );
   }
