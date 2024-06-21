@@ -23,6 +23,9 @@ class MoonRawAlert extends StatefulWidget {
   /// The style of the alert.
   final Style? style;
 
+  /// Called when the visibility state of the alert has changed.
+  final dynamic Function(bool)? onVisibilityChanged;
+
   /// The main content of the alert.
   ///
   /// The [BaseLayoutWidget] can be used as a convenience widget which has
@@ -36,6 +39,7 @@ class MoonRawAlert extends StatefulWidget {
     this.semanticLabel,
     this.transitionDuration = const Duration(milliseconds: 200),
     this.transitionCurve = Curves.easeInOutCubic,
+    this.onVisibilityChanged,
     required this.child,
   });
 
@@ -55,6 +59,8 @@ class _MoonRawAlertState extends State<MoonRawAlert>
     _animationController!.forward();
 
     setState(() => _isVisible = true);
+
+    widget.onVisibilityChanged?.call(true);
   }
 
   void _hideAlert() {
@@ -62,6 +68,8 @@ class _MoonRawAlertState extends State<MoonRawAlert>
       if (!mounted) return;
 
       setState(() => _isVisible = false);
+
+      widget.onVisibilityChanged?.call(false);
     });
   }
 

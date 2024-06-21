@@ -28,7 +28,7 @@ class StyledDrawer extends StatelessWidget {
                 const SizedBox(height: 32),
                 Builder(
                   builder: (BuildContext context) {
-                    return MoonRawButton(
+                    return MoonBaseInteractiveWidget(
                       style: Style(
                         $box.padding(8.0),
                         $box.borderRadius(8.0),
@@ -45,7 +45,7 @@ class StyledDrawer extends StatelessWidget {
           body: Center(
             child: Builder(
               builder: (BuildContext context) {
-                return MoonRawButton(
+                return MoonBaseInteractiveWidget(
                   style: Style(
                     $box.padding(8.0),
                     $box.borderRadius(8.0),

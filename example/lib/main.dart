@@ -20,6 +20,10 @@ class MainApp extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                TextDivider(text: 'MoonRawMenuItem'),
+                StyledMenuItem(),
+                TextDivider(text: 'MoonRawButton'),
+                StyledButton(),
                 TextDivider(text: 'MoonRawAlert'),
                 StyledAlert(),
                 TextDivider(text: 'MoonRawTag'),

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 
-class MoonRawButton extends StatelessWidget {
+/// Base widget for interactive widgets (eg. button, chip, tag, menu item etc).
+class MoonBaseInteractiveWidget extends StatelessWidget {
   /// {@macro flutter.widgets.Focus.autofocus}
   final bool autofocus;
 
@@ -21,7 +22,7 @@ class MoonRawButton extends StatelessWidget {
   /// {@macro flutter.widgets.GestureDetector.hitTestBehavior}
   final HitTestBehavior hitTestBehavior;
 
-  /// Semantic label for the button.
+  /// Semantic label for the widget.
   ///
   /// Announced in accessibility modes (e.g TalkBack/VoiceOver).
   /// This label does not show in the UI.
@@ -30,17 +31,17 @@ class MoonRawButton extends StatelessWidget {
   ///    underlying	[Semantics] widget.
   final String? semanticLabel;
 
-  /// The style of the button.
+  /// The style of the widget.
   final Style? style;
 
-  /// The callback that is called when the button is tapped or otherwise activated.
+  /// The callback that is called when the widget is tapped or otherwise activated.
   ///
-  /// If this callback and [onLongPress] are null, then button will be disabled automatically.
+  /// If this callback and [onLongPress] are null, then widget will be disabled automatically.
   final VoidCallback? onPress;
 
-  /// The callback that is called when button is long-pressed.
+  /// The callback that is called when widget is long-pressed.
   ///
-  /// If this callback and [onPress] are null, then button will be disabled automatically.
+  /// If this callback and [onPress] are null, then widget will be disabled automatically.
   final VoidCallback? onLongPress;
 
   /// Called when the focus state of the [Focus] changes.
@@ -49,13 +50,13 @@ class MoonRawButton extends StatelessWidget {
   /// and false when the [Focus] node loses focus.
   final dynamic Function(bool)? onFocusChange;
 
-  /// The main content of the button.
+  /// The main content of the widget.
   ///
   /// The [BaseLayoutWidget] can be used as a convenience widget which has
   /// already pre-defined layout.
   final Widget child;
 
-  const MoonRawButton({
+  const MoonBaseInteractiveWidget({
     super.key,
     this.autofocus = false,
     this.enableFeedback = false,
