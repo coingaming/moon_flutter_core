@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
-import 'package:moon_core/src/attributes/icon_theme/icon_theme_dto.dart';
+
+import 'package:moon_core/src/mix/attributes/icon_theme_data/icon_theme_data_dto.dart';
 
 /// A modifier that wraps a widget with the [IconTheme] widget.
 final class IconThemeModifierSpec
@@ -32,7 +33,7 @@ final class IconThemeModifierSpec
 
 final class IconThemeModifierAttribute extends WidgetModifierAttribute<
     IconThemeModifierAttribute, IconThemeModifierSpec> {
-  final IconThemeDto iconThemeData;
+  final IconThemeDataDto iconThemeData;
 
   const IconThemeModifierAttribute(this.iconThemeData);
 
@@ -49,15 +50,16 @@ final class IconThemeModifierAttribute extends WidgetModifierAttribute<
   }
 
   @override
-  List<IconThemeDto> get props => [iconThemeData];
+  List<IconThemeDataDto> get props => [iconThemeData];
 }
 
 final class IconThemeWidgetUtility<T extends Attribute>
     extends MixUtility<T, IconThemeModifierAttribute> {
   IconThemeWidgetUtility(super.builder);
 
-  T call(IconThemeDto iconThemeData) =>
+  T call(IconThemeDataDto iconThemeData) =>
       builder(IconThemeModifierAttribute(iconThemeData));
 
-  late final theme = IconThemeUtility((iconThemeDto) => call(iconThemeDto));
+  late final themeData =
+      IconThemeDataUtility((iconThemeDataDto) => call(iconThemeDataDto));
 }

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
-import 'package:moon_core/moon_core.dart';
-import 'package:moon_core/src/modifiers/modifiers_utility.dart';
+
+import 'package:moon_core/src/widgets/alert/alert.dart';
+import 'package:moon_core/src/widgets/common/base_interactive_widget.dart';
 import 'package:moon_core/src/widgets/common/base_layout_widget/base_layout_widget.dart';
 
 class StyledAlert extends StatefulWidget {
@@ -41,17 +42,16 @@ class _StyledAlertState extends State<StyledAlert> {
           // $baseLayout
           $baseLayout.horizontalGap(12),
           $baseLayout.verticalGap(8),
-          $baseLayout.contentTextStyle(
-            fontSize: 12,
-            color: Colors.grey,
-          ),
-          // default - applies to default text and icons
-          $default.text.style(
+          $baseLayout.leadingIconThemeData(size: 24),
+          $baseLayout.labelTextStyle(
             color: themeColor,
             fontSize: 16,
             fontWeight: FontWeight.w600,
           ),
-          $default.icon.theme(size: 24),
+          $baseLayout.contentTextStyle(
+            fontSize: 12,
+            color: Colors.grey,
+          ),
           // icon - applies to Mix styled icons
           $icon.size(16),
           $icon.color(themeColor),

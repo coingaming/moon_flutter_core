@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
-import 'package:moon_core/moon_core.dart';
-import 'package:moon_core/src/modifiers/modifiers_utility.dart';
+
+import 'package:moon_core/src/widgets/common/base_interactive_widget.dart';
 import 'package:moon_core/src/widgets/common/base_layout_widget/base_layout_widget.dart';
 
 class StyledMenuItem extends StatelessWidget {
@@ -18,7 +18,7 @@ class StyledMenuItem extends StatelessWidget {
       // flex
       $flex.gap(8.0),
       // default
-      $default.icon.theme(size: 24, color: Colors.grey),
+      $baseLayout.leadingIconThemeData.size(24),
       // mix styled icon
       $icon.size(40),
       $icon.color(Colors.grey),
