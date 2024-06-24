@@ -1,65 +1,60 @@
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 
-import 'package:moon_core/src/mix/attributes/icon_theme_data/icon_theme_data_dto.dart';
-
 /// A modifier that wraps a widget with the [IconTheme] widget.
 final class IconThemeModifierSpec
     extends WidgetModifierSpec<IconThemeModifierSpec> {
-  final IconThemeData iconThemeData;
+  final IconThemeData data;
 
-  const IconThemeModifierSpec(this.iconThemeData);
+  const IconThemeModifierSpec({required this.data});
 
   @override
   IconThemeModifierSpec lerp(IconThemeModifierSpec? other, double t) {
     return IconThemeModifierSpec(
-      IconThemeData.lerp(iconThemeData, other?.iconThemeData, t),
+      data: IconThemeData.lerp(data, other?.data, t),
     );
   }
 
   @override
-  IconThemeModifierSpec copyWith({IconThemeData? iconThemeData}) {
-    return IconThemeModifierSpec(iconThemeData ?? this.iconThemeData);
+  IconThemeModifierSpec copyWith({IconThemeData? data}) {
+    return IconThemeModifierSpec(data: data ?? this.data);
   }
 
   @override
-  List<IconThemeData> get props => [iconThemeData];
+  List<IconThemeData> get props => [data];
 
   @override
   Widget build(Widget child) {
-    return IconTheme(data: iconThemeData, child: child);
+    return IconTheme(data: data, child: child);
   }
 }
 
 final class IconThemeModifierAttribute extends WidgetModifierAttribute<
     IconThemeModifierAttribute, IconThemeModifierSpec> {
-  final IconThemeDataDto iconThemeData;
+  final IconThemeData data;
 
-  const IconThemeModifierAttribute(this.iconThemeData);
+  const IconThemeModifierAttribute({required this.data});
 
   @override
   IconThemeModifierAttribute merge(IconThemeModifierAttribute? other) {
     return IconThemeModifierAttribute(
-      other?.iconThemeData ?? iconThemeData,
+      data: other?.data ?? data,
     );
   }
 
   @override
   IconThemeModifierSpec resolve(MixData mix) {
-    return IconThemeModifierSpec(iconThemeData.resolve(mix));
+    return IconThemeModifierSpec(data: data);
   }
 
   @override
-  List<IconThemeDataDto> get props => [iconThemeData];
+  List<IconThemeData> get props => [data];
 }
 
 final class IconThemeWidgetUtility<T extends Attribute>
     extends MixUtility<T, IconThemeModifierAttribute> {
   IconThemeWidgetUtility(super.builder);
 
-  T call(IconThemeDataDto iconThemeData) =>
-      builder(IconThemeModifierAttribute(iconThemeData));
-
-  late final themeData =
-      IconThemeDataUtility((iconThemeDataDto) => call(iconThemeDataDto));
+  T call({required IconThemeData data}) =>
+      builder(IconThemeModifierAttribute(data: data));
 }

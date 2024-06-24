@@ -14,9 +14,15 @@ class StyledButton extends StatelessWidget {
       $icon.color(Colors.blue),
       $icon.size(14),
       $text.style(color: Colors.blue),
+      $baseLayout.labelTextStyle(
+        color: Colors.blue,
+      ),
     );
 
     final Style buttonStyle = Style(
+      $baseLayout.labelTextStyle(
+        color: Colors.black,
+      ),
       // box
       $box.color(Colors.white),
       $box.borderRadius(8),
@@ -42,7 +48,7 @@ class StyledButton extends StatelessWidget {
         $with.scale(0.95),
       ),
     ).animate(
-      duration: const Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 1500),
       curve: Curves.easeInOut,
     );
 

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
+import 'package:moon_core/src/mix/modifiers/widget_modifiers.dart';
+import 'package:moon_core/src/utils/extensions/icon_theme_data_x.dart';
 
 import 'package:moon_core/src/widgets/common/base_layout_widget/base_layout_spec.dart';
 
 final $baseLayout = BaseLayoutSpecUtility.self;
+final _wrapper = DefaultModifierUtility.self;
 
 class BaseLayoutWidget extends StyledWidget {
   final Widget? leading;
@@ -38,7 +41,7 @@ class BaseLayoutWidget extends StyledWidget {
               inherit: true,
               children: [
                 if (leading != null) ...[
-                  _DefaultStyleWrapper(
+                  IconThemeAndDefaultTextStyleWrapper(
                     iconThemeData: baseLayoutStyle.leadingIconThemeData,
                     defaultTextStyle: baseLayoutStyle.leadingTextStyle,
                     child: leading!,
@@ -46,14 +49,14 @@ class BaseLayoutWidget extends StyledWidget {
                   SizedBox(width: baseLayoutStyle.horizontalGap),
                 ],
                 if (label != null)
-                  _DefaultStyleWrapper(
+                  IconThemeAndDefaultTextStyleWrapper(
                     iconThemeData: baseLayoutStyle.labelIconThemeData,
                     defaultTextStyle: baseLayoutStyle.labelTextStyle,
                     child: label!,
                   ),
                 if (trailing != null) ...[
                   SizedBox(width: baseLayoutStyle.horizontalGap),
-                  _DefaultStyleWrapper(
+                  IconThemeAndDefaultTextStyleWrapper(
                     iconThemeData: baseLayoutStyle.trailingIconThemeData,
                     defaultTextStyle: baseLayoutStyle.trailingTextStyle,
                     child: trailing!,
@@ -63,7 +66,7 @@ class BaseLayoutWidget extends StyledWidget {
             ),
             if (content != null) ...[
               SizedBox(height: baseLayoutStyle.verticalGap),
-              _DefaultStyleWrapper(
+              IconThemeAndDefaultTextStyleWrapper(
                 iconThemeData: baseLayoutStyle.contentIconThemeData,
                 defaultTextStyle: baseLayoutStyle.contentTextStyle,
                 child: content!,
@@ -76,12 +79,14 @@ class BaseLayoutWidget extends StyledWidget {
   }
 }
 
-class _DefaultStyleWrapper extends StatelessWidget {
+class IconThemeAndDefaultTextStyleWrapper extends StatelessWidget {
+  final bool inherit;
   final IconThemeData? iconThemeData;
   final TextStyle? defaultTextStyle;
   final Widget child;
 
-  const _DefaultStyleWrapper({
+  const IconThemeAndDefaultTextStyleWrapper({
+    this.inherit = false,
     this.iconThemeData,
     this.defaultTextStyle,
     required this.child,
@@ -89,23 +94,38 @@ class _DefaultStyleWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return switch ((iconThemeData != null, defaultTextStyle != null)) {
-      (true, true) => IconTheme(
-          data: iconThemeData!,
-          child: DefaultTextStyle(
-            style: defaultTextStyle!,
-            child: child,
-          ),
-        ),
-      (true, false) => IconTheme(
-          data: iconThemeData!,
-          child: child,
-        ),
-      (false, true) => DefaultTextStyle(
-          style: defaultTextStyle!,
-          child: child,
-        ),
-      _ => child,
-    };
+    final iconStyle = IconSpec.of(context);
+
+    final inheritedIconTheme = IconThemeData(
+      applyTextScaling: iconStyle.applyTextScaling,
+      color: iconStyle.color,
+      fill: iconStyle.fill,
+      grade: iconStyle.grade,
+      opticalSize: iconStyle.opticalSize,
+      shadows: iconStyle.shadows,
+      size: iconStyle.size,
+      weight: iconStyle.weight,
+    );
+
+    final resolvedIconTheme = inheritedIconTheme.merge(iconThemeData);
+
+    return SpecBuilder(
+      inherit: inherit,
+      style: Style(
+        resolvedIconTheme.hasAValue
+            ? _wrapper.iconTheme(
+                data: resolvedIconTheme,
+              )
+            : null,
+        defaultTextStyle != null
+            ? _wrapper.defaultTextStyle(
+                style: defaultTextStyle!,
+              )
+            : null,
+      ),
+      builder: (context) {
+        return child;
+      },
+    );
   }
 }
