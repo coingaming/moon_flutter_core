@@ -73,8 +73,13 @@ final class DefaultTextStyleModifierSpec
 
   @override
   Widget build(Widget child) {
-    return DefaultTextStyle(
+    return DefaultTextStyle.merge(
       style: style,
+      softWrap: softWrap,
+      maxLines: maxLines,
+      textAlign: textAlign,
+      overflow: overflow,
+      textWidthBasis: textWidthBasis,
       child: child,
     );
   }
