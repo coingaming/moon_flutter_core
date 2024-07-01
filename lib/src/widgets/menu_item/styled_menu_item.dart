@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
+import 'package:moon_core/src/utils/extensions.dart';
 
 import 'package:moon_core/src/widgets/common/base_interactive_widget.dart';
-import 'package:moon_core/src/widgets/common/base_layout_widget/base_layout_widget.dart';
 
 class StyledMenuItem extends StatelessWidget {
   const StyledMenuItem({super.key});
@@ -16,12 +16,21 @@ class StyledMenuItem extends StatelessWidget {
       $box.padding(16.0),
       $box.border(color: Colors.grey),
       // flex
-      $flex.gap(8.0),
+      $flex.gap(16.0),
       // default
-      $baseLayout.leadingIconThemeData.size(24),
-      // mix styled icon
-      $icon.size(40),
-      $icon.color(Colors.grey),
+      $with.defaultTextStyle(
+        style: const TextStyle(
+          color: Colors.black,
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      $with.iconTheme(
+        data: const IconThemeData(
+          color: Colors.grey,
+          size: 24,
+        ),
+      ),
       // states
       ($on.hover | $on.focus | $on.press | $on.longPress)(
         $box.color(Colors.grey.withOpacity(0.2)),
@@ -34,19 +43,37 @@ class StyledMenuItem extends StatelessWidget {
     return MoonBaseInteractiveWidget(
       onPress: () {},
       style: menuItemStyle,
-      child: const BaseLayoutWidget(
+      child: StyledRow(
         inherit: true,
-        leading: StyledIcon(Icons.account_circle_outlined),
-        trailing: Icon(Icons.arrow_forward_ios),
-        label: Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("Menu item"),
-              Text("This is a menu item"),
-            ],
+        children: [
+          const Icon(Icons.account_circle_outlined),
+          Expanded(
+            child: StyledColumn(
+              style: Style(
+                $flex.crossAxisAlignment.start(),
+                $flex.gap(4.0),
+              ),
+              children: [
+                const Text("Menu item"),
+                SpecBuilder(
+                  style: Style(
+                    $with.defaultTextStyle(
+                      style: const TextStyle(
+                        color: Colors.grey,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                  builder: (context) {
+                    return const Text("This is a menu item");
+                  },
+                ),
+              ],
+            ),
           ),
-        ),
+          const Icon(Icons.arrow_forward_ios),
+        ],
       ),
     );
   }

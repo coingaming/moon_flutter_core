@@ -178,3 +178,9 @@ extension IconThemeDataMixExt on IconThemeData {
     );
   }
 }
+
+extension ListIconThemeDataMixExt on List<IconThemeData> {
+  List<IconThemeDataDto> toDto() {
+    return map((e) => e.toDto()).toList();
+  }
+}
