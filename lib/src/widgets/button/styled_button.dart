@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
-import 'package:moon_core/moon_core.dart';
-import 'package:moon_core/src/modifiers/modifiers_utility.dart';
-import 'package:moon_core/src/widgets/common/base_layout_widget/base_layout_widget.dart';
+
+import 'package:moon_core/src/utils/extensions.dart';
+import 'package:moon_core/src/widgets/common/base_interactive_widget.dart';
 
 class StyledButton extends StatelessWidget {
   const StyledButton({super.key});
@@ -11,8 +11,11 @@ class StyledButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final Style activeStateStyle = Style(
       $box.color(Colors.grey.shade300),
-      $default.icon.theme(color: Colors.blue, size: 14),
-      $default.text.style(color: Colors.blue),
+      $with.iconTheme.data(
+        color: Colors.blue,
+        size: 14,
+      ),
+      $with.defaultTextStyle.style(color: Colors.blue),
     );
 
     final Style buttonStyle = Style(
@@ -21,16 +24,17 @@ class StyledButton extends StatelessWidget {
       $box.borderRadius(8),
       $box.border(color: Colors.black38),
       $box.padding(8.0),
-      // $baseLayout
-      $baseLayout.horizontalGap(8.0),
       // flex
+      $flex.gap(8.0),
       $flex.mainAxisSize.min(),
-      // default
-      $default.icon.theme(color: Colors.black, size: 14),
-      $default.text.style(color: Colors.black),
       // with
       $with.scale(1),
       $with.opacity(1),
+      $with.defaultTextStyle.style(color: Colors.black),
+      $with.iconTheme.data(
+        color: Colors.black,
+        size: 24,
+      ),
       // states
       ($on.hover | $on.focus)(
         activeStateStyle(),
@@ -47,11 +51,13 @@ class StyledButton extends StatelessWidget {
     return MoonBaseInteractiveWidget(
       onPress: () {},
       style: buttonStyle,
-      child: const BaseLayoutWidget(
+      child: const StyledRow(
         inherit: true,
-        leading: Icon(Icons.widgets_outlined),
-        label: Text("MoonButton"),
-        trailing: Icon(Icons.widgets_outlined),
+        children: [
+          Icon(Icons.widgets_outlined),
+          Text("MoonButton"),
+          Icon(Icons.widgets_outlined),
+        ],
       ),
     );
   }

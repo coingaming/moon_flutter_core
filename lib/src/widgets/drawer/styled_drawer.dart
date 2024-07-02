@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 
-import 'package:moon_core/moon_core.dart';
+import 'package:moon_core/src/widgets/common/base_interactive_widget.dart';
+import 'package:moon_core/src/widgets/drawer/drawer.dart';
 
 class StyledDrawer extends StatelessWidget {
   const StyledDrawer({super.key});

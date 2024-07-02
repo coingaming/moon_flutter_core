@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
-import 'package:moon_core/moon_core.dart';
-import 'package:moon_core/src/modifiers/modifiers_utility.dart';
-import 'package:moon_core/src/widgets/common/base_layout_widget/base_layout_widget.dart';
+
+import 'package:moon_core/src/utils/extensions.dart';
+import 'package:moon_core/src/widgets/alert/alert.dart';
+import 'package:moon_core/src/widgets/common/base_interactive_widget.dart';
 
 class StyledAlert extends StatefulWidget {
   const StyledAlert({super.key});
@@ -38,21 +39,6 @@ class _StyledAlertState extends State<StyledAlert> {
           $box.color(bgColor),
           $box.borderRadius(8.0),
           index == 2 ? $box.border(color: themeColor) : null,
-          // $baseLayout
-          $baseLayout.horizontalGap(12),
-          $baseLayout.verticalGap(8),
-          $baseLayout.contentTextStyle(
-            fontSize: 12,
-            color: Colors.grey,
-          ),
-          // default - applies to default text and icons
-          $default.text.style(
-            color: themeColor,
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
-          $default.icon.theme(size: 24),
-          // icon - applies to Mix styled icons
           $icon.size(16),
           $icon.color(themeColor),
         );
@@ -62,26 +48,33 @@ class _StyledAlertState extends State<StyledAlert> {
             MoonRawAlert(
               show: index == 0 && show,
               style: alertStyle,
-              child: const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: StyledColumn(
+                style: Style(
+                  $flex.crossAxisAlignment.start(),
+                  $flex.gap(8),
+                  $with.defaultTextStyle.style(
+                    color: Colors.grey,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
                 children: [
-                  BaseLayoutWidget(
-                    inherit: true,
-                    leading: Icon(Icons.info_outline),
-                    label: Expanded(
-                      child: Text("MoonAlert"),
+                  StyledRow(
+                    style: Style(
+                      $flex.gap(12),
+                      $with.defaultTextStyle.style(
+                        color: themeColor,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                    trailing: StyledIcon(Icons.close),
+                    children: const [
+                      Icon(Icons.info_outline),
+                      Expanded(child: Text("MoonAlert")),
+                      Icon(Icons.close),
+                    ],
                   ),
-                  SizedBox(height: 8.0),
-                  Text(
-                    "This is a MoonAlert widget.",
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
+                  const Text("This is a MoonAlert widget."),
                 ],
               ),
             ),
