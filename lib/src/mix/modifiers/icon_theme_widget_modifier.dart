@@ -55,6 +55,34 @@ final class IconThemeWidgetUtility<T extends Attribute>
     extends MixUtility<T, IconThemeModifierAttribute> {
   IconThemeWidgetUtility(super.builder);
 
+  T data({
+    bool? applyTextScaling,
+    Color? color,
+    double? fill,
+    double? grade,
+    double? opacity,
+    double? opticalSize,
+    double? size,
+    double? weight,
+    List<Shadow>? shadows,
+  }) {
+    return builder(
+      IconThemeModifierAttribute(
+        data: IconThemeData(
+          applyTextScaling: applyTextScaling,
+          color: color,
+          fill: fill,
+          grade: grade,
+          opacity: opacity,
+          opticalSize: opticalSize,
+          size: size,
+          weight: weight,
+          shadows: shadows,
+        ),
+      ),
+    );
+  }
+
   T call({required IconThemeData data}) =>
       builder(IconThemeModifierAttribute(data: data));
 }

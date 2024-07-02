@@ -11,8 +11,11 @@ class StyledButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final Style activeStateStyle = Style(
       $box.color(Colors.grey.shade300),
-      $with.iconTheme(data: const IconThemeData(color: Colors.blue, size: 14)),
-      $with.defaultTextStyle(style: const TextStyle(color: Colors.blue)),
+      $with.iconTheme.data(
+        color: Colors.blue,
+        size: 14,
+      ),
+      $with.defaultTextStyle.style(color: Colors.blue),
     );
 
     final Style buttonStyle = Style(
@@ -27,8 +30,11 @@ class StyledButton extends StatelessWidget {
       // with
       $with.scale(1),
       $with.opacity(1),
-      $with.defaultTextStyle(style: const TextStyle(color: Colors.black)),
-      $with.iconTheme(data: const IconThemeData(color: Colors.black, size: 24)),
+      $with.defaultTextStyle.style(color: Colors.black),
+      $with.iconTheme.data(
+        color: Colors.black,
+        size: 24,
+      ),
       // states
       ($on.hover | $on.focus)(
         activeStateStyle(),

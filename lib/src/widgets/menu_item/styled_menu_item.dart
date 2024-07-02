@@ -18,19 +18,16 @@ class StyledMenuItem extends StatelessWidget {
       // flex
       $flex.gap(16.0),
       // default
-      $with.defaultTextStyle(
-        style: const TextStyle(
-          color: Colors.black,
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-        ),
+      $with.defaultTextStyle.style(
+        color: Colors.black,
+        fontSize: 16,
+        fontWeight: FontWeight.w600,
       ),
-      $with.iconTheme(
-        data: const IconThemeData(
-          color: Colors.grey,
-          size: 24,
-        ),
+      $with.iconTheme.data(
+        color: Colors.grey,
+        size: 24,
       ),
+
       // states
       ($on.hover | $on.focus | $on.press | $on.longPress)(
         $box.color(Colors.grey.withOpacity(0.2)),

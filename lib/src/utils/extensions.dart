@@ -4,12 +4,9 @@ import 'package:moon_core/src/mix/modifiers/default_text_style_widget_modifier.d
 import 'package:moon_core/src/mix/modifiers/icon_theme_widget_modifier.dart';
 
 extension WithModifierUtilityX on WithModifierUtility {
-  static final _textExpando = Expando<DefaultTextStyleWidgetUtility>();
-  static final _iconExpando = Expando<IconThemeWidgetUtility>();
-
-  DefaultTextStyleWidgetUtility get defaultTextStyle => _textExpando[this] ??=
+  DefaultTextStyleWidgetUtility get defaultTextStyle =>
       DefaultTextStyleWidgetUtility(MixUtility.selfBuilder);
 
   IconThemeWidgetUtility get iconTheme =>
-      _iconExpando[this] ??= IconThemeWidgetUtility(MixUtility.selfBuilder);
+      IconThemeWidgetUtility(MixUtility.selfBuilder);
 }

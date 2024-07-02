@@ -52,24 +52,20 @@ class _StyledAlertState extends State<StyledAlert> {
                 style: Style(
                   $flex.crossAxisAlignment.start(),
                   $flex.gap(8),
-                  $with.defaultTextStyle(
-                    style: const TextStyle(
-                      color: Colors.grey,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                    ),
+                  $with.defaultTextStyle.style(
+                    color: Colors.grey,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
                 children: [
                   StyledRow(
                     style: Style(
                       $flex.gap(12),
-                      $with.defaultTextStyle(
-                        style: TextStyle(
-                          color: themeColor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
+                      $with.defaultTextStyle.style(
+                        color: themeColor,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     children: const [

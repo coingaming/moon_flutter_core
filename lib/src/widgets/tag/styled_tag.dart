@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
-
 import 'package:moon_core/src/utils/extensions.dart';
+
 import 'package:moon_core/src/widgets/common/base_interactive_widget.dart';
 
 class StyledTag extends StatelessWidget {
@@ -21,14 +21,18 @@ class StyledTag extends StatelessWidget {
         $flex.mainAxisSize.min(),
         // icon ($with.iconTheme gets fully supressed by this)
         //$icon.size(12),
-        $with.iconTheme(
-          data: const IconThemeData(color: Colors.black, size: 12),
+        $with.iconTheme.data(
+          color: Colors.black,
+          size: 12,
         ),
+
         // text ($with.defaultTextStyle gets partially supressed by this)
         //$text.style.fontSize(12),
-        $with.defaultTextStyle(
-          style:
-              const TextStyle(color: Colors.black, fontSize: 12, height: 1.0),
+
+        $with.defaultTextStyle.style(
+          color: Colors.black,
+          fontSize: 12,
+          height: 1.0,
         ),
       ),
       child: const StyledRow(
