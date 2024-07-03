@@ -13,7 +13,7 @@ class StyledButton extends StatelessWidget {
       $box.color(Colors.grey.shade300),
       $with.iconTheme.data(
         color: Colors.blue,
-        size: 14,
+        size: 16,
       ),
       $with.defaultTextStyle.style(color: Colors.blue),
     );
@@ -33,7 +33,7 @@ class StyledButton extends StatelessWidget {
       $with.defaultTextStyle.style(color: Colors.black),
       $with.iconTheme.data(
         color: Colors.black,
-        size: 24,
+        size: 16,
       ),
       // states
       ($on.hover | $on.focus)(

@@ -51,9 +51,6 @@ class MoonBaseInteractiveWidget extends StatelessWidget {
   final dynamic Function(bool)? onFocusChange;
 
   /// The main content of the widget.
-  ///
-  /// The [BaseLayoutWidget] can be used as a convenience widget which has
-  /// already pre-defined layout.
   final Widget child;
 
   const MoonBaseInteractiveWidget({
