@@ -66,6 +66,7 @@ class MoonBaseMultiSelectWidget extends StatelessWidget {
   /// The content of the widget.
   final Widget child;
 
+  /// Creates a Moon Design raw multi select widget.
   const MoonBaseMultiSelectWidget({
     super.key,
     this.autofocus = false,

@@ -53,6 +53,7 @@ class MoonBaseInteractiveWidget extends StatelessWidget {
   /// The main content of the widget.
   final Widget child;
 
+  /// Creates a Moon Design raw interactive widget.
   const MoonBaseInteractiveWidget({
     super.key,
     this.autofocus = false,
