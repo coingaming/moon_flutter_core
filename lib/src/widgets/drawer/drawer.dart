@@ -17,6 +17,7 @@ class MoonRawDrawer extends StatelessWidget {
   /// The child widget to display inside the drawer as its content.
   final Widget child;
 
+  /// Creates a Moon Design raw drawer widget.
   const MoonRawDrawer({
     super.key,
     this.semanticLabel,

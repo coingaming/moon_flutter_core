@@ -32,6 +32,7 @@ class MoonRawAlert extends StatefulWidget {
   /// already pre-defined layout.
   final Widget child;
 
+  /// Creates a Moon Design raw alert.
   const MoonRawAlert({
     super.key,
     this.show = false,

@@ -20,6 +20,8 @@ class MainApp extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                TextDivider(text: 'MoonBreadcrumb'),
+                StyledBreadcrumb(),
                 TextDivider(text: 'MoonRawChip'),
                 StyledChip(),
                 TextDivider(text: 'MoonRawRadio'),

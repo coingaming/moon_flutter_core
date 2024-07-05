@@ -26,9 +26,8 @@ class _StyledRadioState extends State<StyledRadio> {
   @override
   Widget build(BuildContext context) {
     final Style outerCircleStyle = Style(
-      $box.height(16),
-      $box.margin.vertical(4),
       $box.border.color.black54(),
+      $box.width(16),
       $box.shape.circle(),
       SelectedState.selected(
         $box.border.color.deepPurple.shade600(),
@@ -39,31 +38,44 @@ class _StyledRadioState extends State<StyledRadio> {
       $icon.color(Colors.deepPurple),
       $icon.size(0),
       SelectedState.selected(
-        $icon.size(8),
+        $icon.size(9),
+      ),
+    );
+
+    final Style focusStateStyle = Style(
+      $box.height(32),
+      $on.focus(
+        $box.border.color.black12(),
+        $box.border.width(4),
+        $box.shape.circle(),
       ),
     );
 
     return Column(
       children: List.generate(
         _Choices.values.length,
-        (int index) => MoonBaseSingleSelectWidget(
-          toggleable: true,
-          style: outerCircleStyle
-              .applyVariant(_getVariant(_Choices.values[index]))
-              .animate(duration: _animationDuration),
-          value: _Choices.values[index],
-          groupValue: _valueCustom,
-          onChanged: (_Choices? value) =>
-              setState(() => _valueCustom = value),
-          child: SizedBox(
-            width: 16,
-            child: StyledIcon(
-              Icons.circle,
-              style: iconStyle
-                  .applyVariant(_getVariant(_Choices.values[index]))
-                  .animate(duration: _animationDuration),
+        (int index) => Column(
+          children: [
+            MoonBaseSingleSelectWidget(
+              toggleable: true,
+              style: focusStateStyle.animate(duration: _animationDuration),
+              value: _Choices.values[index],
+              groupValue: _valueCustom,
+              onChanged: (_Choices? value) =>
+                  setState(() => _valueCustom = value),
+              child: Box(
+                style: outerCircleStyle
+                    .applyVariant(_getVariant(_Choices.values[index]))
+                    .animate(duration: _animationDuration),
+                child: StyledIcon(
+                  Icons.circle,
+                  style: iconStyle
+                      .applyVariant(_getVariant(_Choices.values[index]))
+                      .animate(duration: _animationDuration),
+                ),
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );

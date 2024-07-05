@@ -64,6 +64,7 @@ class MoonBaseSingleSelectWidget<T> extends StatelessWidget {
   /// The main content of the widget.
   final Widget child;
 
+  /// Creates a Moon Design raw single select widget.
   const MoonBaseSingleSelectWidget({
     super.key,
     this.autofocus = false,
