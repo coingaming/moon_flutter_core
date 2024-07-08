@@ -20,7 +20,9 @@ class MainApp extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                TextDivider(text: 'MoonBreadcrumb'),
+                TextDivider(text: 'MoonRawDotIndicator'),
+                StyledDotIndicator(),
+                TextDivider(text: 'MoonRawBreadcrumb'),
                 StyledBreadcrumb(),
                 TextDivider(text: 'MoonRawChip'),
                 StyledChip(),
@@ -44,11 +46,3 @@ class MainApp extends StatelessWidget {
     );
   }
 }
-
-//
-// TextDivider(text: 'MoonRawButton'),
-// StyledButton(),
-// TextDivider(text: 'MoonRawTag'),
-// StyledTag(),
-// TextDivider(text: 'MoonRawAvatar'),
-// StyledAvatar(),
