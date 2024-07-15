@@ -6,14 +6,18 @@ class MoonBaseInteractiveWidget extends StatelessWidget {
   /// {@macro flutter.widgets.Focus.autofocus}
   final bool autofocus;
 
+  /// Whether the widget is enabled and interactive.
+  final bool enabled;
+
   /// Should gestures provide audible and/or haptic feedback.
   ///
-  /// On platforms like Android, enabling feedback will result in audible and tactile
-  /// responses to certain actions. For example, a tap may produce a clicking sound,
-  /// while a long-press may trigger a short vibration.
+  /// On platforms like Android, enabling feedback will result in audible and
+  /// tactile responses to certain actions. For example, a tap may produce a
+  /// clicking sound, while a long-press may trigger a short vibration.
   final bool enableFeedback;
 
-  /// The duration to wait after the press is released before the state of pressed is removed.
+  /// The duration to wait after the press is released before the state of
+  /// pressed is removed.
   final Duration unpressDelay;
 
   /// {@macro flutter.widgets.Focus.focusNode}
@@ -36,18 +40,20 @@ class MoonBaseInteractiveWidget extends StatelessWidget {
 
   /// The callback that is called when the widget is tapped or otherwise activated.
   ///
-  /// If this callback and [onLongPress] are null, then widget will be disabled automatically.
+  /// If this callback and [onLongPress] are null, then widget will be disabled
+  /// automatically.
   final VoidCallback? onPress;
 
   /// The callback that is called when widget is long-pressed.
   ///
-  /// If this callback and [onPress] are null, then widget will be disabled automatically.
+  /// If this callback and [onPress] are null, then widget will be disabled
+  /// automatically.
   final VoidCallback? onLongPress;
 
   /// Called when the focus state of the [Focus] changes.
   ///
-  /// Called with true when the [Focus] node gains focus
-  /// and false when the [Focus] node loses focus.
+  /// Called with true when the [Focus] node gains focus and false when the
+  /// [Focus] node loses focus.
   final dynamic Function(bool)? onFocusChange;
 
   /// The main content of the widget.
@@ -57,6 +63,7 @@ class MoonBaseInteractiveWidget extends StatelessWidget {
   const MoonBaseInteractiveWidget({
     super.key,
     this.autofocus = false,
+    this.enabled = true,
     this.enableFeedback = false,
     this.unpressDelay = const Duration(milliseconds: 200),
     this.focusNode,
@@ -74,13 +81,13 @@ class MoonBaseInteractiveWidget extends StatelessWidget {
     return Semantics(
       label: semanticLabel,
       child: MouseRegion(
-        cursor: (onPress != null || onLongPress != null)
+        cursor: (enabled && onPress != null || onLongPress != null)
             ? SystemMouseCursors.click
             : SystemMouseCursors.basic,
         child: PressableBox(
           autofocus: autofocus,
           focusNode: focusNode,
-          enabled: onPress != null || onLongPress != null,
+          enabled: enabled && onPress != null || onLongPress != null,
           enableFeedback: enableFeedback,
           hitTestBehavior: hitTestBehavior,
           unpressDelay: unpressDelay,

@@ -20,6 +20,8 @@ class MainApp extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                TextDivider(text: 'MoonRawSegmentedTabControl'),
+                StyledSegmentedTabControl(),
                 TextDivider(text: 'MoonRawDotIndicator'),
                 StyledDotIndicator(),
                 TextDivider(text: 'MoonRawBreadcrumb'),
