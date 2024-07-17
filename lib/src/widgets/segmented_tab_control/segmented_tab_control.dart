@@ -56,57 +56,45 @@ class MoonRawSegmentedTabControl extends StatefulWidget {
 class _MoonRawSegmentedTabControlState extends State<MoonRawSegmentedTabControl>
     with SingleTickerProviderStateMixin {
   late int _selectedIndex;
-  late TabController _controller;
+  late TabController? _controller;
 
   void _handleTabChange() {
-    final int newIndex = _controller.index;
+    final int animationValue =
+        widget.tabController?.animation?.value.round() ?? 0;
 
-    if (newIndex != _selectedIndex) {
-      setState(() {
-        _selectedIndex = newIndex;
-        widget.onTabChanged?.call(newIndex);
-
-        _updateTabsSelectedStatus();
-      });
-    }
+    if (animationValue != _selectedIndex) _updateTabs(animationValue);
   }
 
-  void _updateTabsSelectedStatus() {
+  void _updateTabsSelectedStatus(int newIndex) {
     widget.tabs.asMap().forEach((int index, MoonRawSegmentedTab tab) {
       tab.isSelected?.call(index == _selectedIndex);
     });
   }
 
-  void _handleTap(int index) {
-    if (index >= 0 && index < widget.tabs.length) {
-      _controller.index = index;
+  void _updateTabs(int newIndex) {
+    if (newIndex >= 0 &&
+        newIndex < widget.tabs.length &&
+        newIndex != _selectedIndex) {
+      _selectedIndex = newIndex;
 
-      widget.onTabChanged?.call(index);
+      widget.onTabChanged?.call(newIndex);
+      _updateTabsSelectedStatus(newIndex);
     }
   }
 
   @override
   void initState() {
     super.initState();
+    _controller = widget.tabController ?? DefaultTabController.maybeOf(context);
 
-    _controller = widget.tabController ??
-        DefaultTabController.maybeOf(context) ??
-        TabController(
-          vsync: this,
-          length: widget.tabs.length,
-          initialIndex: widget.initialIndex,
-        );
+    _controller?.animation?.addListener(_handleTabChange);
 
-    _controller.animation?.addListener(_handleTabChange);
-
-    _selectedIndex = _controller.index;
+    _selectedIndex = _controller?.index ?? widget.initialIndex;
   }
 
   @override
   void dispose() {
-    _controller.animation?.removeListener(_handleTabChange);
-
-    if (widget.tabController == null) _controller.dispose();
+    _controller?.animation?.removeListener(_handleTabChange);
 
     super.dispose();
   }
@@ -124,7 +112,7 @@ class _MoonRawSegmentedTabControlState extends State<MoonRawSegmentedTabControl>
           semanticLabel: widget.tabs[index].semanticLabel,
           style: widget.tabs[index].tabStyle,
           onFocusChange: widget.tabs[index].onFocusChange,
-          onPress: () => _handleTap(index),
+          onPress: () => _updateTabs(index),
           child: widget.tabs[index].child!,
         );
 
