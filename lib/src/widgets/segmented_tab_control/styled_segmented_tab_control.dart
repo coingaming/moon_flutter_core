@@ -18,11 +18,12 @@ class _StyledSegmentedTabControlState extends State<StyledSegmentedTabControl>
 
   final Duration _duration = const Duration(milliseconds: 200);
 
-  int _selectedIndex = 0;
+  int _selectedIndex = 1;
 
-  SelectedState _getVariant(int index) => index == _selectedIndex
-      ? SelectedState.selected
-      : SelectedState.unselected;
+  SelectedState _getVariant(int index, {bool hasController = true}) =>
+      index == (hasController ? tabController.index : _selectedIndex)
+          ? SelectedState.selected
+          : SelectedState.unselected;
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +95,7 @@ class _StyledSegmentedTabControlState extends State<StyledSegmentedTabControl>
             (int index) => MoonRawSegmentedTab(
               tabStyle: pillTabStyle
                   .animate(duration: _duration)
-                  .applyVariant(_getVariant(index)),
+                  .applyVariant(_getVariant(index, hasController: false)),
               child: StyledText('Tab ${index + 1}'),
             ),
           ),
@@ -106,7 +107,9 @@ class _StyledSegmentedTabControlState extends State<StyledSegmentedTabControl>
           style: Style(
             $flex.gap(4.0),
           ),
-          onTabChanged: (int index) => setState(() => _selectedIndex = index),
+          onTabChanged: (int index) => setState(
+            () => tabController.index = index,
+          ),
           tabs: List.generate(
             3,
             (int index) => MoonRawSegmentedTab(
@@ -142,10 +145,20 @@ class _StyledSegmentedTabControlState extends State<StyledSegmentedTabControl>
             controller: tabController,
             children: List.generate(
               3,
-              (int index) => ColoredBox(
-                color: Colors.deepPurpleAccent.shade100,
-                child: Center(
-                  child: Text('Tab ${index + 1} content'),
+              (int index) => MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: GestureDetector(
+                  onTap: () => tabController.index = index == 0
+                      ? 1
+                      : index == 1
+                          ? 2
+                          : 0,
+                  child: ColoredBox(
+                    color: Colors.deepPurpleAccent.shade100,
+                    child: Center(
+                      child: Text('Tab ${index + 1} content'),
+                    ),
+                  ),
                 ),
               ),
             ),
