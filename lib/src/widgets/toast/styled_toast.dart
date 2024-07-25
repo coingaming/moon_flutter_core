@@ -12,6 +12,7 @@ class StyledToast extends StatelessWidget {
         $box.color(Colors.deepPurpleAccent),
         $box.padding(8, 16),
         $box.borderRadius(8),
+        $text.style.color(Colors.white),
       ),
       onPress: () => MoonRawToast.show(
         context,
@@ -26,7 +27,7 @@ class StyledToast extends StatelessWidget {
         ),
         child: const StyledText('This is toast content!'),
       ),
-      child: const Text('Show toast'),
+      child: const StyledText('Show toast'),
     );
   }
 }
