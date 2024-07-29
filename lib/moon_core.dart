@@ -3,6 +3,8 @@ library moon_core;
 
 export 'package:moon_core/src/widgets/alert/alert.dart';
 export 'package:moon_core/src/widgets/alert/styled_alert.dart';
+export 'package:moon_core/src/widgets/avatar/avatar.dart';
+export 'package:moon_core/src/widgets/avatar/styled_avatar.dart';
 export 'package:moon_core/src/widgets/breadcrumb/breadcrumb.dart';
 export 'package:moon_core/src/widgets/breadcrumb/styled_breadcrumb.dart';
 export 'package:moon_core/src/widgets/button/styled_button.dart';
