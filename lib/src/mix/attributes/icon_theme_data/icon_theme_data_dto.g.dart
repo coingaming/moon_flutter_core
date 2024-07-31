@@ -81,7 +81,7 @@ base mixin _$IconThemeDataDto on Dto<IconThemeData> {
 ///
 /// This class provides methods to set individual properties of a [IconThemeDataDto].
 /// Use the methods of this class to configure specific properties of a [IconThemeDataDto].
-final class IconThemeDataUtility<T extends Attribute>
+class IconThemeDataUtility<T extends Attribute>
     extends DtoUtility<T, IconThemeDataDto, IconThemeData> {
   /// Utility for defining [IconThemeDataDto.color]
   late final color = ColorUtility((v) => only(color: v));

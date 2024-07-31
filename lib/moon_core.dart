@@ -19,6 +19,8 @@ export 'package:moon_core/src/widgets/drawer/styled_drawer.dart';
 export 'package:moon_core/src/widgets/menu_item/styled_menu_item.dart';
 export 'package:moon_core/src/widgets/modal/modal.dart';
 export 'package:moon_core/src/widgets/modal/styled_modal.dart';
+export 'package:moon_core/src/widgets/popover/popover.dart';
+export 'package:moon_core/src/widgets/popover/styled_popover.dart';
 export 'package:moon_core/src/widgets/radio/styled_radio.dart';
 export 'package:moon_core/src/widgets/segmented_tab_control/styled_segmented_tab_control.dart';
 export 'package:moon_core/src/widgets/tag/styled_tag.dart';
