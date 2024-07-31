@@ -22,6 +22,8 @@ class MainApp extends StatelessWidget {
               children: [
                 TextDivider(text: 'MoonRawAvatar'),
                 StyledAvatar(),
+                TextDivider(text: 'MoonRawPopover'),
+                StyledPopover(),
                 TextDivider(text: 'MoonRawModal'),
                 StyledModal(),
                 TextDivider(text: 'MoonRawToast'),
