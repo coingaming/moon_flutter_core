@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mix/mix.dart';
 
 import 'package:moon_core/src/utils/extensions.dart';
@@ -38,6 +39,13 @@ class StyledButton extends StatelessWidget {
       // states
       ($on.hover | $on.focus)(
         activeStateStyle(),
+        $with.animate(
+          effects: [
+            const BlurEffect(
+              duration: Duration(seconds: 5),
+            ),
+          ],
+        ),
       ),
       ($on.press | $on.longPress)(
         activeStateStyle(),

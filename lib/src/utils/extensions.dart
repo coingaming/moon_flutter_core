@@ -1,4 +1,5 @@
 import 'package:mix/mix.dart';
+import 'package:moon_core/src/mix/modifiers/animate_modifier.dart';
 
 import 'package:moon_core/src/mix/modifiers/default_text_style_modifier.dart';
 import 'package:moon_core/src/mix/modifiers/icon_theme_modifier.dart';
@@ -9,6 +10,9 @@ extension WithModifierUtilityX on WithModifierUtility {
 
   IconThemeModifierSpecUtility get iconTheme =>
       IconThemeModifierSpecUtility(MixUtility.selfBuilder);
+
+  AnimateModifierSpecUtility get animate =>
+      const AnimateModifierSpecUtility(MixUtility.selfBuilder);
 }
 
 extension SpecModifierUtilityX on SpecModifierUtility {
