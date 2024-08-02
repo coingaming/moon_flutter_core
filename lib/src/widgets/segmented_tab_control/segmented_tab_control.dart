@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
-import 'package:moon_core/moon_core.dart';
+
+import 'package:moon_core/src/widgets/common/base_interactive_widget.dart';
 import 'package:moon_core/src/widgets/segmented_tab_control/segmented_tab.dart';
 
 class MoonRawSegmentedTabControl extends StatefulWidget {

@@ -1,4 +1,5 @@
 import 'package:flutter/rendering.dart';
+
 import 'package:moon_core/src/widgets/avatar/avatar.dart';
 
 class AvatarCircleClipper extends CustomClipper<Path> {

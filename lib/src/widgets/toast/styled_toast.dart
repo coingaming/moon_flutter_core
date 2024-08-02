@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
-import 'package:moon_core/moon_core.dart';
+
+import 'package:moon_core/src/widgets/common/base_interactive_widget.dart';
+import 'package:moon_core/src/widgets/toast/toast.dart';
 
 class StyledToast extends StatelessWidget {
   const StyledToast({super.key});
