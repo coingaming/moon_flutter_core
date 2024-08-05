@@ -90,6 +90,7 @@ class _StyledSegmentedTabControlState extends State<StyledSegmentedTabControl>
       children: [
         MoonRawSegmentedTabControl(
           style: pillTabContainerStyle,
+          initialIndex: _selectedIndex,
           onTabChanged: (int index) => setState(() => _selectedIndex = index),
           tabs: List.generate(
             3,
