@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
-import 'package:moon_core/src/utils/extensions.dart';
 
+import 'package:moon_core/src/utils/extensions.dart';
 import 'package:moon_core/src/widgets/common/base_interactive_widget.dart';
 
 class StyledMenuItem extends StatelessWidget {
@@ -54,12 +54,10 @@ class StyledMenuItem extends StatelessWidget {
                 const Text("Menu item"),
                 SpecBuilder(
                   style: Style(
-                    $with.defaultTextStyle(
-                      style: const TextStyle(
-                        color: Colors.grey,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      ),
+                    $with.defaultTextStyle.style(
+                      color: Colors.grey,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
                   builder: (context) {

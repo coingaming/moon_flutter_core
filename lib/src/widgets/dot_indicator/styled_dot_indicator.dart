@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
-import 'package:moon_core/moon_core.dart';
+
+import 'package:moon_core/src/widgets/common/base_interactive_widget.dart';
 import 'package:moon_core/src/widgets/common/variants/selected_state_variants.dart';
 
 class StyledDotIndicator extends StatefulWidget {

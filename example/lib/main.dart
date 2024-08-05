@@ -14,40 +14,78 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         backgroundColor: Colors.grey.shade200,
-        body: const Center(
+        body: Center(
           child: SingleChildScrollView(
-            padding: EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                TextDivider(text: 'MoonRawAvatar'),
-                StyledAvatar(),
-                TextDivider(text: 'MoonRawPopover'),
-                StyledPopover(),
-                TextDivider(text: 'MoonRawModal'),
-                StyledModal(),
-                TextDivider(text: 'MoonRawToast'),
-                StyledToast(),
-                TextDivider(text: 'MoonRawSegmentedTabControl'),
-                StyledSegmentedTabControl(),
-                TextDivider(text: 'MoonRawDotIndicator'),
-                StyledDotIndicator(),
-                TextDivider(text: 'MoonRawBreadcrumb'),
-                StyledBreadcrumb(),
-                TextDivider(text: 'MoonRawChip'),
-                StyledChip(),
-                TextDivider(text: 'MoonRawRadio'),
-                StyledRadio(),
-                TextDivider(text: 'MoonRawCheckbox'),
-                StyledCheckbox(),
-                TextDivider(text: 'MoonRawMenuItem'),
-                StyledMenuItem(),
-                TextDivider(text: 'MoonRawButton'),
-                StyledButton(),
-                TextDivider(text: 'MoonRawAlert'),
-                StyledAlert(),
-                TextDivider(text: 'MoonRawTag'),
-                StyledTag(),
+                //
+                // Demo button
+                //
+                DemoButton(
+                  leading: const Icon(Icons.widgets_outlined),
+                  title: const SizedBox(
+                    width: 100,
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text("MoonButton"),
+                    ),
+                  ),
+                  trailing: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.greenAccent,
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: const SizedBox(
+                      height: 48,
+                      width: 48,
+                      child: Stack(
+                        alignment: Alignment.topCenter,
+                        children: [
+                          Icon(
+                            Icons.person,
+                            size: 24,
+                          ),
+                          Positioned(
+                            bottom: 0,
+                            child: Text("JD"),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+
+                //
+                const TextDivider(text: 'MoonRawAvatar'),
+                const StyledAvatar(),
+                const TextDivider(text: 'MoonRawPopover'),
+                const StyledPopover(),
+                const TextDivider(text: 'MoonRawModal'),
+                const StyledModal(),
+                const TextDivider(text: 'MoonRawToast'),
+                const StyledToast(),
+                const TextDivider(text: 'MoonRawSegmentedTabControl'),
+                const StyledSegmentedTabControl(),
+                const TextDivider(text: 'MoonRawDotIndicator'),
+                const StyledDotIndicator(),
+                const TextDivider(text: 'MoonRawBreadcrumb'),
+                const StyledBreadcrumb(),
+                const TextDivider(text: 'MoonRawChip'),
+                const StyledChip(),
+                const TextDivider(text: 'MoonRawRadio'),
+                const StyledRadio(),
+                const TextDivider(text: 'MoonRawCheckbox'),
+                const StyledCheckbox(),
+                const TextDivider(text: 'MoonRawMenuItem'),
+                const StyledMenuItem(),
+                const TextDivider(text: 'MoonRawButton'),
+                const StyledButton(),
+                const TextDivider(text: 'MoonRawAlert'),
+                const StyledAlert(),
+                const TextDivider(text: 'MoonRawTag'),
+                const StyledTag(),
               ],
             ),
           ),

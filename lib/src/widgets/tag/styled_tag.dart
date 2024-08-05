@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
-import 'package:moon_core/src/utils/extensions.dart';
 
+import 'package:moon_core/src/utils/extensions.dart';
 import 'package:moon_core/src/widgets/common/base_interactive_widget.dart';
 
 class StyledTag extends StatelessWidget {

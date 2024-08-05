@@ -1,5 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
+
 import 'package:moon_core/src/widgets/avatar/avatar.dart';
 
 class AvatarRectangleClipper extends CustomClipper<Path> {

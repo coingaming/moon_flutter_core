@@ -7,6 +7,7 @@ export 'package:moon_core/src/widgets/avatar/avatar.dart';
 export 'package:moon_core/src/widgets/avatar/styled_avatar.dart';
 export 'package:moon_core/src/widgets/breadcrumb/breadcrumb.dart';
 export 'package:moon_core/src/widgets/breadcrumb/styled_breadcrumb.dart';
+export 'package:moon_core/src/widgets/button/demo_button.dart';
 export 'package:moon_core/src/widgets/button/styled_button.dart';
 export 'package:moon_core/src/widgets/checkbox/styled_checkbox.dart';
 export 'package:moon_core/src/widgets/chip/styled_chip.dart';

@@ -1,7 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+
 import 'package:moon_core/src/widgets/avatar/avatar_circle_clipper.dart';
 import 'package:moon_core/src/widgets/avatar/avatar_rectangle_clipper.dart';
 

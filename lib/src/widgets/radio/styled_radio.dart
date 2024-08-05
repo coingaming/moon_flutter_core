@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
+
 import 'package:moon_core/src/widgets/common/base_single_select_widget.dart';
 import 'package:moon_core/src/widgets/common/variants/selected_state_variants.dart';
 
@@ -29,16 +30,18 @@ class _StyledRadioState extends State<StyledRadio> {
       $box.border.color.black54(),
       $box.width(16),
       $box.shape.circle(),
+      $box.alignment.center(),
       SelectedState.selected(
         $box.border.color.deepPurple.shade600(),
       ),
     );
 
-    final Style iconStyle = Style(
-      $icon.color(Colors.deepPurple),
-      $icon.size(0),
+    final Style innerCircleStyle = Style(
+      $box.color(Colors.deepPurple),
+      $box.shape.circle(),
+      $box.width(0),
       SelectedState.selected(
-        $icon.size(9),
+        $box.width(9),
       ),
     );
 
@@ -67,9 +70,8 @@ class _StyledRadioState extends State<StyledRadio> {
                 style: outerCircleStyle
                     .applyVariant(_getVariant(_Choices.values[index]))
                     .animate(duration: _animationDuration),
-                child: StyledIcon(
-                  Icons.circle,
-                  style: iconStyle
+                child: Box(
+                  style: innerCircleStyle
                       .applyVariant(_getVariant(_Choices.values[index]))
                       .animate(duration: _animationDuration),
                 ),
