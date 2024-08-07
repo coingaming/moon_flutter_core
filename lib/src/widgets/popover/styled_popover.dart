@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 
 import 'package:moon_core/src/widgets/common/base_interactive_widget.dart';
-import 'package:moon_core/src/widgets/popover/popover.dart';
+import 'package:moon_core/src/widgets/common/base_overlay_widget.dart';
 
 class StyledPopover extends StatefulWidget {
   const StyledPopover({super.key});
@@ -16,9 +16,8 @@ class _StyledPopoverState extends State<StyledPopover> {
 
   @override
   Widget build(BuildContext context) {
-    return MoonRawPopover(
+    return MoonBaseOverlay(
       show: _show,
-      popoverPosition: MoonPopoverPosition.vertical,
       onTapOutside: () => setState(() => _show = false),
       target: MoonBaseInteractiveWidget(
         onPress: () => setState(() => _show = !_show),
