@@ -1,6 +1,8 @@
 /// Moon Design headless UI core
 library moon_core;
 
+export 'package:moon_core/src/widgets/accordion/styled_accordion.dart';
+export 'package:moon_core/src/widgets/accordion/accordion.dart';
 export 'package:moon_core/src/widgets/alert/alert.dart';
 export 'package:moon_core/src/widgets/alert/styled_alert.dart';
 export 'package:moon_core/src/widgets/avatar/avatar.dart';

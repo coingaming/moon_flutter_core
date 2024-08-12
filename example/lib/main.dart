@@ -58,6 +58,8 @@ class MainApp extends StatelessWidget {
                 ),
 
                 //
+                const TextDivider(text: 'MoonRawAccordion'),
+                const StyledAccordion(),
                 const TextDivider(text: 'MoonRawAvatar'),
                 const StyledAvatar(),
                 const TextDivider(text: 'MoonRawTooltip'),
