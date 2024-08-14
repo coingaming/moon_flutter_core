@@ -8,10 +8,10 @@ class StyledDropdown extends StatefulWidget {
   const StyledDropdown({super.key});
 
   @override
-  State<StyledDropdown> createState() => _MoonRawSwitchState();
+  State<StyledDropdown> createState() => _StyledDropdownState();
 }
 
-class _MoonRawSwitchState extends State<StyledDropdown> {
+class _StyledDropdownState extends State<StyledDropdown> {
   bool _showChoices = false;
 
   @override
