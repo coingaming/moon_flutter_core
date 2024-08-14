@@ -17,6 +17,7 @@ export 'package:moon_core/src/widgets/common/base_single_select_widget.dart';
 export 'package:moon_core/src/widgets/dot_indicator/styled_dot_indicator.dart';
 export 'package:moon_core/src/widgets/drawer/drawer.dart';
 export 'package:moon_core/src/widgets/drawer/styled_drawer.dart';
+export 'package:moon_core/src/widgets/dropdown/styled_dropdown.dart';
 export 'package:moon_core/src/widgets/menu_item/styled_menu_item.dart';
 export 'package:moon_core/src/widgets/modal/modal.dart';
 export 'package:moon_core/src/widgets/modal/styled_modal.dart';

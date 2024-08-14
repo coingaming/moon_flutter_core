@@ -21,7 +21,7 @@ class MoonBaseOverlay extends StatefulWidget {
   final double distanceToTarget;
 
   /// The margin around the overlay. Prevents the overlay from touching the
-  /// edges of the viewport.
+  /// horizontal edges of the viewport.
   final double overlayMargin;
 
   /// The duration of the overlay transition animation (fade in and out).
@@ -30,9 +30,9 @@ class MoonBaseOverlay extends StatefulWidget {
   /// The curve of the overlay transition animation (fade in and out).
   final Curve transitionCurve;
 
-  /// Sets the overlay position relative to the [target].
+  /// Sets the overlay anchor position relative to the [target].
   /// Defaults to [OverlayPosition.top].
-  final OverlayPosition overlayPosition;
+  final OverlayPosition overlayAnchorPosition;
 
   /// The semantic label for the overlay.
   final String? semanticLabel;
@@ -57,7 +57,7 @@ class MoonBaseOverlay extends StatefulWidget {
     this.overlayMargin = 8.0,
     this.transitionDuration = const Duration(milliseconds: 200),
     this.transitionCurve = Curves.easeInOutCubic,
-    this.overlayPosition = OverlayPosition.top,
+    this.overlayAnchorPosition = OverlayPosition.top,
     this.semanticLabel,
     this.onTap,
     this.onTapOutside,
@@ -99,8 +99,7 @@ class MoonBaseOverlayState extends State<MoonBaseOverlay>
       targetRenderBox.size.centerRight(Offset.zero),
       ancestor: overlayRenderBox,
     );
-
-    OverlayPosition overlayPosition = widget.overlayPosition;
+    OverlayPosition overlayPosition = widget.overlayAnchorPosition;
 
     if (Directionality.of(context) == TextDirection.rtl ||
         overlayPosition == OverlayPosition.horizontal ||
@@ -142,22 +141,20 @@ class MoonBaseOverlayState extends State<MoonBaseOverlay>
     required double overlayTargetGlobalCenter,
     required double overlayTargetGlobalRight,
   }) {
+    final double screenSize = MediaQuery.of(context).size.width;
+
     return switch (overlayPosition) {
       OverlayPosition.top => _OverlayPositionProperties(
           offset: Offset(0, -distanceToTarget),
           targetAnchor: Alignment.topCenter,
           followerAnchor: Alignment.bottomCenter,
-          overlayMaxWidth: overlayWidth -
-              ((overlayWidth / 2 - overlayTargetGlobalCenter) * 2).abs() -
-              widget.overlayMargin * 2,
+          overlayMaxWidth: screenSize - 2 * widget.overlayMargin,
         ),
       OverlayPosition.bottom => _OverlayPositionProperties(
           offset: Offset(0, distanceToTarget),
           targetAnchor: Alignment.bottomCenter,
           followerAnchor: Alignment.topCenter,
-          overlayMaxWidth: overlayWidth -
-              ((overlayWidth / 2 - overlayTargetGlobalCenter) * 2).abs() -
-              widget.overlayMargin * 2,
+          overlayMaxWidth: screenSize - 2 * widget.overlayMargin,
         ),
       OverlayPosition.left => _OverlayPositionProperties(
           offset: Offset(-distanceToTarget, 0),
@@ -177,29 +174,29 @@ class MoonBaseOverlayState extends State<MoonBaseOverlay>
         ),
       OverlayPosition.topLeft => _OverlayPositionProperties(
           offset: Offset(0, -distanceToTarget),
-          targetAnchor: Alignment.topRight,
-          followerAnchor: Alignment.bottomRight,
-          overlayMaxWidth: overlayTargetGlobalRight - widget.overlayMargin,
-        ),
-      OverlayPosition.topRight => _OverlayPositionProperties(
-          offset: Offset(0, -distanceToTarget),
           targetAnchor: Alignment.topLeft,
           followerAnchor: Alignment.bottomLeft,
           overlayMaxWidth:
               overlayWidth - overlayTargetGlobalLeft - widget.overlayMargin,
         ),
-      OverlayPosition.bottomLeft => _OverlayPositionProperties(
-          offset: Offset(0, distanceToTarget),
-          targetAnchor: Alignment.bottomRight,
-          followerAnchor: Alignment.topRight,
+      OverlayPosition.topRight => _OverlayPositionProperties(
+          offset: Offset(0, -distanceToTarget),
+          targetAnchor: Alignment.topRight,
+          followerAnchor: Alignment.bottomRight,
           overlayMaxWidth: overlayTargetGlobalRight - widget.overlayMargin,
         ),
-      OverlayPosition.bottomRight => _OverlayPositionProperties(
+      OverlayPosition.bottomLeft => _OverlayPositionProperties(
           offset: Offset(0, distanceToTarget),
           targetAnchor: Alignment.bottomLeft,
           followerAnchor: Alignment.topLeft,
           overlayMaxWidth:
               overlayWidth - overlayTargetGlobalLeft - widget.overlayMargin,
+        ),
+      OverlayPosition.bottomRight => _OverlayPositionProperties(
+          offset: Offset(0, distanceToTarget),
+          targetAnchor: Alignment.bottomRight,
+          followerAnchor: Alignment.topRight,
+          overlayMaxWidth: overlayTargetGlobalRight - widget.overlayMargin,
         ),
       _ => throw AssertionError("No match: $overlayPosition"),
     };
@@ -284,11 +281,16 @@ class MoonBaseOverlayState extends State<MoonBaseOverlay>
                         widget.onTapOutside?.call();
                         widget.onTap?.call();
                       },
-                      child: FadeTransition(
-                        opacity: _fadeAnimation,
-                        child: Directionality(
-                          textDirection: Directionality.of(context),
-                          child: widget.child,
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxWidth: overlayPositionParameters.overlayMaxWidth,
+                        ),
+                        child: FadeTransition(
+                          opacity: _fadeAnimation,
+                          child: Directionality(
+                            textDirection: Directionality.of(context),
+                            child: widget.child,
+                          ),
                         ),
                       ),
                     ),
