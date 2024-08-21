@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
-import 'package:moon_core/moon_core.dart';
+
+import 'package:moon_core/src/widgets/bottom_sheet/modal_bottom_sheet.dart';
+import 'package:moon_core/src/widgets/common/base_interactive_widget.dart';
 
 class StyledBottomSheet extends StatelessWidget {
   const StyledBottomSheet({super.key});
@@ -8,13 +10,11 @@ class StyledBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Future<dynamic> bottomSheetBuilder(BuildContext context) {
-      return showMoonModalRawBottomSheet(
+      return showMoonRawModalBottomSheet(
         context: context,
-        transitionDuration: const Duration(milliseconds: 2350),
         bottomSheetStyle: Style(
-          $box.height(MediaQuery.of(context).size.height * 0.8),
-          $box.borderRadius.top(32),
-          $box.color(Colors.white),
+          $box.borderRadius.top(24),
+          $box.color(Colors.purple.shade50),
         ),
         builder: (BuildContext context) => Column(
           mainAxisSize: MainAxisSize.min,
@@ -24,7 +24,7 @@ class StyledBottomSheet extends StatelessWidget {
               width: 40,
               margin: const EdgeInsets.symmetric(vertical: 8),
               decoration: const ShapeDecoration(
-                color: Colors.grey,
+                color: Colors.purple,
                 shape: StadiumBorder(),
               ),
             ),
@@ -40,8 +40,9 @@ class StyledBottomSheet extends StatelessWidget {
                   style: Style(
                     $box.width(48),
                     $box.height(48),
+                    $icon.color(Colors.purple),
                   ),
-                  child: const Icon(Icons.close),
+                  child: const StyledIcon(Icons.close),
                   onPress: () => Navigator.of(context).pop(),
                 ),
               ],

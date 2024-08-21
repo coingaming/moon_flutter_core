@@ -3,21 +3,15 @@ import 'dart:async';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
-import 'package:moon_core/src/utils/extensions.dart';
+
 import 'package:moon_core/src/widgets/bottom_sheet/utils/bottom_sheet_custom_scroll_physics.dart';
 import 'package:moon_core/src/widgets/bottom_sheet/utils/scroll_to_top_status_bar.dart';
-
-typedef WidgetWithChildBuilder = Widget Function(
-  BuildContext context,
-  Animation<double> animation,
-  Widget child,
-);
 
 /// The Moon Design raw bottom sheet.
 ///
 /// The MoonRawBottomSheet widget itself is rarely used directly.
 /// Instead, prefer to create a modal bottom sheet with
-/// [showMoonModalRawBottomSheet].
+/// [showMoonRawModalBottomSheet].
 class MoonRawBottomSheet extends StatefulWidget {
   /// Whether the bottom sheet can be dragged vertically and dismissed by
   /// swiping downwards.
@@ -31,10 +25,10 @@ class MoonRawBottomSheet extends StatefulWidget {
   final double closeProgressThreshold;
 
   /// The duration of the bottom sheet transition animation (slide in or out).
-  final Duration? transitionDuration;
+  final Duration transitionDuration;
 
   /// The curve of the bottom sheet transition animation (slide in or out).
-  final Curve? transitionCurve;
+  final Curve transitionCurve;
 
   /// The semantic label for the bottom sheet.
   final String? semanticLabel;
@@ -46,9 +40,8 @@ class MoonRawBottomSheet extends StatefulWidget {
   /// process.
   ///
   /// The bottom sheet may not be fully closed (e.g., due to user interaction)
-  /// even after this callback is called.
-  /// Therefore, this callback may be called multiple times for the same bottom
-  /// sheet.
+  /// even after this callback is called. Therefore, this callback may be called
+  /// multiple times for the same bottom sheet.
   final void Function() onClosing;
 
   /// The callback that is called to determine whether the bottom sheet should
@@ -73,13 +66,13 @@ class MoonRawBottomSheet extends StatefulWidget {
   /// The widget to display inside the bottom sheet as its content.
   final Widget child;
 
-  /// Creates a Moon Design modal bottom sheet.
+  /// Creates a Moon Design raw modal bottom sheet.
   const MoonRawBottomSheet({
     super.key,
     this.enableDrag = true,
     this.closeProgressThreshold = 0.6,
     this.minFlingVelocity = 500.0,
-    this.transitionDuration,
+    this.transitionDuration = const Duration(milliseconds: 350),
     this.transitionCurve = const Cubic(0.0, 0.0, 0.2, 1.0),
     this.semanticLabel,
     this.bottomSheetStyle,
@@ -124,7 +117,7 @@ class MoonRawBottomSheetState extends State<MoonRawBottomSheet>
 
   Curve? _defaultCurve;
 
-  ParametricCurve<double>? transitionCurve;
+  ParametricCurve<double>? _transitionCurve;
 
   DateTime? _startTime;
 
@@ -133,8 +126,6 @@ class MoonRawBottomSheetState extends State<MoonRawBottomSheet>
   // is used to determine the scroll end velocity when attempting to dismiss the
   // modal via dragging.
   VelocityTracker? _velocityTracker;
-
-  bool get needsVerifyShouldClose => widget.shouldClose != null;
 
   bool get _dismissUnderway =>
       widget.animationController.status == AnimationStatus.reverse;
@@ -160,7 +151,7 @@ class MoonRawBottomSheetState extends State<MoonRawBottomSheet>
     });
   }
 
-  FutureOr<bool> shouldClose() async {
+  FutureOr<bool> _shouldClose() async {
     if (_verifyingShouldClose) return false;
     _verifyingShouldClose = true;
 
@@ -173,7 +164,7 @@ class MoonRawBottomSheetState extends State<MoonRawBottomSheet>
   Future<void> _handleDragUpdate(double primaryDelta) async {
     assert(widget.enableDrag, 'Dragging is disabled');
 
-    transitionCurve = Curves.linear;
+    _transitionCurve = Curves.linear;
 
     if (_dismissUnderway) return;
     _isDragging = true;
@@ -183,7 +174,7 @@ class MoonRawBottomSheetState extends State<MoonRawBottomSheet>
     if (widget.shouldClose != null) {
       _cancelClose();
 
-      final bool canClose = await shouldClose();
+      final bool canClose = await _shouldClose();
 
       if (canClose) {
         _close();
@@ -201,12 +192,7 @@ class MoonRawBottomSheetState extends State<MoonRawBottomSheet>
 
     if (_dismissUnderway || !_isDragging) return;
 
-    // transitionCurve = BottomSheetSuspendedCurve(
-    //   widget.animationController.value,
-    //   curve: _defaultCurve!,
-    // );
-    //
-    transitionCurve = Split(
+    _transitionCurve = Split(
       widget.animationController.value,
       beginCurve: _defaultCurve!,
       endCurve: _defaultCurve!,
@@ -218,7 +204,7 @@ class MoonRawBottomSheetState extends State<MoonRawBottomSheet>
       if (widget.shouldClose != null) {
         _cancelClose();
 
-        final bool canClose = await shouldClose();
+        final bool canClose = await _shouldClose();
 
         if (canClose) _close();
       } else {
@@ -267,7 +253,7 @@ class MoonRawBottomSheetState extends State<MoonRawBottomSheet>
       // encompasses a DragEndDetails class, while BouncingScrollPhysics and
       // other physics that permit overflow do not provide drag end information.
 
-      // We utilize the velocity from DragEndDetails if it is accessible.
+      // The velocity from DragEndDetails is utilized if accessible.
       if (notification is ScrollEndNotification) {
         final DragEndDetails? dragDetails = notification.dragDetails;
 
@@ -328,11 +314,15 @@ class MoonRawBottomSheetState extends State<MoonRawBottomSheet>
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    _defaultCurve = widget.transitionCurve;
+    _transitionCurve = _defaultCurve;
+  }
+
+  @override
   Widget build(BuildContext context) {
-    _defaultCurve ??= widget.transitionCurve;
-
-    transitionCurve ??= _defaultCurve;
-
     return ScrollToTopStatusBarHandler(
       scrollController: _scrollController,
       child: AnimatedBuilder(
@@ -341,7 +331,7 @@ class MoonRawBottomSheetState extends State<MoonRawBottomSheet>
           assert(child != null);
 
           final double animationValue =
-              transitionCurve!.transform(widget.animationController.value);
+              _transitionCurve!.transform(widget.animationController.value);
 
           final draggableChild = widget.enableDrag
               ? KeyedSubtree(
@@ -384,16 +374,10 @@ class MoonRawBottomSheetState extends State<MoonRawBottomSheet>
             child: Semantics(
               label: widget.semanticLabel,
               child: Box(
-                style: widget.bottomSheetStyle ??
-                    Style(
-                      $box.height(
-                        MediaQuery.of(context).size.height * 0.8,
-                      ),
-                      $box.color(Colors.white),
-                      $box.borderRadius.top(8),
-                      $with.defaultTextStyle.style.color(Colors.black),
-                      $with.iconTheme.data(color: Colors.black),
-                    ),
+                style: Style(
+                  $box.height(MediaQuery.of(context).size.height * 0.8),
+                  $box.color(Colors.white),
+                ).merge(widget.bottomSheetStyle),
                 child: widget.child,
               ),
             ),
@@ -433,17 +417,9 @@ class _ModalBottomSheetLayout extends SingleChildLayoutDelegate {
 // Used with VelocityTracker.
 // https://github.com/flutter/flutter/pull/64267#issuecomment-694196304
 PointerDeviceKind _defaultPointerDeviceKind(BuildContext context) {
-  final TargetPlatform platform = Theme.of(context).platform;
-
-  switch (platform) {
-    case TargetPlatform.iOS:
-    case TargetPlatform.android:
-      return PointerDeviceKind.touch;
-    case TargetPlatform.linux:
-    case TargetPlatform.macOS:
-    case TargetPlatform.windows:
-      return PointerDeviceKind.mouse;
-    case TargetPlatform.fuchsia:
-      return PointerDeviceKind.unknown;
-  }
+  return switch (Theme.of(context).platform) {
+    TargetPlatform.iOS || TargetPlatform.android => PointerDeviceKind.touch,
+    TargetPlatform.fuchsia => PointerDeviceKind.unknown,
+    _ => PointerDeviceKind.mouse,
+  };
 }

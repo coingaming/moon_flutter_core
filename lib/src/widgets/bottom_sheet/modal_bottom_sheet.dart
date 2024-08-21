@@ -5,8 +5,8 @@ import 'package:mix/mix.dart';
 
 import 'package:moon_core/src/widgets/bottom_sheet/bottom_sheet.dart';
 
-/// Displays a Moon Design modal bottom sheet.
-Future<T?> showMoonModalRawBottomSheet<T>({
+/// Displays a Moon Design raw modal bottom sheet.
+Future<T?> showMoonRawModalBottomSheet<T>({
   required BuildContext context,
   bool enableDrag = true,
   bool isDismissible = true,
@@ -39,7 +39,7 @@ Future<T?> showMoonModalRawBottomSheet<T>({
 
   final T? result =
       await Navigator.of(context, rootNavigator: useRootNavigator).push(
-    MoonModalBottomSheetRoute<T>(
+    _MoonModalBottomSheetRoute<T>(
       enableDrag: enableDrag,
       isDismissible: isDismissible,
       themes: themes,
@@ -59,7 +59,7 @@ Future<T?> showMoonModalRawBottomSheet<T>({
   return result;
 }
 
-class MoonModalBottomSheetRoute<T> extends PageRoute<T> {
+class _MoonModalBottomSheetRoute<T> extends PageRoute<T> {
   final bool enableDrag;
   final bool isDismissible;
   final CapturedThemes? themes;
@@ -73,7 +73,7 @@ class MoonModalBottomSheetRoute<T> extends PageRoute<T> {
   final ScrollController? scrollController;
   final WidgetBuilder builder;
 
-  MoonModalBottomSheetRoute({
+  _MoonModalBottomSheetRoute({
     super.settings,
     this.enableDrag = true,
     this.isDismissible = true,
@@ -129,11 +129,11 @@ class MoonModalBottomSheetRoute<T> extends PageRoute<T> {
 
   @override
   bool canTransitionTo(TransitionRoute<dynamic> nextRoute) =>
-      nextRoute is MoonModalBottomSheetRoute;
+      nextRoute is _MoonModalBottomSheetRoute;
 
   @override
   bool canTransitionFrom(TransitionRoute<dynamic> previousRoute) =>
-      previousRoute is MoonModalBottomSheetRoute || previousRoute is PageRoute;
+      previousRoute is _MoonModalBottomSheetRoute || previousRoute is PageRoute;
 
   @override
   Widget buildPage(
@@ -164,19 +164,19 @@ class MoonModalBottomSheetRoute<T> extends PageRoute<T> {
 class _ModalBottomSheet<T> extends StatefulWidget {
   final bool enableDrag;
   final double closeProgressThreshold;
-  final Duration? transitionDuration;
-  final Curve? transitionCurve;
+  final Duration transitionDuration;
+  final Curve transitionCurve;
   final String? semanticLabel;
   final Style? bottomSheetStyle;
   final AnimationController? animationController;
-  final MoonModalBottomSheetRoute<T> route;
+  final _MoonModalBottomSheetRoute<T> route;
 
   const _ModalBottomSheet({
     super.key,
-    this.enableDrag = true,
+    required this.enableDrag,
     required this.closeProgressThreshold,
-    this.transitionDuration,
-    this.transitionCurve,
+    required this.transitionDuration,
+    required this.transitionCurve,
     this.semanticLabel,
     this.bottomSheetStyle,
     this.animationController,
@@ -191,26 +191,19 @@ class _ModalBottomSheetState<T> extends State<_ModalBottomSheet<T>> {
   ScrollController? _scrollController;
 
   String _getRouteLabel() {
-    final TargetPlatform platform = Theme.of(context).platform;
+    final MaterialLocalizations? materialLocalizations =
+        Localizations.of<MaterialLocalizations>(
+      context,
+      MaterialLocalizations,
+    );
 
-    switch (platform) {
-      case TargetPlatform.iOS:
-      case TargetPlatform.linux:
-      case TargetPlatform.macOS:
-      case TargetPlatform.windows:
-        return '';
-      case TargetPlatform.android:
-      case TargetPlatform.fuchsia:
-        if (Localizations.of<MaterialLocalizations>(
-              context,
-              MaterialLocalizations,
-            ) !=
-            null) {
-          return MaterialLocalizations.of(context).dialogLabel;
-        } else {
-          return const DefaultMaterialLocalizations().dialogLabel;
-        }
-    }
+    return switch (Theme.of(context).platform) {
+      TargetPlatform.android ||
+      TargetPlatform.fuchsia =>
+        materialLocalizations?.dialogLabel ??
+            const DefaultMaterialLocalizations().dialogLabel,
+      _ => '',
+    };
   }
 
   Future<bool> _handleShouldClose() async {
@@ -223,9 +216,7 @@ class _ModalBottomSheetState<T> extends State<_ModalBottomSheet<T>> {
     final Animation<double>? animation = widget.route.animation;
 
     // Used to relay the state of the bottom sheet internal animation controller.
-    if (animation != null) {
-      widget.animationController?.value = animation.value;
-    }
+    if (animation != null) widget.animationController?.value = animation.value;
   }
 
   @override
@@ -273,13 +264,14 @@ class _ModalBottomSheetState<T> extends State<_ModalBottomSheet<T>> {
                 transitionCurve: widget.transitionCurve,
                 semanticLabel: widget.semanticLabel,
                 bottomSheetStyle: widget.bottomSheetStyle,
-                onClosing: () =>
-                    {if (widget.route.isCurrent) Navigator.of(context).pop()},
+                animationController: widget.route._animationController!,
+                scrollController: scrollController,
+                onClosing: () => {
+                  if (widget.route.isCurrent) Navigator.of(context).pop(),
+                },
                 shouldClose: widget.route._hasScopedWillPopCallback
                     ? () => _handleShouldClose()
                     : null,
-                animationController: widget.route._animationController!,
-                scrollController: scrollController,
                 child: child!,
               ),
             );
