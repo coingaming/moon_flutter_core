@@ -5,6 +5,8 @@ export 'package:moon_core/src/widgets/alert/alert.dart';
 export 'package:moon_core/src/widgets/alert/styled_alert.dart';
 export 'package:moon_core/src/widgets/avatar/avatar.dart';
 export 'package:moon_core/src/widgets/avatar/styled_avatar.dart';
+export 'package:moon_core/src/widgets/bottom_sheet/modal_bottom_sheet.dart';
+export 'package:moon_core/src/widgets/bottom_sheet/styled_modal_bottom_sheet.dart';
 export 'package:moon_core/src/widgets/breadcrumb/breadcrumb.dart';
 export 'package:moon_core/src/widgets/breadcrumb/styled_breadcrumb.dart';
 export 'package:moon_core/src/widgets/button/demo_button.dart';

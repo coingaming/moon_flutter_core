@@ -64,6 +64,8 @@ class MainApp extends StatelessWidget {
                 const StyledDropdown(),
                 const TextDivider(text: 'MoonRawTooltip'),
                 const StyledTooltip(),
+                const TextDivider(text: 'MoonRawBottomSheet'),
+                const StyledBottomSheet(),
                 const TextDivider(text: 'MoonRawPopover'),
                 const StyledPopover(),
                 const TextDivider(text: 'MoonRawModal'),
