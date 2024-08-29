@@ -237,12 +237,9 @@ class _MoonRawAccordionState<T> extends State<MoonRawAccordion<T>>
   Widget _buildIcon(BuildContext context) {
     return RotationTransition(
       turns: _halfTween.animate(_expansionCurvedAnimation),
-      child: StyledIcon(
+      child: const Icon(
         Icons.keyboard_arrow_down,
-        style: Style(
-          $icon.size(24),
-          $icon.color(Colors.grey.shade600),
-        ),
+        size: 24,
       ),
     );
   }
@@ -255,12 +252,10 @@ class _MoonRawAccordionState<T> extends State<MoonRawAccordion<T>>
       onPress: _handleTap,
       style: Style(
         $box.decoration(
-          border: widget.hasContentOutside
-              ? null
-              : Border.all(
-                  color: Colors.transparent,
-                  strokeAlign: BorderSide.strokeAlignOutside,
-                ),
+          border: Border.all(
+            color: Colors.transparent,
+            strokeAlign: BorderSide.strokeAlignOutside,
+          ),
         ),
         $box.clipBehavior.hardEdge(),
       ).merge(widget.outerContainerStyle),
@@ -348,115 +343,3 @@ class _MoonRawAccordionState<T> extends State<MoonRawAccordion<T>>
     );
   }
 }
-
-// class XAccordion extends StatefulWidget {
-//   const XAccordion({
-//     super.key,
-//     required this.header,
-//     required this.content,
-//     this.initiallyExpanded = false,
-//     this.headerStyle,
-//     this.contentStyle,
-//   });
-//
-//   final Widget header;
-//   final List<Widget> content;
-//   final Style? headerStyle;
-//   final Style? contentStyle;
-//   final bool initiallyExpanded;
-//
-//   @override
-//   State<XAccordion> createState() => _XAccordionState();
-// }
-//
-// class _XAccordionState extends State<XAccordion> with TickerProviderStateMixin {
-//   late final MixWidgetStateController _stateController;
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//
-//     _stateController = MixWidgetStateController()
-//       ..selected = widget.initiallyExpanded;
-//   }
-//
-//   void _handleTap() {
-//     _stateController.selected = !_stateController.selected;
-//
-//     setState(() {
-//       // Rebuild without widget.children.
-//     });
-//   }
-//
-//   @override
-//   void dispose() {
-//     _stateController.dispose();
-//
-//     super.dispose();
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final Widget content = Offstage(
-//       offstage: !_stateController.selected,
-//       child: TickerMode(
-//         enabled: _stateController.selected,
-//         child: Column(
-//           children: [
-//             // if (widget.showDivider && !widget.hasContentOutside)
-//             Container(height: 1, color: Colors.black),
-//             VBox(
-//               style: Style(
-//                 $box.alignment.bottomLeft(),
-//                 $flex.crossAxisAlignment.center(),
-//               ).merge(widget.contentStyle),
-//               children: widget.content,
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//
-//     return RepaintBoundary(
-//       child: Pressable(
-//         controller: _stateController,
-//         onPress: _handleTap,
-//         child: HBox(
-//           style: widget.headerStyle,
-//           children: [
-//             Column(
-//               children: [
-//                 widget.header,
-//                 if (_stateController.selected)
-//                   Align(
-//                     alignment: Alignment.topCenter,
-//                     child: Offstage(
-//                       offstage: !_stateController.selected,
-//                       child: TickerMode(
-//                         enabled: _stateController.selected,
-//                         child: Column(
-//                           children: [
-//                             // if (widget.showDivider && !widget.hasContentOutside)
-//                             Container(height: 6, color: Colors.grey),
-//                             VBox(
-//                               style: Style(
-//                                       // $box.alignment.bottomLeft(),
-//                                       // $flex.crossAxisAlignment.center(),
-//                                       )
-//                                   .merge(widget.contentStyle),
-//                               children: widget.content,
-//                             ),
-//                           ],
-//                         ),
-//                       ),
-//                     ),
-//                   ),
-//               ],
-//             ),
-//             // widget.header
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }

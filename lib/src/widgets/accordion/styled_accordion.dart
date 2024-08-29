@@ -81,7 +81,7 @@ class _StyledAccordionState extends State<StyledAccordion> {
               setState(() => _currentlyOpenAccordionItem = value),
           header: const Text('Ungrouped MoonRawAccordion'),
           trailingWidget: (BuildContext context, Animation<double> animation) =>
-              Text(animation.value == 1 ? 'Close' : 'Open'),
+              Text(animation.value > 0.5 ? 'Close' : 'Open'),
           children: const [
             Text('This is the content of the accordion.'),
           ],

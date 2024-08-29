@@ -60,10 +60,10 @@ class MoonRawTooltip extends StatelessWidget {
   /// Applies only when [useDefaultTooltipShape] is true.
   final List<BoxShadow>? tooltipShadows;
 
-  /// The tooltip position relative to the [target].
+  /// The tooltip anchor position relative to the [target].
   /// Defaults to [OverlayPosition.top].
   /// Applies only when [useDefaultTooltipShape] is true.
-  final OverlayPosition tooltipPosition;
+  final OverlayPosition tooltipAnchorPosition;
 
   /// The semantic label for the tooltip.
   final String? semanticLabel;
@@ -95,7 +95,7 @@ class MoonRawTooltip extends StatelessWidget {
     this.transitionDuration = const Duration(milliseconds: 200),
     this.transitionCurve = Curves.easeInOutCubic,
     this.tooltipShadows,
-    this.tooltipPosition = OverlayPosition.top,
+    this.tooltipAnchorPosition = OverlayPosition.top,
     this.semanticLabel,
     this.onTap,
     required this.target,
@@ -112,7 +112,7 @@ class MoonRawTooltip extends StatelessWidget {
       key: key,
       show: show,
       semanticLabel: semanticLabel,
-      overlayPosition: tooltipPosition,
+      overlayAnchorPosition: tooltipAnchorPosition,
       distanceToTarget: distanceToTarget + effectiveArrowLength,
       overlayMargin: tooltipMargin,
       transitionCurve: transitionCurve,
@@ -142,7 +142,7 @@ class MoonRawTooltip extends StatelessWidget {
                           borderRadius!.resolve(Directionality.of(context)),
                       borderWidth: borderWidth,
                       childWidth: targetRenderBox?.size.width ?? 0.0,
-                      tooltipPosition: tooltipPosition,
+                      tooltipPosition: tooltipAnchorPosition,
                     ),
                   ),
                   child: child,
