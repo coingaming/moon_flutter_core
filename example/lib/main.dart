@@ -58,6 +58,8 @@ class MainApp extends StatelessWidget {
                 ),
 
                 //
+                const TextDivider(text: 'MoonRawAccordion'),
+                const StyledAccordion(),
                 const TextDivider(text: 'MoonRawLinearProgress'),
                 const StyledLinearProgress(),
                 const TextDivider(text: 'MoonRawCircularProgress'),
