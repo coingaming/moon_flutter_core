@@ -58,8 +58,8 @@ class MainApp extends StatelessWidget {
                 ),
 
                 //
-                const TextDivider(text: 'MoonRawSwitch'),
-                const StyledSwitch(),
+                const TextDivider(text: 'MoonRawCarousel'),
+                const StyledCarousel(),
                 const TextDivider(text: 'MoonRawAccordion'),
                 const StyledAccordion(),
                 const TextDivider(text: 'MoonRawLinearProgress'),
@@ -92,6 +92,8 @@ class MainApp extends StatelessWidget {
                 const StyledBreadcrumb(),
                 const TextDivider(text: 'MoonRawChip'),
                 const StyledChip(),
+                const TextDivider(text: 'MoonRawSwitch'),
+                const StyledSwitch(),
                 const TextDivider(text: 'MoonRawRadio'),
                 const StyledRadio(),
                 const TextDivider(text: 'MoonRawCheckbox'),
