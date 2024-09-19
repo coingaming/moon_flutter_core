@@ -41,6 +41,11 @@ export 'package:moon_core/src/widgets/segmented_tab_control/styled_segmented_tab
 export 'package:moon_core/src/widgets/switch/styled_switch.dart';
 export 'package:moon_core/src/widgets/switch/switch.dart';
 export 'package:moon_core/src/widgets/tag/styled_tag.dart';
+export 'package:moon_core/src/widgets/text_input/form_text_input.dart';
+export 'package:moon_core/src/widgets/text_input/styled_form_text_input.dart';
+export 'package:moon_core/src/widgets/text_input/styled_text_input.dart';
+export 'package:moon_core/src/widgets/text_input/text_input.dart';
+export 'package:moon_core/src/widgets/text_input/text_input_configuration.dart';
 export 'package:moon_core/src/widgets/toast/styled_toast.dart';
 export 'package:moon_core/src/widgets/toast/toast.dart';
 export 'package:moon_core/src/widgets/tooltip/styled_tooltip.dart';

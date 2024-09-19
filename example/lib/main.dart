@@ -58,6 +58,10 @@ class MainApp extends StatelessWidget {
                 ),
 
                 //
+                const TextDivider(text: 'MoonRawTextInput'),
+                const StyledTextInput(),
+                const TextDivider(text: 'MoonRawFormTextInput'),
+                const StyledFormTextInput(),
                 const TextDivider(text: 'MoonRawCarousel'),
                 const StyledCarousel(),
                 const TextDivider(text: 'MoonRawAccordion'),

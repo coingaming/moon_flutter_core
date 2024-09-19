@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-
 import 'package:mix/mix.dart';
 
 class MoonRawToast {
@@ -168,7 +167,7 @@ class MoonRawToast {
 
     Future.delayed(
       _timeBetweenToasts,
-          () {
+      () {
         if (toastEntry.buildContext.mounted) {
           Navigator.of(toastEntry.buildContext).overlay?.insert(_entry!);
         }

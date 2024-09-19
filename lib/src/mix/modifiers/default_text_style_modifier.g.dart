@@ -174,10 +174,10 @@ final class DefaultTextStyleModifierSpecAttribute
       ];
 }
 
-/// Utility class for configuring [DefaultTextStyleModifierSpecAttribute] properties.
+/// Utility class for configuring [DefaultTextStyleModifierSpec] properties.
 ///
-/// This class provides methods to set individual properties of a [DefaultTextStyleModifierSpecAttribute].
-/// Use the methods of this class to configure specific properties of a [DefaultTextStyleModifierSpecAttribute].
+/// This class provides methods to set individual properties of a [DefaultTextStyleModifierSpec].
+/// Use the methods of this class to configure specific properties of a [DefaultTextStyleModifierSpec].
 class DefaultTextStyleModifierSpecUtility<T extends Attribute>
     extends SpecUtility<T, DefaultTextStyleModifierSpecAttribute> {
   /// Utility for defining [DefaultTextStyleModifierSpecAttribute.style]
@@ -203,9 +203,14 @@ class DefaultTextStyleModifierSpecUtility<T extends Attribute>
   late final textWidthBasis =
       TextWidthBasisUtility((v) => only(textWidthBasis: v));
 
-  DefaultTextStyleModifierSpecUtility(super.builder);
+  DefaultTextStyleModifierSpecUtility(super.builder, {super.mutable});
 
-  static final self = DefaultTextStyleModifierSpecUtility((v) => v);
+  DefaultTextStyleModifierSpecUtility<T> get chain =>
+      DefaultTextStyleModifierSpecUtility(attributeBuilder, mutable: true);
+
+  static DefaultTextStyleModifierSpecUtility<
+          DefaultTextStyleModifierSpecAttribute>
+      get self => DefaultTextStyleModifierSpecUtility((v) => v);
 
   /// Returns a new [DefaultTextStyleModifierSpecAttribute] with the specified properties.
   @override

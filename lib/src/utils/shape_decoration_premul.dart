@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+
 import 'package:moon_core/src/utils/color/color_premul_lerp.dart';
 
 // TODO: Remove this once Flutter transitions from straight alpha to premultiplied alpha for color lerping.

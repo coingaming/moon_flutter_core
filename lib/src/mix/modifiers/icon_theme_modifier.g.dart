@@ -52,8 +52,8 @@ mixin _$IconThemeModifierSpec on WidgetModifierSpec<IconThemeModifierSpec> {
   /// compare two [IconThemeModifierSpec] instances for equality.
   @override
   List<Object?> get props => [
-        _$this.data,
-      ];
+    _$this.data,
+  ];
 
   IconThemeModifierSpec get _$this => this as IconThemeModifierSpec;
 }
@@ -111,8 +111,8 @@ final class IconThemeModifierSpecAttribute
   /// compare two [IconThemeModifierSpecAttribute] instances for equality.
   @override
   List<Object?> get props => [
-        data,
-      ];
+    data,
+  ];
 }
 
 /// Utility class for configuring [IconThemeModifierSpecAttribute] properties.
