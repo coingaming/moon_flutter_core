@@ -6,7 +6,7 @@ part of 'icon_theme_data_dto.dart';
 // MixableDtoGenerator
 // **************************************************************************
 
-base mixin _$IconThemeDataDto on Dto<IconThemeData> {
+mixin _$IconThemeDataDto on Dto<IconThemeData> {
   /// Resolves to [IconThemeData] using the provided [MixData].
   ///
   /// If a property is null in the [MixData], it falls back to the
@@ -77,10 +77,10 @@ base mixin _$IconThemeDataDto on Dto<IconThemeData> {
   IconThemeDataDto get _$this => this as IconThemeDataDto;
 }
 
-/// Utility class for configuring [IconThemeDataDto] properties.
+/// Utility class for configuring [IconThemeData] properties.
 ///
-/// This class provides methods to set individual properties of a [IconThemeDataDto].
-/// Use the methods of this class to configure specific properties of a [IconThemeDataDto].
+/// This class provides methods to set individual properties of a [IconThemeData].
+/// Use the methods of this class to configure specific properties of a [IconThemeData].
 class IconThemeDataUtility<T extends Attribute>
     extends DtoUtility<T, IconThemeDataDto, IconThemeData> {
   /// Utility for defining [IconThemeDataDto.color]
