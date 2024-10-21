@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 
 import 'package:moon_core/src/utils/moon_squircle_border.dart';
+import 'package:moon_core/src/utils/shape_decoration_premul.dart';
 import 'package:moon_core/src/widgets/text_input/form_text_input.dart';
 import 'package:moon_core/src/widgets/text_input/text_input_configuration.dart';
 
@@ -19,7 +20,7 @@ class _StyledFormTextInputState extends State<StyledFormTextInput> {
   bool _hidePassword = true;
 
   ShapeDecoration _getBorder(Color color, {double width = 1.5}) =>
-      ShapeDecoration(
+      ShapeDecorationWithPremultipliedAlpha(
         shape: MoonSquircleBorder(
           borderRadius: BorderRadius.circular(8),
           side: BorderSide(color: color, width: width),
