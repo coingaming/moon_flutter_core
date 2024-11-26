@@ -1,6 +1,34 @@
-import 'package:example/text_divider.dart';
+import 'package:example/src/styled_components/accordion.dart';
+import 'package:example/src/styled_components/alert.dart';
+import 'package:example/src/styled_components/auth_code.dart';
+import 'package:example/src/styled_components/avatar.dart';
+import 'package:example/src/styled_components/breadcrumb.dart';
+import 'package:example/src/styled_components/button.dart';
+import 'package:example/src/styled_components/button_demo.dart';
+import 'package:example/src/styled_components/carousel.dart';
+import 'package:example/src/styled_components/checkbox.dart';
+import 'package:example/src/styled_components/chip.dart';
+import 'package:example/src/styled_components/circular_loader.dart';
+import 'package:example/src/styled_components/circular_progress.dart';
+import 'package:example/src/styled_components/dot_indicator.dart';
+import 'package:example/src/styled_components/dropdown.dart';
+import 'package:example/src/styled_components/form_text_input.dart';
+import 'package:example/src/styled_components/linear_loader.dart';
+import 'package:example/src/styled_components/linear_progress.dart';
+import 'package:example/src/styled_components/menu_item.dart';
+import 'package:example/src/styled_components/modal.dart';
+import 'package:example/src/styled_components/modal_bottom_sheet.dart';
+import 'package:example/src/styled_components/popover.dart';
+import 'package:example/src/styled_components/radio.dart';
+import 'package:example/src/styled_components/segmented_tab_control.dart';
+import 'package:example/src/styled_components/switch.dart';
+import 'package:example/src/styled_components/tag.dart';
+import 'package:example/src/styled_components/text_input.dart';
+import 'package:example/src/styled_components/toast.dart';
+import 'package:example/src/styled_components/tooltip.dart';
+import 'package:example/src/text_divider.dart';
+
 import 'package:flutter/material.dart';
-import 'package:moon_core/moon_core.dart';
 
 void main() {
   runApp(const MainApp());
@@ -20,9 +48,6 @@ class MainApp extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                //
-                // Demo button
-                //
                 DemoButton(
                   leading: const Icon(Icons.widgets_outlined),
                   title: const SizedBox(
@@ -56,8 +81,6 @@ class MainApp extends StatelessWidget {
                     ),
                   ),
                 ),
-
-                //
                 const TextDivider(text: 'MoonRawAuthCode'),
                 const StyledAuthCode(),
                 const TextDivider(text: 'MoonRawTextInput'),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:mix/mix.dart';
 
 /// Base widget for interactive widgets (eg. button, chip, tag, menu item etc).
