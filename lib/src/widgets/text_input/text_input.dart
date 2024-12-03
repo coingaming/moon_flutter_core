@@ -71,8 +71,11 @@ class _MoonRawTextInputState extends State<MoonRawTextInput>
       _configuration.hasFloatingLabel &&
       (_effectiveFocusNode.hasFocus || editingValue.isNotEmpty);
 
-  bool get _textAlignIsVerticalTop =>
+  bool get _textAlignVerticalTop =>
       _configuration.textAlignVertical == TextAlignVertical.top;
+
+  bool get _textAlignVerticalBottom =>
+      _configuration.textAlignVertical == TextAlignVertical.bottom;
 
   bool get _showHint => editingValue.isEmpty || _configuration.hasFloatingLabel;
 
@@ -199,6 +202,42 @@ class _MoonRawTextInputState extends State<MoonRawTextInput>
     if (_effectiveController.selection.isCollapsed) {
       _editableText!.toggleToolbar();
     }
+  }
+
+  AlignmentGeometry _getTextVerticalAlignment() {
+    return switch (_configuration.textAlignVertical) {
+      TextAlignVertical.top => AlignmentDirectional.topCenter,
+      TextAlignVertical.center => AlignmentDirectional.center,
+      TextAlignVertical.bottom => AlignmentDirectional.bottomCenter,
+      _ => _configuration.hasFloatingLabel
+          ? Alignment.bottomCenter
+          : Alignment.center
+    };
+  }
+
+  AlignmentDirectional _getHintTextAlignment() {
+    return switch ((
+      _configuration.textAlignVertical,
+      _configuration.textAlign
+    )) {
+      (TextAlignVertical.top, TextAlign.start) => AlignmentDirectional.topStart,
+      (TextAlignVertical.top, TextAlign.center) =>
+        AlignmentDirectional.topCenter,
+      (TextAlignVertical.top, TextAlign.end) => AlignmentDirectional.topEnd,
+      (TextAlignVertical.center, TextAlign.start) =>
+        AlignmentDirectional.centerStart,
+      (TextAlignVertical.center, TextAlign.center) =>
+        AlignmentDirectional.center,
+      (TextAlignVertical.center, TextAlign.end) =>
+        AlignmentDirectional.centerEnd,
+      (TextAlignVertical.bottom, TextAlign.start) =>
+        AlignmentDirectional.bottomStart,
+      (TextAlignVertical.bottom, TextAlign.center) =>
+        AlignmentDirectional.bottomCenter,
+      (TextAlignVertical.bottom, TextAlign.end) =>
+        AlignmentDirectional.bottomEnd,
+      _ => AlignmentDirectional.centerStart,
+    };
   }
 
   @override
@@ -499,14 +538,6 @@ class _MoonRawTextInputState extends State<MoonRawTextInput>
         final EdgeInsets resolvedPadding =
             effectivePadding.resolve(Directionality.of(context));
 
-        final AlignmentDirectional? textAlignVertical =
-            switch (_configuration.textAlignVertical) {
-          TextAlignVertical.top => AlignmentDirectional.topCenter,
-          TextAlignVertical.center => AlignmentDirectional.center,
-          TextAlignVertical.bottom => AlignmentDirectional.bottomCenter,
-          _ => null,
-        };
-
         final Style defaultInputStyle = Style(
           $box.chain
             ..constraints(
@@ -529,9 +560,9 @@ class _MoonRawTextInputState extends State<MoonRawTextInput>
             if (focused) _effectiveFocusNode.requestFocus();
           },
           child: Box(
-            style: defaultInputStyle.merge(_configuration.inputStyle).add(
-                  $box.padding.vertical(0),
-                ),
+            style: defaultInputStyle
+                .merge(_configuration.inputStyle)
+                .add($box.padding.vertical(0)),
             child: StyledRow(
               inherit: true,
               children: [
@@ -540,16 +571,14 @@ class _MoonRawTextInputState extends State<MoonRawTextInput>
                   child: Stack(
                     children: [
                       Align(
-                        alignment: textAlignVertical ??
-                            (_configuration.hasFloatingLabel
-                                ? Alignment.bottomCenter
-                                : Alignment.center),
+                        alignment: _getTextVerticalAlignment(),
                         child: Padding(
                           padding: EdgeInsets.only(
-                            top: resolvedPadding.bottom +
+                            top: resolvedPadding.top +
                                 _configuration.inputTextVerticalOffsetValue +
-                                (_expands || _textAlignIsVerticalTop ? 2 : 0),
-                            bottom: resolvedPadding.bottom,
+                                (_expands || _textAlignVerticalTop ? 2 : 0),
+                            bottom: resolvedPadding.bottom +
+                                (_expands || _textAlignVerticalBottom ? 2 : 0),
                           ),
                           child: child,
                         ),
@@ -558,7 +587,7 @@ class _MoonRawTextInputState extends State<MoonRawTextInput>
                         Padding(
                           padding: EdgeInsets.only(
                             top: resolvedPadding.top,
-                            bottom: resolvedPadding.top,
+                            bottom: resolvedPadding.bottom,
                           ),
                           child: AnimatedScale(
                             alignment: effectiveAlignment,
@@ -568,10 +597,9 @@ class _MoonRawTextInputState extends State<MoonRawTextInput>
                                 : 1.0,
                             child: AnimatedAlign(
                               duration: effectiveTransitionDuration,
-                              alignment:
-                                  _textAlignIsVerticalTop || _animateLabel
-                                      ? AlignmentDirectional.topStart
-                                      : AlignmentDirectional.centerStart,
+                              alignment: _animateLabel
+                                  ? effectiveAlignment
+                                  : _getHintTextAlignment(),
                               child: AnimatedOpacity(
                                 opacity: _showHint ? 1.0 : 0.0,
                                 duration: effectiveTransitionDuration,
@@ -593,10 +621,42 @@ class _MoonRawTextInputState extends State<MoonRawTextInput>
       child: child,
     );
 
-    child = Column(
+    return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        child,
+        TextFieldTapRegion(
+          enabled: _isEnabled,
+          child: IgnorePointer(
+            ignoring: !_isEnabled,
+            child: AnimatedBuilder(
+              animation: _effectiveController, // Changes the _currentLength.
+              builder: (BuildContext context, Widget? child) {
+                final collapsedSelection = TextSelection.collapsed(
+                  offset: _effectiveController.text.length,
+                );
+
+                return Semantics(
+                  maxValueLength: semanticsMaxValueLength,
+                  currentValueLength: _currentLength,
+                  onTap: _configuration.readOnly
+                      ? null
+                      : () {
+                          if (!_effectiveController.selection.isValid) {
+                            _effectiveController.selection = collapsedSelection;
+                          }
+                          _requestKeyboard();
+                        },
+                  onDidGainAccessibilityFocus: handleDidGainAccessibilityFocus,
+                  child: child,
+                );
+              },
+              child: _selectionGestureDetectorBuilder.buildGestureDetector(
+                behavior: HitTestBehavior.translucent,
+                child: child,
+              ),
+            ),
+          ),
+        ),
         if (_configuration.helper != null || (_configuration.errorText != null))
           RepaintBoundary(
             child: FocusableActionDetector(
@@ -605,6 +665,7 @@ class _MoonRawTextInputState extends State<MoonRawTextInput>
               child: Pressable(
                 enabled: _isEnabled,
                 controller: _mixStateController,
+                mouseCursor: MouseCursor.defer,
                 child: Box(
                   style: Style().merge(_configuration.helperStyle),
                   child: _configuration.errorText != null
@@ -617,39 +678,6 @@ class _MoonRawTextInputState extends State<MoonRawTextInput>
             ),
           ),
       ],
-    );
-
-    return TextFieldTapRegion(
-      child: IgnorePointer(
-        ignoring: !_isEnabled,
-        child: AnimatedBuilder(
-          animation: _effectiveController, // Changes the _currentLength.
-          builder: (BuildContext context, Widget? child) {
-            final collapsedSelection = TextSelection.collapsed(
-              offset: _effectiveController.text.length,
-            );
-
-            return Semantics(
-              maxValueLength: semanticsMaxValueLength,
-              currentValueLength: _currentLength,
-              onTap: _configuration.readOnly
-                  ? null
-                  : () {
-                      if (!_effectiveController.selection.isValid) {
-                        _effectiveController.selection = collapsedSelection;
-                      }
-                      _requestKeyboard();
-                    },
-              onDidGainAccessibilityFocus: handleDidGainAccessibilityFocus,
-              child: child,
-            );
-          },
-          child: _selectionGestureDetectorBuilder.buildGestureDetector(
-            behavior: HitTestBehavior.translucent,
-            child: child,
-          ),
-        ),
-      ),
     );
   }
 }
