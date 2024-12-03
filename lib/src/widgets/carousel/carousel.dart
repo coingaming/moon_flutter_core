@@ -590,7 +590,7 @@ class _MoonCarouselScrollPosition extends ScrollPositionWithSingleContext
   }
 }
 
-/// The physics for the [MoonRawCarousel].
+/// The scroll physics for the [MoonRawCarousel].
 class MoonCarouselScrollPhysics extends ScrollPhysics {
   /// Extends [FixedExtentScrollPhysics] for carousel behavior. If
   /// [MoonRawCarousel.loop] is false, friction is applied when scrolling

@@ -49,77 +49,32 @@ class MoonRawAlert extends StatefulWidget {
   State<MoonRawAlert> createState() => _MoonRawAlertState();
 }
 
-class _MoonRawAlertState extends State<MoonRawAlert>
-    with SingleTickerProviderStateMixin {
-  bool _isVisible = true;
-
-  AnimationController? _animationController;
-  Animation<double>? _curvedAnimation;
-
-  void _showAlert() {
-    if (!mounted) return;
-    _animationController!.forward();
-
-    setState(() => _isVisible = true);
-
-    widget.onVisibilityChanged?.call(true);
-  }
-
-  void _hideAlert() {
-    _animationController!.reverse().then<void>((void value) {
-      if (!mounted) return;
-
-      setState(() => _isVisible = false);
-
-      widget.onVisibilityChanged?.call(false);
-    });
-  }
+class _MoonRawAlertState extends State<MoonRawAlert> {
+  late bool _isVisible;
 
   @override
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((Duration _) {
-      if (!mounted) return;
-
-      if (_isVisible) _animationController!.value = 1.0;
-    });
-  }
-
-  @override
-  void didUpdateWidget(MoonRawAlert oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    if (oldWidget.show != widget.show) {
-      widget.show ? _showAlert() : _hideAlert();
-    }
-  }
-
-  @override
-  void dispose() {
-    _animationController!.dispose();
-
-    super.dispose();
+    _isVisible = widget.show;
   }
 
   @override
   Widget build(BuildContext context) {
-    _animationController ??= AnimationController(
-      duration: widget.transitionDuration,
-      vsync: this,
-    );
-
-    _curvedAnimation ??= CurvedAnimation(
-      parent: _animationController!,
-      curve: widget.transitionCurve,
-    );
-
-    return Visibility(
-      visible: _isVisible,
-      child: Semantics(
-        label: widget.semanticLabel,
-        child: FadeTransition(
-          opacity: _curvedAnimation!,
+    return Semantics(
+      label: widget.semanticLabel,
+      child: AnimatedOpacity(
+        opacity: widget.show ? 1 : 0,
+        duration: widget.transitionDuration,
+        curve: widget.transitionCurve,
+        onEnd: () {
+          setState(() {
+            _isVisible = widget.show;
+            widget.onVisibilityChanged?.call(widget.show);
+          });
+        },
+        child: Visibility(
+          visible: widget.show || _isVisible,
           child: Box(
             style: widget.style,
             child: widget.child,

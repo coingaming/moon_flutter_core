@@ -19,7 +19,7 @@ class MoonRawBreadcrumbItem {
   /// The main content of the breadcrumb item.
   final Widget child;
 
-  /// Creates a Moon Design breadcrumb item.
+  /// Creates a Moon Design raw breadcrumb item.
   const MoonRawBreadcrumbItem({
     this.semanticLabel,
     this.style,

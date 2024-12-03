@@ -77,7 +77,7 @@ class MoonRawTooltip extends StatelessWidget {
   /// The child widget to display inside the tooltip as its content.
   final Widget child;
 
-  /// Creates a Moon Design tooltip.
+  /// Creates a Moon Design raw tooltip.
   const MoonRawTooltip({
     super.key,
     required this.show,

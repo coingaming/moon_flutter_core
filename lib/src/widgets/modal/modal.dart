@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// Displays a modal overlay with entrance/exit animations, barrier color,
-/// and behavior. Allows dismissing the dialog by tapping on the barrier.
+/// and behavior. Allows dismissing the modal by tapping on the barrier.
 Future<T?> showMoonRawModal<T>({
   bool barrierDismissible = true,
   bool useRootNavigator = true,

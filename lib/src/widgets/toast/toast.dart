@@ -8,10 +8,8 @@ class MoonRawToast {
   static const double _toastTravelDistance = 64.0;
   static const Duration _timeBetweenToasts = Duration(milliseconds: 200);
 
-  static final _toastQueue = <_ToastEntry>[];
-
-  static Timer? _timer;
-  static OverlayEntry? _entry;
+  static final List<_ToastEntry> _toastQueue = [];
+  static bool _isDisplaying = false;
 
   /// Creates a Moon Design raw toast.
   const MoonRawToast();
@@ -61,7 +59,7 @@ class MoonRawToast {
       to: Navigator.of(effectiveContext).context,
     );
 
-    final OverlayEntry entry = OverlayEntry(
+    final OverlayEntry overlayEntry = OverlayEntry(
       builder: (BuildContext _) {
         return TweenAnimationBuilder(
           duration: transitionDuration,
@@ -120,66 +118,48 @@ class MoonRawToast {
       },
     );
 
-    final _ToastEntry toastEntry =
-        _ToastEntry(buildContext: effectiveContext, overlayEntry: entry);
+    final _ToastEntry toastEntry = _ToastEntry(
+      overlayEntry: overlayEntry,
+      context: effectiveContext,
+      displayDuration: displayDuration,
+    );
 
     _toastQueue.add(toastEntry);
 
-    if (_timer == null) _showAndRemoveToastOverlay(duration: displayDuration);
+    if (!_isDisplaying) _processQueue();
   }
 
-  /// Clear the toast queue.
-  static void clearToastQueue() {
-    _timer?.cancel();
-    _timer = null;
+  static Future<void> _processQueue() async {
+    _isDisplaying = true;
 
-    if (_entry == null) return;
+    while (_toastQueue.isNotEmpty) {
+      final _ToastEntry toastEntry = _toastQueue.removeAt(0);
 
-    _entry?.remove();
-    _entry = null;
+      if (!toastEntry.context.mounted) continue;
 
-    _toastQueue.clear();
-  }
+      Navigator.of(toastEntry.context).overlay?.insert(toastEntry.overlayEntry);
 
-  /// Show and remove the toast overlay.
-  static void _showAndRemoveToastOverlay({required Duration duration}) {
-    if (_toastQueue.isEmpty) {
-      _entry = null;
-      return;
+      await Future<void>.delayed(toastEntry.displayDuration);
+
+      toastEntry.overlayEntry.remove();
+
+      await Future<void>.delayed(_timeBetweenToasts);
     }
 
-    final toastEntry = _toastQueue.removeAt(0);
-
-    if (!toastEntry.buildContext.mounted) {
-      clearToastQueue();
-      return;
-    }
-
-    _entry = toastEntry.overlayEntry;
-    _timer = Timer(duration, () {
-      _timer?.cancel();
-      _timer = null;
-
-      _entry?.remove();
-      _entry = null;
-
-      _showAndRemoveToastOverlay(duration: duration);
-    });
-
-    Future.delayed(
-      _timeBetweenToasts,
-      () {
-        if (toastEntry.buildContext.mounted) {
-          Navigator.of(toastEntry.buildContext).overlay?.insert(_entry!);
-        }
-      },
-    );
+    _isDisplaying = false;
   }
+
+  static void clearQueue() => _toastQueue.clear();
 }
 
 class _ToastEntry {
-  final BuildContext buildContext;
   final OverlayEntry overlayEntry;
+  final BuildContext context;
+  final Duration displayDuration;
 
-  _ToastEntry({required this.buildContext, required this.overlayEntry});
+  _ToastEntry({
+    required this.overlayEntry,
+    required this.context,
+    required this.displayDuration,
+  });
 }

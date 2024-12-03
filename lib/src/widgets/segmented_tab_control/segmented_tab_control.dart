@@ -74,9 +74,10 @@ class _MoonRawSegmentedTabControlState extends State<MoonRawSegmentedTabControl>
   }
 
   void _updateTabs(int newIndex) {
-    if (newIndex >= 0 &&
-        newIndex < widget.tabs.length &&
-        newIndex != _selectedIndex) {
+    final bool isValidIndex = newIndex >= 0 && newIndex < widget.tabs.length;
+    final bool isDifferentIndex = newIndex != _selectedIndex;
+
+    if (isValidIndex && isDifferentIndex) {
       _selectedIndex = newIndex;
 
       widget.onTabChanged?.call(newIndex);

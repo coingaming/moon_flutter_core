@@ -18,7 +18,7 @@ class MoonRawCircularLoader extends StatelessWidget {
   /// The shape of the end of the stroke (stroke-cap) for the circular loader.
   final StrokeCap strokeCap;
 
-  /// Creates a Moon Design circular loader.
+  /// Creates a Moon Design raw circular loader.
   const MoonRawCircularLoader({
     super.key,
     this.color = Colors.grey,
