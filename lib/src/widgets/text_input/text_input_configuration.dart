@@ -31,7 +31,8 @@ class MoonTextInputConfiguration {
   final bool hasFloatingLabel;
 
   /// The vertical offset applied to the input text. Provides more detailed
-  /// control over text input positioning.
+  /// control over text input vertical positioning.
+  /// Does not apply to the [hint] widget.
   final double inputTextVerticalOffsetValue;
 
   /// Scale value for floating label animation.
@@ -540,6 +541,7 @@ class MoonTextInputConfiguration {
         keyboardType = keyboardType ??
             (maxLines == 1 ? TextInputType.text : TextInputType.multiline),
         assert(maxLength == null || maxLength == noMaxLength || maxLength > 0),
+        assert(inputTextVerticalOffsetValue >= 0),
         assert(obscuringCharacter.length == 1),
         assert(maxLines == null || maxLines > 0),
         assert(minLines == null || minLines > 0),
