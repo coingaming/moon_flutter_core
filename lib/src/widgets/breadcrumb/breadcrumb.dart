@@ -60,8 +60,10 @@ class _MoonBreadcrumbState extends State<MoonRawBreadcrumb> {
         )
         .toList();
 
-    if (widget.items.length > resolvedItemCountToShow &&
-        resolvedItemCountToShow > 1) {
+    final bool hasMoreItems = widget.items.length > resolvedItemCountToShow;
+    final bool hasMultipleItemsToShow = resolvedItemCountToShow > 1;
+
+    if (hasMoreItems && hasMultipleItemsToShow) {
       customizedVisibleItemsList.insert(
         1,
         Row(
@@ -112,9 +114,7 @@ class _MoonBreadcrumbState extends State<MoonRawBreadcrumb> {
 
   Widget _buildDivider() =>
       widget.divider ??
-      Text(
-        Directionality.of(context) == TextDirection.ltr ? '/' : '\\',
-      );
+      Text(Directionality.of(context) == TextDirection.ltr ? '/' : '\\');
 
   @override
   Widget build(BuildContext context) {

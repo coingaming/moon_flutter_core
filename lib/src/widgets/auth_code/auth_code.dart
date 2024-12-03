@@ -283,23 +283,25 @@ class _MoonRawAuthCodeState extends State<MoonRawAuthCode>
   void _debounceBlink() {
     _hasPeeked = true;
 
-    if (widget.peekWhenObscuring &&
-        _textEditingController.text.length >
-            _inputList.where((x) => x.isNotEmpty).length) {
+    final bool hasText = _textEditingController.text.length >
+        _inputList.where((x) => x.isNotEmpty).length;
+
+    if (widget.peekWhenObscuring && hasText) {
       _setState(() => _hasPeeked = false);
 
       if (_peekDebounce?.isActive ?? false) _peekDebounce!.cancel();
 
-      _peekDebounce = Timer(widget.peekDuration, () {
-        _setState(() => _hasPeeked = true);
-      });
+      _peekDebounce = Timer(
+        widget.peekDuration,
+        () => _setState(() => _hasPeeked = true),
+      );
     }
   }
 
   void _onFocus() {
-    if (!widget.autoUnfocus ||
-        !_focusNode.hasFocus ||
-        MediaQuery.of(context).viewInsets.bottom != 0) {
+    final bool shouldFocus = !widget.autoUnfocus || !_focusNode.hasFocus;
+
+    if (shouldFocus || MediaQuery.of(context).viewInsets.bottom != 0) {
       _focusNode.requestFocus();
       return;
     }
@@ -447,11 +449,9 @@ class _MoonRawAuthCodeState extends State<MoonRawAuthCode>
     final bool showObscured = !widget.peekWhenObscuring ||
         (widget.peekWhenObscuring && _hasPeeked) ||
         index != _inputList.where((x) => x.isNotEmpty).length - 1;
+    final obscureText = isFieldFilled && showObscured && widget.obscureText;
 
-    if (showObscured &&
-        widget.obscureText &&
-        isFieldFilled &&
-        widget.obscuringWidget != null) {
+    if (obscureText && widget.obscuringWidget != null) {
       return widget.obscuringWidget!;
     }
 
@@ -573,17 +573,17 @@ class _MoonRawAuthCodeState extends State<MoonRawAuthCode>
                                   isActive: _selectedIndex > index,
                                   child: Builder(
                                     builder: (BuildContext context) {
-                                      _effectiveTextStyle = widget
-                                              .inputFieldStyle
-                                              ?.of(context)
-                                              .resolvableOf<TextSpec,
+                                      final MixData? mixData =
+                                          widget.inputFieldStyle?.of(context);
+
+                                      _effectiveTextStyle = mixData
+                                              ?.resolvableOf<TextSpec,
                                                   TextSpecAttribute>()
                                               ?.style ??
                                           const TextStyle(fontSize: 24);
 
-                                      _effectiveHeight = widget.inputFieldStyle
-                                              ?.of(context)
-                                              .resolvableOf<BoxSpec,
+                                      _effectiveHeight = mixData
+                                              ?.resolvableOf<BoxSpec,
                                                   BoxSpecAttribute>()
                                               ?.height ??
                                           56;

@@ -45,7 +45,7 @@ class _StyledAlertState extends State<StyledAlert> {
         return Column(
           children: [
             MoonRawAlert(
-              show: index == 0 && show,
+              show: (index > 0) || index == 0 && show,
               style: alertStyle,
               child: StyledColumn(
                 style: Style(
@@ -67,10 +67,14 @@ class _StyledAlertState extends State<StyledAlert> {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    children: const [
-                      Icon(Icons.info_outline),
-                      Expanded(child: Text("MoonAlert")),
-                      Icon(Icons.close),
+                    children: [
+                      const Icon(Icons.info_outline),
+                      const Expanded(child: Text("MoonAlert")),
+                      IconButton(
+                        onPressed: () =>
+                            index == 0 ? setState(() => show = !show) : null,
+                        icon: const Icon(Icons.close),
+                      ),
                     ],
                   ),
                   const Text("This is a MoonAlert widget."),

@@ -153,17 +153,13 @@ class _MoonRawAccordionState<T> extends State<MoonRawAccordion<T>>
   void _handleTap() {
     setState(() {
       _isExpanded = !_isExpanded;
-      if (_isExpanded) {
-        _expansionAnimationController.forward();
-      } else {
-        _expansionAnimationController.reverse().then<void>((void value) {
-          if (!mounted) return;
 
-          setState(() {
-            // Rebuild without widget.children.
-          });
-        });
-      }
+      _isExpanded
+          ? _expansionAnimationController.forward()
+          : _expansionAnimationController.reverse().then<void>((void value) {
+              if (mounted) setState(() {}); // Rebuild without widget.children.
+            });
+
       PageStorage.maybeOf(context)?.writeState(context, _isExpanded);
     });
 
@@ -192,9 +188,7 @@ class _MoonRawAccordionState<T> extends State<MoonRawAccordion<T>>
     _expansionAnimationController.addListener(_animationListener);
 
     WidgetsBinding.instance.addPostFrameCallback((Duration _) {
-      if (!mounted) return;
-
-      if (_isExpanded) _expansionAnimationController.value = 1.0;
+      if (mounted & _isExpanded) _expansionAnimationController.value = 1.0;
     });
   }
 
@@ -209,17 +203,12 @@ class _MoonRawAccordionState<T> extends State<MoonRawAccordion<T>>
     _isExpanded = widget._selected;
 
     setState(() {
-      if (_isExpanded) {
-        _expansionAnimationController.forward();
-      } else {
-        _expansionAnimationController.reverse().then<void>((void value) {
-          if (!mounted) return;
+      _isExpanded
+          ? _expansionAnimationController.forward()
+          : _expansionAnimationController.reverse().then<void>((void value) {
+              if (mounted) setState(() {}); // Rebuild without widget.children.
+            });
 
-          setState(() {
-            // Rebuild without widget.children.
-          });
-        });
-      }
       PageStorage.maybeOf(context)?.writeState(context, _isExpanded);
     });
   }

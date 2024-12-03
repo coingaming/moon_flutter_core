@@ -67,7 +67,7 @@ class MoonRawBottomSheet extends StatefulWidget {
   /// The widget to display inside the bottom sheet as its content.
   final Widget child;
 
-  /// Creates a Moon Design raw modal bottom sheet.
+  /// Creates a Moon Design raw bottom sheet.
   const MoonRawBottomSheet({
     super.key,
     this.enableDrag = true,

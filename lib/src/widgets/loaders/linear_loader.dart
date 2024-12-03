@@ -15,7 +15,7 @@ class MoonRawLinearLoader extends StatelessWidget {
   /// The height of the linear loader.
   final double height;
 
-  /// Creates a Moon Design linear loader.
+  /// Creates a Moon Design raw linear loader.
   const MoonRawLinearLoader({
     super.key,
     this.borderRadius = const BorderRadius.all(Radius.circular(8)),

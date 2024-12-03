@@ -51,12 +51,40 @@ class StyledButton extends StatelessWidget {
     return MoonBaseInteractiveWidget(
       onPress: () {},
       style: buttonStyle,
-      child: const StyledRow(
+      child: StyledRow(
         inherit: true,
         children: [
-          Icon(Icons.widgets_outlined),
-          Text("MoonButton"),
-          Icon(Icons.widgets_outlined),
+          const Icon(Icons.widgets_outlined),
+          const SizedBox(
+            width: 100,
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text("MoonButton"),
+            ),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.greenAccent,
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            child: const SizedBox(
+              height: 48,
+              width: 48,
+              child: Stack(
+                alignment: Alignment.topCenter,
+                children: [
+                  Icon(
+                    Icons.person,
+                    size: 24,
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    child: Text("JD"),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
