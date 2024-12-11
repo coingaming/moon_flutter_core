@@ -25,12 +25,6 @@ class MoonRawSegmentedTab {
   /// The styling options for the segmented tab.
   final Style? tabStyle;
 
-  /// Called when the focus state of the [Focus] changes.
-  ///
-  /// Called with true when the [Focus] node gains focus and false when the
-  /// [Focus] node loses focus.
-  final dynamic Function(bool)? onFocusChange;
-
   /// The callback that returns the current selection status of the segmented tab
   /// as a boolean value.
   final ValueChanged<bool>? isSelected;
@@ -46,7 +40,6 @@ class MoonRawSegmentedTab {
     this.focusNode,
     this.tabStyle,
     this.semanticLabel,
-    this.onFocusChange,
     this.isSelected,
     this.child,
   });
