@@ -93,6 +93,8 @@ class _MoonRawSegmentedTabControlState extends State<MoonRawSegmentedTabControl>
     _controller?.animation?.addListener(_handleTabChange);
 
     _selectedIndex = _controller?.index ?? widget.initialIndex;
+
+    _updateTabsSelectedStatus(_selectedIndex);
   }
 
   @override
@@ -114,7 +116,6 @@ class _MoonRawSegmentedTabControlState extends State<MoonRawSegmentedTabControl>
           focusNode: widget.tabs[index].focusNode,
           semanticLabel: widget.tabs[index].semanticLabel,
           style: widget.tabs[index].tabStyle,
-          onFocusChange: widget.tabs[index].onFocusChange,
           onPress: () => _updateTabs(index),
           child: widget.tabs[index].child!,
         );
