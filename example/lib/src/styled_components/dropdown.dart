@@ -21,7 +21,7 @@ class _StyledDropdownState extends State<StyledDropdown> {
       show: _showChoices,
       onTapOutside: () => setState(() => _showChoices = false),
       target: MoonBaseInteractiveWidget(
-        onPress: () => setState(() => _showChoices = !_showChoices),
+        onTap: () => setState(() => _showChoices = !_showChoices),
         child: HBox(
           style: Style(
             $box.width(200),

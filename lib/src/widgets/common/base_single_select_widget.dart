@@ -96,7 +96,7 @@ class MoonBaseSingleSelectWidget<T> extends StatelessWidget {
         enableFeedback: enableFeedback,
         style: style,
         onFocusChange: onFocusChange,
-        onPress: onChanged == null
+        onTap: onChanged == null
             ? null
             : () => onChanged!(_isSelected && toggleable ? null : value),
         child: child,

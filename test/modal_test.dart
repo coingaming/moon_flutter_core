@@ -176,7 +176,7 @@ class _ModalTestWidget extends StatelessWidget {
             builder: (BuildContext context) {
               return MoonBaseInteractiveWidget(
                 key: _showButtonKey,
-                onPress: () => showMoonRawModal<void>(
+                onTap: () => showMoonRawModal<void>(
                   context: context,
                   barrierDismissible: isDismissible,
                   routeSettings: routeSettings,
@@ -188,7 +188,7 @@ class _ModalTestWidget extends StatelessWidget {
                         MoonBaseInteractiveWidget(
                           key: _closeButtonKey,
                           child: const Text("Close modal"),
-                          onPress: () => Navigator.of(context).pop(),
+                          onTap: () => Navigator.of(context).pop(),
                         ),
                       ],
                     );

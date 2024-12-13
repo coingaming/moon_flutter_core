@@ -58,7 +58,7 @@ class _StyledChipState extends State<StyledChip> {
     return Column(
       children: [
         MoonBaseInteractiveWidget(
-          onPress: () {},
+          onTap: () {},
           style: chipStyle,
           child: const StyledRow(
             inherit: true,

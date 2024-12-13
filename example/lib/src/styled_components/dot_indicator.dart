@@ -67,7 +67,7 @@ class _StyledDotIndicatorState extends State<StyledDotIndicator> {
               )
                   .applyVariant(_variant(index))
                   .animate(duration: const Duration(milliseconds: 200)),
-              onPress: () => setState(() => _selectedDot = index),
+              onTap: () => setState(() => _selectedDot = index),
               child: Center(
                 child: StyledText('$index'),
               ),

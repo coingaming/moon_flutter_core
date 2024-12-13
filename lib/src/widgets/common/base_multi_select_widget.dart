@@ -109,7 +109,7 @@ class MoonBaseMultiSelectWidget extends StatelessWidget {
         enableFeedback: enableFeedback,
         style: style,
         onFocusChange: onFocusChange,
-        onPress: onChanged == null ? null : () => _handleTap(),
+        onTap: onChanged == null ? null : () => _handleTap(),
         child: child,
       ),
     );

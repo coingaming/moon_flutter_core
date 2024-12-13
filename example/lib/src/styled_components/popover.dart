@@ -20,7 +20,7 @@ class _StyledPopoverState extends State<StyledPopover> {
       show: _show,
       onTapOutside: () => setState(() => _show = false),
       target: MoonBaseInteractiveWidget(
-        onPress: () => setState(() => _show = !_show),
+        onTap: () => setState(() => _show = !_show),
         style: Style(
           $box.color(Colors.deepPurpleAccent),
           $box.padding(8, 16),
@@ -44,7 +44,7 @@ class _StyledPopoverState extends State<StyledPopover> {
               $box.borderRadius(8),
             ),
             child: const Text("Close popover"),
-            onPress: () => setState(() => _show = false),
+            onTap: () => setState(() => _show = false),
           ),
         ),
       ),

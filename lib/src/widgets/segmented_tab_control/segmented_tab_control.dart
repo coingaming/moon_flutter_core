@@ -116,7 +116,7 @@ class _MoonRawSegmentedTabControlState extends State<MoonRawSegmentedTabControl>
           focusNode: widget.tabs[index].focusNode,
           semanticLabel: widget.tabs[index].semanticLabel,
           style: widget.tabs[index].tabStyle,
-          onPress: () => _updateTabs(index),
+          onTap: () => _updateTabs(index),
           child: widget.tabs[index].child!,
         );
 

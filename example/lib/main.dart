@@ -52,7 +52,7 @@ class MainApp extends StatelessWidget {
             $text.style.color(Colors.white),
           ),
           child: const StyledText("Tap to open Drawer"),
-          onPress: () => Scaffold.of(context).openDrawer(),
+          onTap: () => Scaffold.of(context).openDrawer(),
         );
       },
     );

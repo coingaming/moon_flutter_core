@@ -16,7 +16,7 @@ class StyledToast extends StatelessWidget {
         $box.borderRadius(8),
         $text.style.color(Colors.white),
       ),
-      onPress: () => MoonRawToast.show(
+      onTap: () => MoonRawToast.show(
         context,
         style: Style(
           $box.color(Colors.black87),

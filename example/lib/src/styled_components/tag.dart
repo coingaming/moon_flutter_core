@@ -10,7 +10,7 @@ class StyledTag extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MoonBaseInteractiveWidget(
-      onPress: () {},
+      onTap: () {},
       style: Style(
         // box
         $box.color(Colors.white),

@@ -38,7 +38,7 @@ class StyledMenuItem extends StatelessWidget {
     );
 
     return MoonBaseInteractiveWidget(
-      onPress: () {},
+      onTap: () {},
       style: menuItemStyle,
       child: StyledRow(
         inherit: true,

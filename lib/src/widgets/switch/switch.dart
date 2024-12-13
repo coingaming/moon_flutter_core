@@ -238,7 +238,7 @@ class _MoonRawSwitchState extends State<MoonRawSwitch>
           $box.height(24),
           $box.width(44),
         ).merge(widget.switchStyle),
-        onPress: _handleTap,
+        onTap: _handleTap,
         child: RepaintBoundary(
           child: AnimatedBuilder(
             animation: _animationController,

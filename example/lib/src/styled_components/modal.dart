@@ -16,7 +16,7 @@ class StyledModal extends StatelessWidget {
         $box.borderRadius(8),
         $text.style.color(Colors.white),
       ),
-      onPress: () => showMoonRawModal<void>(
+      onTap: () => showMoonRawModal<void>(
         context: context,
         transitionDuration: const Duration(milliseconds: 300),
         builder: (BuildContext context) {
@@ -36,7 +36,7 @@ class StyledModal extends StatelessWidget {
                   $box.borderRadius(8),
                 ),
                 child: const Text("Close modal"),
-                onPress: () => Navigator.of(context).pop(),
+                onTap: () => Navigator.of(context).pop(),
               ),
             ),
           );

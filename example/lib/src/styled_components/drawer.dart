@@ -31,7 +31,7 @@ class StyledDrawer extends StatelessWidget {
                   $text.style.color(Colors.white),
                 ),
                 child: const StyledText("Close"),
-                onPress: () => Navigator.of(context).pop(),
+                onTap: () => Navigator.of(context).pop(),
               );
             },
           ),
