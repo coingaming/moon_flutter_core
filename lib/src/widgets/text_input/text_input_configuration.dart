@@ -44,11 +44,17 @@ class MoonTextInputConfiguration {
   /// The curve of the text input transition animation.
   final Curve? transitionCurve;
 
-  /// A builder to build the text input error widget.
+  /// A builder to build and customise the text input [errorText] widget.
+  /// If errorBuilder is not provided, default [MoonErrorMessage] is used to
+  /// display the [errorText].
   final MoonTextInputErrorBuilder? errorBuilder;
 
   /// The error text can be used to force text input into an error state
   /// (useful for asynchronous errors).
+  ///
+  /// In order to customise the error, use the [errorBuilder] property.
+  /// If [errorBuilder] is not provided, default [MoonErrorMessage] is used to
+  /// display the errorText.
   ///
   /// The validator errors take precedence over the provided [errorText].
   final String? errorText;
@@ -60,7 +66,7 @@ class MoonTextInputConfiguration {
   /// The style of the text input container.
   final Style? inputStyle;
 
-  /// The style of the helper/error container.
+  /// The style of the both helper and error container based on the state.
   final Style? helperStyle;
 
   /// The widget to display before the text input.
