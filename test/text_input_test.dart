@@ -545,7 +545,7 @@ class _TextInputTestWidget extends StatelessWidget {
                   ),
                   MoonBaseInteractiveWidget(
                     key: _submitButtonKey,
-                    onPress: () => Form.of(context).validate(),
+                    onTap: () => Form.of(context).validate(),
                     child: const Text("Submit"),
                   ),
                 ],
