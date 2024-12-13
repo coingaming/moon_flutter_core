@@ -311,7 +311,7 @@ class _TooltipTestWidgetState extends State<_TooltipTestWidget> {
                 onTap: () => setState(() => _show = false),
                 target: MoonBaseInteractiveWidget(
                   child: const Text(_target),
-                  onPress: () => setState(() => _show = true),
+                  onTap: () => setState(() => _show = true),
                 ),
                 child: const Text(_tooltipContent),
               ),

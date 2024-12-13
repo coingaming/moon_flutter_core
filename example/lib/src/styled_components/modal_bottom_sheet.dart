@@ -43,7 +43,7 @@ class StyledBottomSheet extends StatelessWidget {
                     $icon.color(Colors.purple),
                   ),
                   child: const StyledIcon(Icons.close),
-                  onPress: () => Navigator.of(context).pop(),
+                  onTap: () => Navigator.of(context).pop(),
                 ),
               ],
             ),
@@ -83,7 +83,7 @@ class StyledBottomSheet extends StatelessWidget {
             $text.style.color(Colors.white),
           ),
           child: const StyledText("Show bottom sheet"),
-          onPress: () => bottomSheetBuilder(context),
+          onTap: () => bottomSheetBuilder(context),
         );
       },
     );

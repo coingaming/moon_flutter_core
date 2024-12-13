@@ -139,7 +139,7 @@ class _BreadcrumbItemBuilder extends StatelessWidget {
     return MoonBaseInteractiveWidget(
       semanticLabel: item.semanticLabel,
       style: item.style,
-      onPress: onTap,
+      onTap: onTap,
       child: item.child,
     );
   }

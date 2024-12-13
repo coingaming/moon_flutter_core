@@ -79,7 +79,7 @@ void main() {
         home: Scaffold(
           key: globalKey,
           body: MoonBaseInteractiveWidget(
-            onPress: () {
+            onTap: () {
               MoonRawToast.show(
                 globalKey.currentContext!,
                 child: const Text(_toastLabel),
@@ -193,7 +193,7 @@ class _ToastTestWidget extends StatelessWidget {
         body: Builder(
           builder: (context) {
             return MoonBaseInteractiveWidget(
-              onPress: () {
+              onTap: () {
                 MoonRawToast.show(
                   context,
                   toastAlignment: toastAlignment!,

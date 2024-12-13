@@ -191,7 +191,7 @@ class _BottomSheetTestWidget extends StatelessWidget {
           builder: (BuildContext context) {
             return MoonBaseInteractiveWidget(
               key: _showBottomSheetButtonKey,
-              onPress: () => bottomSheetBuilder(context),
+              onTap: () => bottomSheetBuilder(context),
               child: const Text("Show"),
             );
           },

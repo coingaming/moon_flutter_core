@@ -49,7 +49,7 @@ class StyledButton extends StatelessWidget {
     );
 
     return MoonBaseInteractiveWidget(
-      onPress: () {},
+      onTap: () {},
       style: buttonStyle,
       child: StyledRow(
         inherit: true,

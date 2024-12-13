@@ -89,7 +89,7 @@ class _StyledAlertState extends State<StyledAlert> {
                   $box.margin(8),
                   $box.padding(8.0, 16.0),
                 ),
-                onPress: () => setState(() => show = !show),
+                onTap: () => setState(() => show = !show),
                 child: const Text('Toggle Alert'),
               ),
           ],

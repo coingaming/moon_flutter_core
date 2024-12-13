@@ -43,11 +43,11 @@ class MoonBaseInteractiveWidget extends StatelessWidget {
   ///
   /// If this callback and [onLongPress] are null, then widget will be disabled
   /// automatically.
-  final VoidCallback? onPress;
+  final VoidCallback? onTap;
 
   /// The callback that is called when widget is long-pressed.
   ///
-  /// If this callback and [onPress] are null, then widget will be disabled
+  /// If this callback and [onTap] are null, then widget will be disabled
   /// automatically.
   final VoidCallback? onLongPress;
 
@@ -71,7 +71,7 @@ class MoonBaseInteractiveWidget extends StatelessWidget {
     this.hitTestBehavior = HitTestBehavior.opaque,
     this.semanticLabel,
     this.style,
-    this.onPress,
+    this.onTap,
     this.onLongPress,
     this.onFocusChange,
     required this.child,
@@ -82,18 +82,18 @@ class MoonBaseInteractiveWidget extends StatelessWidget {
     return Semantics(
       label: semanticLabel,
       child: MouseRegion(
-        cursor: (enabled && onPress != null || onLongPress != null)
+        cursor: (enabled && onTap != null || onLongPress != null)
             ? SystemMouseCursors.click
             : SystemMouseCursors.basic,
         child: PressableBox(
           autofocus: autofocus,
           focusNode: focusNode,
-          enabled: enabled && onPress != null || onLongPress != null,
+          enabled: enabled && onTap != null || onLongPress != null,
           enableFeedback: enableFeedback,
           hitTestBehavior: hitTestBehavior,
           unpressDelay: unpressDelay,
           onFocusChange: onFocusChange,
-          onPress: onPress,
+          onPress: onTap,
           onLongPress: onLongPress,
           style: style,
           child: child,
