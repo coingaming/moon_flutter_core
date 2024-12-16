@@ -81,23 +81,18 @@ class MoonBaseInteractiveWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Semantics(
       label: semanticLabel,
-      child: MouseRegion(
-        cursor: (enabled && onTap != null || onLongPress != null)
-            ? SystemMouseCursors.click
-            : SystemMouseCursors.basic,
-        child: PressableBox(
-          autofocus: autofocus,
-          focusNode: focusNode,
-          enabled: enabled && onTap != null || onLongPress != null,
-          enableFeedback: enableFeedback,
-          hitTestBehavior: hitTestBehavior,
-          unpressDelay: unpressDelay,
-          onFocusChange: onFocusChange,
-          onPress: onTap,
-          onLongPress: onLongPress,
-          style: style,
-          child: child,
-        ),
+      child: PressableBox(
+        autofocus: autofocus,
+        focusNode: focusNode,
+        enabled: enabled && onTap != null || onLongPress != null,
+        enableFeedback: enableFeedback,
+        hitTestBehavior: hitTestBehavior,
+        unpressDelay: unpressDelay,
+        onFocusChange: onFocusChange,
+        onPress: enabled ? onTap : null,
+        onLongPress: enabled ? onLongPress : null,
+        style: style,
+        child: child,
       ),
     );
   }
