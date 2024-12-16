@@ -82,7 +82,7 @@ void main() {
   });
 
   testWidgets(
-      "First widget remains selected if its 'groupValue' is always the same",
+      "Widget remains selected if its 'groupValue' always matches its value",
       (WidgetTester tester) async {
     await tester.pumpWidget(
       const _BaseSingleSelectTestWidget(
@@ -101,7 +101,7 @@ void main() {
   });
 
   testWidgets(
-      "First widget is not selectable if its 'groupValue' never matches its 'value'",
+      "Widget is not selectable if its 'groupValue' never matches its 'value'",
       (WidgetTester tester) async {
     await tester.pumpWidget(
       const _BaseSingleSelectTestWidget(
@@ -141,16 +141,35 @@ void main() {
     await tester.pumpWidget(
       _BaseSingleSelectTestWidget(
         customOnChanged: true,
-        onChanged: (_Choice? choice) {
-          selectedValue = choice;
-        },
+        onChanged: (_Choice? choice) => selectedValue = choice,
       ),
     );
 
     await tester.tap(secondWidget);
     await tester.pumpAndSettle();
 
-    expect(selectedValue, equals(_Choice.second));
+    expect(selectedValue, _Choice.second);
+  });
+
+  testWidgets("Single select widget has correct semantic label",
+      (WidgetTester tester) async {
+    const String firstSemanticLabel = "First widget";
+    const String secondSemanticLabel = "Second widget";
+
+    await tester.pumpWidget(
+      const _BaseSingleSelectTestWidget(
+        firstWidgetSemanticLabel: firstSemanticLabel,
+        secondWidgetSemanticLabel: secondSemanticLabel,
+      ),
+    );
+
+    final Finder firstWidgetWithSemanticLabel =
+        find.bySemanticsLabel(firstSemanticLabel);
+    final Finder secondWidgetWithSemanticLabel =
+        find.bySemanticsLabel(secondSemanticLabel);
+
+    expect(firstWidgetWithSemanticLabel, findsOneWidget);
+    expect(secondWidgetWithSemanticLabel, findsOneWidget);
   });
 }
 
@@ -158,12 +177,16 @@ class _BaseSingleSelectTestWidget extends StatefulWidget {
   final bool toggleable;
   final bool customOnChanged;
   final _Choice? firstWidgetGroupValue;
+  final String? firstWidgetSemanticLabel;
+  final String? secondWidgetSemanticLabel;
   final void Function(_Choice?)? onChanged;
 
   const _BaseSingleSelectTestWidget({
     this.toggleable = false,
     this.customOnChanged = false,
     this.firstWidgetGroupValue,
+    this.firstWidgetSemanticLabel,
+    this.secondWidgetSemanticLabel,
     this.onChanged,
   });
 
@@ -184,6 +207,7 @@ class _BaseSingleSelectTestWidgetState
           children: [
             MoonBaseSingleSelectWidget(
               key: _firstRadioKey,
+              semanticLabel: widget.firstWidgetSemanticLabel,
               toggleable: widget.toggleable,
               value: _Choice.first,
               groupValue: widget.firstWidgetGroupValue ?? _value,
@@ -194,6 +218,7 @@ class _BaseSingleSelectTestWidgetState
             ),
             MoonBaseSingleSelectWidget(
               key: _secondRadioKey,
+              semanticLabel: widget.secondWidgetSemanticLabel,
               toggleable: widget.toggleable,
               value: _Choice.second,
               groupValue: _value,
