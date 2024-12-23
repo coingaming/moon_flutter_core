@@ -73,10 +73,10 @@ class _MoonBreadcrumbState extends State<MoonRawBreadcrumb> {
                   () => setState(() => showFullPath = true),
               item: widget.showMoreWidget ??
                   const MoonRawBreadcrumbItem(
-                    semanticLabel: 'Show full path',
+                    semanticLabel: "Show full path",
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 8),
-                      child: Text('...'),
+                      child: Text("..."),
                     ),
                   ),
             ),
@@ -114,7 +114,7 @@ class _MoonBreadcrumbState extends State<MoonRawBreadcrumb> {
 
   Widget _buildDivider() =>
       widget.divider ??
-      Text(Directionality.of(context) == TextDirection.ltr ? '/' : '\\');
+      Text(Directionality.of(context) == TextDirection.ltr ? "/" : "\\");
 
   @override
   Widget build(BuildContext context) {

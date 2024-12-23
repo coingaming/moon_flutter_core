@@ -32,6 +32,13 @@ class _StyledAuthCodeState extends State<StyledAuthCode> {
         authInputFieldCount: 4,
         errorAnimationType: ErrorAnimationType.shake,
         authFieldCursorColor: Colors.orange,
+        hint: const Padding(
+          padding: EdgeInsets.only(top: 8),
+          child: Text(
+            "This is hint",
+            style: TextStyle(color: Colors.grey),
+          ),
+        ),
         inputFieldStyle: Style(
           $box.shapeDecoration.as(_getBorder(Colors.grey)),
           $flex.chain
@@ -54,16 +61,14 @@ class _StyledAuthCodeState extends State<StyledAuthCode> {
           $with.defaultTextStyle.style.fontSize(24),
         ).animate(duration: const Duration(milliseconds: 200)),
         validator: (String? pin) =>
-            (pin != null && pin != '0000' && pin.length == 4)
-                ? 'The input must be exactly "0000".'
+            (pin != null && pin != "0000" && pin.length == 4)
+                ? "The input must be exactly '0000'."
                 : null,
-        errorBuilder: (BuildContext context, String? errorText) => Align(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 8),
-            child: Text(
-              errorText ?? '',
-              style: const TextStyle(color: Colors.red),
-            ),
+        errorBuilder: (BuildContext context, String? errorText) => Padding(
+          padding: const EdgeInsets.only(top: 8),
+          child: Text(
+            errorText ?? "",
+            style: const TextStyle(color: Colors.red),
           ),
         ),
       ),

@@ -44,14 +44,14 @@ Future<T?> showMoonRawModal<T>({
 bool _debugIsActive(BuildContext context) {
   if (context is Element && !context.debugIsActive) {
     throw FlutterError.fromParts(<DiagnosticsNode>[
-      ErrorSummary('This BuildContext is no longer valid.'),
+      ErrorSummary("This BuildContext is no longer valid."),
       ErrorDescription(
-        'The BuildContext passed to showMoonRawModal is no longer valid.',
+        "The BuildContext passed to showMoonRawModal is no longer valid.",
       ),
       ErrorHint(
-        'This often happens when showMoonRawModal is called after awaiting a '
-        'Future, causing the BuildContext to refer to a disposed widget. Use a '
-        'parent context instead.',
+        "This often happens when showMoonRawModal is called after awaiting a "
+        "Future, causing the BuildContext to refer to a disposed widget. Use a "
+        "parent context instead.",
       ),
     ]);
   }

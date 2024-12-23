@@ -12,23 +12,15 @@ class StyledTag extends StatelessWidget {
     return MoonBaseInteractiveWidget(
       onTap: () {},
       style: Style(
-        // box
         $box.color(Colors.white),
         $box.borderRadius(4.0),
         $box.padding(4.0, 8.0),
         $flex.gap(2.0),
-        // flex
         $flex.mainAxisSize.min(),
-        // icon ($with.iconTheme gets fully supressed by this)
-        //$icon.size(12),
         $with.iconTheme.data(
           color: Colors.black,
           size: 12,
         ),
-
-        // text ($with.defaultTextStyle gets partially suppressed by this)
-        //$text.style.fontSize(12),
-
         $with.defaultTextStyle.style(
           color: Colors.black,
           fontSize: 12,

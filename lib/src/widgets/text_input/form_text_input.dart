@@ -47,7 +47,7 @@ class MoonRawFormTextInput extends FormField<String> {
               bucket: field.bucket,
               child: MoonRawTextInput(
                 textInputConfiguration: configuration.copyWith(
-                  restorationId: 'editable',
+                  restorationId: "editable",
                   errorText:
                       field.errorText ?? textInputConfiguration?.errorText,
                   controller:
@@ -86,7 +86,7 @@ class _MoonFormTextInputState extends FormFieldState<String> {
   void _registerController() {
     assert(_controller != null);
 
-    registerForRestoration(_controller!, 'controller');
+    registerForRestoration(_controller!, "controller");
   }
 
   void _createLocalController([TextEditingValue? value]) {
@@ -176,7 +176,7 @@ class _MoonFormTextInputState extends FormFieldState<String> {
   @override
   void reset() {
     // SetState is handled by the superclass, no extra call needed.
-    _effectiveController.text = widget.initialValue ?? '';
+    _effectiveController.text = widget.initialValue ?? "";
 
     super.reset();
   }

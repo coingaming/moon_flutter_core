@@ -152,7 +152,7 @@ class _MoonRawTextInputState extends State<MoonRawTextInput>
   void _registerController() {
     assert(_controller != null);
 
-    registerForRestoration(_controller!, 'controller');
+    registerForRestoration(_controller!, "controller");
   }
 
   void _createLocalController([TextEditingValue? value]) {
@@ -337,7 +337,7 @@ class _MoonRawTextInputState extends State<MoonRawTextInput>
           _configuration.style!.inherit == false &&
           (_configuration.style!.fontSize == null ||
               _configuration.style!.textBaseline == null)),
-      'Inherit false style must supply fontSize and textBaseline.',
+      "Inherit false style must supply fontSize and textBaseline.",
     );
 
     final FocusNode focusNode = _effectiveFocusNode;
@@ -491,7 +491,7 @@ class _MoonRawTextInputState extends State<MoonRawTextInput>
           paintCursorAboveText: paintCursorAboveText,
           readOnly: _configuration.readOnly || !_isEnabled,
           rendererIgnoresPointer: true,
-          restorationId: 'editable',
+          restorationId: "editable",
           scribbleEnabled: _configuration.scribbleEnabled,
           scrollController: _configuration.scrollController,
           scrollPadding: _configuration.scrollPadding,

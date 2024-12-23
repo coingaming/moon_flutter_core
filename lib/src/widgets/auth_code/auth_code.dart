@@ -123,6 +123,10 @@ class MoonRawAuthCode extends StatefulWidget {
   /// A builder to build the auth code error widget.
   final MoonAuthCodeErrorBuilder errorBuilder;
 
+  /// The hint to display below the auth code when provided.
+  /// Auth code hint is not be visible in error state.
+  final Widget? hint;
+
   /// The character or placeholder to display in the auth code input field when
   /// its value is empty.
   final Widget? hintCharacter;
@@ -164,6 +168,7 @@ class MoonRawAuthCode extends StatefulWidget {
     this.onSubmitted,
     this.onEditingComplete,
     required this.errorBuilder,
+    this.hint,
     this.hintCharacter,
     this.obscuringWidget,
   }) : assert(authInputFieldCount > 0);
@@ -568,6 +573,7 @@ class _MoonRawAuthCodeState extends State<MoonRawAuthCode>
                             (int index) => RepaintBoundary(
                               child: Pressable(
                                 enabled: widget.enabled,
+                                mouseCursor: SystemMouseCursors.text,
                                 controller: _stateControllers[index],
                                 child: ActiveStateVariant(
                                   isActive: _selectedIndex > index,
@@ -610,6 +616,7 @@ class _MoonRawAuthCodeState extends State<MoonRawAuthCode>
                 ],
               ),
             ),
+            if (!_isInErrorMode && widget.hint != null) widget.hint!,
             if (_isInErrorMode)
               widget.errorBuilder(
                 context,

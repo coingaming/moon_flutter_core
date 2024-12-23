@@ -49,7 +49,7 @@ class _StyledAvatarState extends State<StyledAvatar> {
                 $text.style.color(Colors.white),
                 $text.style.fontSize(8),
               ),
-              child: const StyledText('Flutter'),
+              child: const StyledText("Flutter"),
             ),
             content: Box(
               style: Style(
@@ -63,7 +63,7 @@ class _StyledAvatarState extends State<StyledAvatar> {
                 $text.style.color(Colors.white),
                 $text.style.fontSize(16),
               ),
-              child: const StyledText('MD'),
+              child: const StyledText("MD"),
             ),
           ),
         ),
@@ -83,7 +83,7 @@ class _StyledAvatarState extends State<StyledAvatar> {
               $text.style.color(Colors.white),
               $text.style.fontSize(8),
             ),
-            child: const StyledText('3'),
+            child: const StyledText("3"),
           ),
           content: Box(
             style: Style(

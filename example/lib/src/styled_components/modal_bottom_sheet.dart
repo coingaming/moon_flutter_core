@@ -33,7 +33,7 @@ class StyledBottomSheet extends StatelessWidget {
                 const SizedBox(width: 48),
                 const Expanded(
                   child: Center(
-                    child: Text('Pick your choice!'),
+                    child: Text("Pick your choice!"),
                   ),
                 ),
                 MoonBaseInteractiveWidget(

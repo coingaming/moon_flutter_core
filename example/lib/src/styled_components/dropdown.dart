@@ -56,7 +56,7 @@ class _StyledDropdownState extends State<StyledDropdown> {
           ),
           children: List.generate(
             3,
-            (int index) => Text('Choose menu item nr ${index + 1}.'),
+            (int index) => Text("Choose menu item nr ${index + 1}."),
           ),
         ),
       ),

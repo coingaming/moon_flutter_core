@@ -27,9 +27,9 @@ class StyledToast extends StatelessWidget {
           $flex.gap(8),
           $flex.mainAxisSize.min(),
         ),
-        child: const StyledText('This is toast content!'),
+        child: const StyledText("This is toast content!"),
       ),
-      child: const StyledText('Show toast'),
+      child: const StyledText("Show toast"),
     );
   }
 }

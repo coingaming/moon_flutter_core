@@ -97,7 +97,7 @@ class _StyledSegmentedTabControlState extends State<StyledSegmentedTabControl>
               tabStyle: pillTabStyle
                   .animate(duration: _duration)
                   .applyVariant(_getVariant(index, hasController: false)),
-              child: StyledText('Tab ${index + 1}'),
+              child: StyledText("Tab ${index + 1}"),
             ),
           ),
         ),
@@ -120,7 +120,7 @@ class _StyledSegmentedTabControlState extends State<StyledSegmentedTabControl>
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  StyledText('Tab ${index + 1}'),
+                  StyledText("Tab ${index + 1}"),
                   Positioned(
                     left: 0,
                     right: 0,
@@ -157,7 +157,7 @@ class _StyledSegmentedTabControlState extends State<StyledSegmentedTabControl>
                   child: ColoredBox(
                     color: Colors.deepPurpleAccent.shade100,
                     child: Center(
-                      child: Text('Tab ${index + 1} content'),
+                      child: Text("Tab ${index + 1} content"),
                     ),
                   ),
                 ),

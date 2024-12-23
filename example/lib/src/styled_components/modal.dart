@@ -42,7 +42,7 @@ class StyledModal extends StatelessWidget {
           );
         },
       ),
-      child: const StyledText('Show modal'),
+      child: const StyledText("Show modal"),
     );
   }
 }

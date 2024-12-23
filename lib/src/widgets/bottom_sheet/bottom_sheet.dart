@@ -100,7 +100,7 @@ class MoonRawBottomSheet extends StatefulWidget {
   ) {
     return AnimationController(
       duration: duration,
-      debugLabel: 'MoonBottomSheet',
+      debugLabel: "MoonBottomSheet",
       vsync: vsync,
     );
   }
@@ -108,7 +108,7 @@ class MoonRawBottomSheet extends StatefulWidget {
 
 class MoonRawBottomSheetState extends State<MoonRawBottomSheet>
     with TickerProviderStateMixin {
-  final GlobalKey _childKey = GlobalKey(debugLabel: 'BottomSheet child');
+  final GlobalKey _childKey = GlobalKey(debugLabel: "BottomSheet child");
 
   // Used in NotificationListener to identify distinct ScrollNotification events
   // before and after the dragging gesture.
@@ -163,7 +163,7 @@ class MoonRawBottomSheetState extends State<MoonRawBottomSheet>
   }
 
   Future<void> _handleDragUpdate(double primaryDelta) async {
-    assert(widget.enableDrag, 'Dragging is disabled');
+    assert(widget.enableDrag, "Dragging is disabled");
 
     _transitionCurve = Curves.linear;
 
@@ -189,7 +189,7 @@ class MoonRawBottomSheetState extends State<MoonRawBottomSheet>
   }
 
   Future<void> _handleDragEnd(double velocity) async {
-    assert(widget.enableDrag, 'Dragging is disabled');
+    assert(widget.enableDrag, "Dragging is disabled");
 
     if (_dismissUnderway || !_isDragging) return;
 

@@ -66,7 +66,7 @@ class MoonRawAvatar extends StatelessWidget {
     required this.content,
   })  : assert(
           badge != null || !showBadge,
-          'If showBadge is true, badge can not be null.',
+          "If showBadge is true, badge can not be null.",
         ),
         avatarClipperBorderRadius = null,
         badgeClipperBorderRadius = null,
@@ -88,7 +88,7 @@ class MoonRawAvatar extends StatelessWidget {
     required this.content,
   })  : assert(
           badge != null || !showBadge,
-          'If showBadge is true, badge can not be null.',
+          "If showBadge is true, badge can not be null.",
         ),
         badgeSizeValue = null;
 

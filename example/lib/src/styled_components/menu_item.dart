@@ -10,14 +10,11 @@ class StyledMenuItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Style menuItemStyle = Style(
-      // box
       $box.color(Colors.white.withOpacity(0)),
       $box.borderRadius(8),
       $box.padding(16.0),
       $box.border(color: Colors.grey),
-      // flex
       $flex.gap(16.0),
-      // default
       $with.defaultTextStyle.style(
         color: Colors.black,
         fontSize: 16,
@@ -27,8 +24,6 @@ class StyledMenuItem extends StatelessWidget {
         color: Colors.grey,
         size: 24,
       ),
-
-      // states
       ($on.hover | $on.focus | $on.press | $on.longPress)(
         $box.color(Colors.grey.withOpacity(0.2)),
       ),

@@ -37,7 +37,7 @@ class _StyledBreadcrumbState extends State<StyledBreadcrumb> {
       items: List.generate(
         _pagesCount,
         (int index) {
-          final String itemName = index == 0 ? 'Home' : 'Page $index';
+          final String itemName = index == 0 ? "Home" : "Page $index";
 
           return MoonRawBreadcrumbItem(
             style: Style(

@@ -40,7 +40,7 @@ class _StyledTooltipState extends State<StyledTooltip> {
       ),
       child: const Padding(
         padding: EdgeInsets.all(8.0),
-        child: Text('This is tooltip'),
+        child: Text("This is tooltip"),
       ),
     );
   }

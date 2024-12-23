@@ -81,10 +81,10 @@ abstract class MoonBaseProgressIndicator extends StatefulWidget {
 
     properties.add(
       PercentProperty(
-        'value',
+        "value",
         value,
         showName: false,
-        ifNull: '<indeterminate>',
+        ifNull: "<indeterminate>",
       ),
     );
   }
@@ -96,7 +96,7 @@ abstract class MoonBaseProgressIndicator extends StatefulWidget {
     String? expandedSemanticsValue = semanticsValue;
 
     if (value != null) {
-      expandedSemanticsValue ??= '${(value! * 100).round()}%';
+      expandedSemanticsValue ??= "${(value! * 100).round()}%";
     }
 
     return Semantics(

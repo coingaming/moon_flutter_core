@@ -49,7 +49,7 @@ class _StyledAccordionState extends State<StyledAccordion> {
           ),
           onExpansionChanged: (AccordionItems? value) =>
               setState(() => _currentlyOpenAccordionItem = value),
-          header: const Text('Grouped MoonRawAccordion'),
+          header: const Text("Grouped MoonRawAccordion"),
           trailingWidget: (BuildContext context, Animation<double> animation) =>
               RotationTransition(
             turns: Tween<double>(begin: 0.0, end: 0.5).animate(animation),
@@ -61,7 +61,7 @@ class _StyledAccordionState extends State<StyledAccordion> {
             height: 1,
           ),
           children: const [
-            Text('This is the content of the accordion.'),
+            Text("This is the content of the accordion."),
           ],
         ),
         const SizedBox(height: 32),
@@ -80,11 +80,11 @@ class _StyledAccordionState extends State<StyledAccordion> {
           ),
           onExpansionChanged: (AccordionItems? value) =>
               setState(() => _currentlyOpenAccordionItem = value),
-          header: const Text('Ungrouped MoonRawAccordion'),
+          header: const Text("Ungrouped MoonRawAccordion"),
           trailingWidget: (BuildContext context, Animation<double> animation) =>
-              Text(animation.value > 0.5 ? 'Close' : 'Open'),
+              Text(animation.value > 0.5 ? "Close" : "Open"),
           children: const [
-            Text('This is the content of the accordion.'),
+            Text("This is the content of the accordion."),
           ],
         ),
       ],

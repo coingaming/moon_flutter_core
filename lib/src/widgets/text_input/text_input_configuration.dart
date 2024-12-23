@@ -557,23 +557,23 @@ class MoonTextInputConfiguration {
         ),
         assert(
           !expands || (maxLines == null && minLines == null),
-          'MinLines and maxLines must be null when expands is true.',
+          "MinLines and maxLines must be null when expands is true.",
         ),
         assert(
           !obscureText || maxLines == 1,
-          'Obscured fields cannot be multiline.',
+          "Obscured fields cannot be multiline.",
         ),
         // Ensure no unexpected changes occur in the users set value.
         assert(
           !identical(textInputAction, TextInputAction.newline) ||
               maxLines == 1 ||
               !identical(keyboardType, TextInputType.text),
-          'Use keyboardType TextInputType.multiline when using '
-          'TextInputAction.newline on a multiline MoonTextInput.',
+          "Use keyboardType TextInputType.multiline when using "
+          "TextInputAction.newline on a multiline MoonTextInput.",
         ),
         assert(
           !hasFloatingLabel || !expands,
-          'Expandable text input cannot have a floating label.',
+          "Expandable text input cannot have a floating label.",
         );
 
   MoonTextInputConfiguration copyWith({
@@ -745,77 +745,77 @@ void textInputDebugFillProperties(
 ) {
   properties.add(
     DiagnosticsProperty<TextEditingController>(
-      'controller',
+      "controller",
       textInputConfiguration.controller,
       defaultValue: null,
     ),
   );
   properties.add(
     DiagnosticsProperty<FocusNode>(
-      'focusNode',
+      "focusNode",
       textInputConfiguration.focusNode,
       defaultValue: null,
     ),
   );
   properties.add(
     DiagnosticsProperty<UndoHistoryController>(
-      'undoController',
+      "undoController",
       textInputConfiguration.undoController,
       defaultValue: null,
     ),
   );
   properties.add(
     DiagnosticsProperty<bool>(
-      'enabled',
+      "enabled",
       textInputConfiguration.enabled,
       defaultValue: null,
     ),
   );
   properties.add(
     DiagnosticsProperty<TextInputType>(
-      'keyboardType',
+      "keyboardType",
       textInputConfiguration.keyboardType,
       defaultValue: TextInputType.text,
     ),
   );
   properties.add(
     DiagnosticsProperty<TextStyle>(
-      'style',
+      "style",
       textInputConfiguration.style,
       defaultValue: null,
     ),
   );
   properties.add(
     DiagnosticsProperty<bool>(
-      'autofocus',
+      "autofocus",
       textInputConfiguration.autofocus,
       defaultValue: false,
     ),
   );
   properties.add(
     DiagnosticsProperty<String>(
-      'obscuringCharacter',
+      "obscuringCharacter",
       textInputConfiguration.obscuringCharacter,
       defaultValue: '•',
     ),
   );
   properties.add(
     DiagnosticsProperty<bool>(
-      'obscureText',
+      "obscureText",
       textInputConfiguration.obscureText,
       defaultValue: false,
     ),
   );
   properties.add(
     DiagnosticsProperty<bool>(
-      'autocorrect',
+      "autocorrect",
       textInputConfiguration.autocorrect,
       defaultValue: true,
     ),
   );
   properties.add(
     EnumProperty<SmartDashesType>(
-      'smartDashesType',
+      "smartDashesType",
       textInputConfiguration.smartDashesType,
       defaultValue: textInputConfiguration.obscureText
           ? SmartDashesType.disabled
@@ -824,7 +824,7 @@ void textInputDebugFillProperties(
   );
   properties.add(
     EnumProperty<SmartQuotesType>(
-      'smartQuotesType',
+      "smartQuotesType",
       textInputConfiguration.smartQuotesType,
       defaultValue: textInputConfiguration.obscureText
           ? SmartQuotesType.disabled
@@ -833,197 +833,197 @@ void textInputDebugFillProperties(
   );
   properties.add(
     DiagnosticsProperty<bool>(
-      'enableSuggestions',
+      "enableSuggestions",
       textInputConfiguration.enableSuggestions,
       defaultValue: true,
     ),
   );
   properties.add(
     IntProperty(
-      'maxLines',
+      "maxLines",
       textInputConfiguration.maxLines,
       defaultValue: 1,
     ),
   );
   properties.add(
     IntProperty(
-      'minLines',
+      "minLines",
       textInputConfiguration.minLines,
       defaultValue: null,
     ),
   );
   properties.add(
     DiagnosticsProperty<bool>(
-      'expands',
+      "expands",
       textInputConfiguration.expands,
       defaultValue: false,
     ),
   );
   properties.add(
     IntProperty(
-      'maxLength',
+      "maxLength",
       textInputConfiguration.maxLength,
       defaultValue: null,
     ),
   );
   properties.add(
     EnumProperty<MaxLengthEnforcement>(
-      'maxLengthEnforcement',
+      "maxLengthEnforcement",
       textInputConfiguration.maxLengthEnforcement,
       defaultValue: null,
     ),
   );
   properties.add(
     EnumProperty<TextInputAction>(
-      'textInputAction',
+      "textInputAction",
       textInputConfiguration.textInputAction,
       defaultValue: null,
     ),
   );
   properties.add(
     EnumProperty<TextCapitalization>(
-      'textCapitalization',
+      "textCapitalization",
       textInputConfiguration.textCapitalization,
       defaultValue: TextCapitalization.none,
     ),
   );
   properties.add(
     EnumProperty<TextAlign>(
-      'textAlign',
+      "textAlign",
       textInputConfiguration.textAlign,
       defaultValue: TextAlign.start,
     ),
   );
   properties.add(
     DiagnosticsProperty<TextAlignVertical>(
-      'textAlignVertical',
+      "textAlignVertical",
       textInputConfiguration.textAlignVertical,
       defaultValue: null,
     ),
   );
   properties.add(
     EnumProperty<TextDirection>(
-      'textDirection',
+      "textDirection",
       textInputConfiguration.textDirection,
       defaultValue: null,
     ),
   );
   properties.add(
     DoubleProperty(
-      'cursorWidth',
+      "cursorWidth",
       textInputConfiguration.cursorWidth,
       defaultValue: 2.0,
     ),
   );
   properties.add(
     DoubleProperty(
-      'cursorHeight',
+      "cursorHeight",
       textInputConfiguration.cursorHeight,
       defaultValue: null,
     ),
   );
   properties.add(
     DiagnosticsProperty<Radius>(
-      'cursorRadius',
+      "cursorRadius",
       textInputConfiguration.cursorRadius,
       defaultValue: null,
     ),
   );
   properties.add(
     DiagnosticsProperty<bool>(
-      'cursorOpacityAnimates',
+      "cursorOpacityAnimates",
       textInputConfiguration.cursorOpacityAnimates,
       defaultValue: null,
     ),
   );
   properties.add(
     ColorProperty(
-      'cursorColor',
+      "cursorColor",
       textInputConfiguration.cursorColor,
       defaultValue: null,
     ),
   );
   properties.add(
     ColorProperty(
-      'cursorErrorColor',
+      "cursorErrorColor",
       textInputConfiguration.cursorErrorColor,
       defaultValue: null,
     ),
   );
   properties.add(
     DiagnosticsProperty<Brightness>(
-      'keyboardAppearance',
+      "keyboardAppearance",
       textInputConfiguration.keyboardAppearance,
       defaultValue: null,
     ),
   );
   properties.add(
     DiagnosticsProperty<EdgeInsetsGeometry>(
-      'scrollPadding',
+      "scrollPadding",
       textInputConfiguration.scrollPadding,
       defaultValue: const EdgeInsets.all(20.0),
     ),
   );
   properties.add(
     FlagProperty(
-      'selectionEnabled',
+      "selectionEnabled",
       value: textInputConfiguration.enableInteractiveSelection,
       defaultValue: true,
-      ifFalse: 'selection disabled',
+      ifFalse: "selection disabled",
     ),
   );
   properties.add(
     DiagnosticsProperty<TextSelectionControls>(
-      'selectionControls',
+      "selectionControls",
       textInputConfiguration.selectionControls,
       defaultValue: null,
     ),
   );
   properties.add(
     DiagnosticsProperty<ScrollController>(
-      'scrollController',
+      "scrollController",
       textInputConfiguration.scrollController,
       defaultValue: null,
     ),
   );
   properties.add(
     DiagnosticsProperty<ScrollPhysics>(
-      'scrollPhysics',
+      "scrollPhysics",
       textInputConfiguration.scrollPhysics,
       defaultValue: null,
     ),
   );
   properties.add(
     DiagnosticsProperty<Clip>(
-      'clipBehavior',
+      "clipBehavior",
       textInputConfiguration.clipBehavior,
       defaultValue: Clip.hardEdge,
     ),
   );
   properties.add(
     DiagnosticsProperty<bool>(
-      'scribbleEnabled',
+      "scribbleEnabled",
       textInputConfiguration.scribbleEnabled,
       defaultValue: true,
     ),
   );
   properties.add(
     DiagnosticsProperty<bool>(
-      'enableIMEPersonalizedLearning',
+      "enableIMEPersonalizedLearning",
       textInputConfiguration.enableIMEPersonalizedLearning,
       defaultValue: true,
     ),
   );
   properties.add(
     DiagnosticsProperty<SpellCheckConfiguration>(
-      'spellCheckConfiguration',
+      "spellCheckConfiguration",
       textInputConfiguration.spellCheckConfiguration,
       defaultValue: null,
     ),
   );
   properties.add(
     DiagnosticsProperty<List<String>>(
-      'contentCommitMimeTypes',
+      "contentCommitMimeTypes",
       textInputConfiguration.contentInsertionConfiguration?.allowedMimeTypes ??
           const <String>[],
       defaultValue: textInputConfiguration.contentInsertionConfiguration == null
