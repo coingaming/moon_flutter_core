@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:mix/mix.dart';
 
@@ -26,6 +27,12 @@ class MoonBaseInteractiveWidget extends StatelessWidget {
 
   /// {@macro flutter.widgets.GestureDetector.hitTestBehavior}
   final HitTestBehavior hitTestBehavior;
+
+  /// The controller for the widget state.
+  final MixWidgetStateController? stateController;
+
+  /// The cursor for a mouse pointer when it enters or is hovering over the widget.
+  final MouseCursor? mouseCursor;
 
   /// Semantic label for the widget.
   ///
@@ -69,6 +76,8 @@ class MoonBaseInteractiveWidget extends StatelessWidget {
     this.unpressDelay = const Duration(milliseconds: 200),
     this.focusNode,
     this.hitTestBehavior = HitTestBehavior.opaque,
+    this.stateController,
+    this.mouseCursor,
     this.semanticLabel,
     this.style,
     this.onTap,
@@ -79,20 +88,37 @@ class MoonBaseInteractiveWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
-      label: semanticLabel,
-      child: PressableBox(
-        autofocus: autofocus,
-        focusNode: focusNode,
-        enabled: enabled && onTap != null || onLongPress != null,
-        enableFeedback: enableFeedback,
-        hitTestBehavior: hitTestBehavior,
-        unpressDelay: unpressDelay,
-        onFocusChange: onFocusChange,
-        onPress: enabled ? onTap : null,
-        onLongPress: enabled ? onLongPress : null,
-        style: style,
-        child: child,
+    final bool isEnabled = enabled && (onTap != null || onLongPress != null);
+
+    return ExcludeFocusTraversal(
+      excluding: !isEnabled,
+      child: Semantics(
+        label: semanticLabel,
+        child: CallbackShortcuts(
+          bindings: onTap != null
+              ? {
+                  const SingleActivator(LogicalKeyboardKey.enter): onTap!,
+                  const SingleActivator(LogicalKeyboardKey.space): onTap!,
+                }
+              : {},
+          child: Pressable(
+            autofocus: autofocus,
+            focusNode: focusNode,
+            enabled: isEnabled,
+            enableFeedback: enableFeedback,
+            hitTestBehavior: hitTestBehavior,
+            unpressDelay: unpressDelay,
+            mouseCursor: mouseCursor,
+            controller: stateController,
+            onFocusChange: onFocusChange,
+            onPress: enabled ? onTap : null,
+            onLongPress: enabled ? onLongPress : null,
+            child: Box(
+              style: style,
+              child: child,
+            ),
+          ),
+        ),
       ),
     );
   }

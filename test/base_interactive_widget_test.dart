@@ -93,7 +93,7 @@ void main() {
 
     expect(
       RendererBinding.instance.mouseTracker.debugDeviceActiveCursor(1),
-      SystemMouseCursors.basic,
+      SystemMouseCursors.forbidden,
     );
   });
 

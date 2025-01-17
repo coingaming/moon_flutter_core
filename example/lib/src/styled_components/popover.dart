@@ -1,3 +1,5 @@
+import 'package:example/src/common_styles.dart';
+
 import 'package:flutter/material.dart';
 
 import 'package:mix/mix.dart';
@@ -14,6 +16,14 @@ class StyledPopover extends StatefulWidget {
 class _StyledPopoverState extends State<StyledPopover> {
   bool _show = false;
 
+  Style get _popoverStyle => Style(
+        $box.chain
+          ..height(100)
+          ..width(150)
+          ..borderRadius(16)
+          ..color(Colors.deepPurple.shade200),
+      );
+
   @override
   Widget build(BuildContext context) {
     return MoonBaseOverlay(
@@ -21,28 +31,14 @@ class _StyledPopoverState extends State<StyledPopover> {
       onTapOutside: () => setState(() => _show = false),
       target: MoonBaseInteractiveWidget(
         onTap: () => setState(() => _show = !_show),
-        style: Style(
-          $box.color(Colors.deepPurpleAccent),
-          $box.padding(8, 16),
-          $box.borderRadius(8),
-          $text.style.color(Colors.white),
-        ),
+        style: getButtonStyle(),
         child: const StyledText("Show popover"),
       ),
       child: Box(
-        style: Style(
-          $box.height(100),
-          $box.width(150),
-          $box.borderRadius(16),
-          $box.color(Colors.deepPurple.shade200),
-        ),
+        style: _popoverStyle,
         child: Center(
           child: MoonBaseInteractiveWidget(
-            style: Style(
-              $box.color(Colors.white),
-              $box.padding(8, 16),
-              $box.borderRadius(8),
-            ),
+            style: getButtonStyle(),
             child: const Text("Close popover"),
             onTap: () => setState(() => _show = false),
           ),

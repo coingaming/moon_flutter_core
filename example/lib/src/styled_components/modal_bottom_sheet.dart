@@ -1,3 +1,5 @@
+import 'package:example/src/common_styles.dart';
+
 import 'package:flutter/material.dart';
 
 import 'package:mix/mix.dart';
@@ -7,15 +9,26 @@ import 'package:moon_core/moon_core.dart';
 class StyledBottomSheet extends StatelessWidget {
   const StyledBottomSheet({super.key});
 
+  Style get _bottomSheetStyle => Style(
+        $box.chain
+          ..borderRadius.top(24)
+          ..color(Colors.purple.shade50),
+      );
+
+  Style get _menuItemStyle => Style(
+        $box.padding(16.0),
+        $flex.mainAxisAlignment.spaceBetween(),
+        ($on.focus | $on.hover)(
+          $box.color(Colors.purple.shade100),
+        ),
+      );
+
   @override
   Widget build(BuildContext context) {
     Future<dynamic> bottomSheetBuilder(BuildContext context) {
       return showMoonRawModalBottomSheet(
         context: context,
-        bottomSheetStyle: Style(
-          $box.borderRadius.top(24),
-          $box.color(Colors.purple.shade50),
-        ),
+        bottomSheetStyle: _bottomSheetStyle,
         builder: (BuildContext context) => Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -37,11 +50,7 @@ class StyledBottomSheet extends StatelessWidget {
                   ),
                 ),
                 MoonBaseInteractiveWidget(
-                  style: Style(
-                    $box.width(48),
-                    $box.height(48),
-                    $icon.color(Colors.purple),
-                  ),
+                  style: getIconButtonStyle(),
                   child: const StyledIcon(Icons.close),
                   onTap: () => Navigator.of(context).pop(),
                 ),
@@ -56,16 +65,19 @@ class StyledBottomSheet extends StatelessWidget {
                 primary: true,
                 itemCount: 20,
                 padding: EdgeInsets.zero,
-                itemBuilder: (BuildContext _, int index) => Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text("Item nr:"),
-                      Text("$index"),
-                    ],
-                  ),
-                ),
+                itemBuilder: (BuildContext _, int index) {
+                  return MoonBaseInteractiveWidget(
+                    style: _menuItemStyle,
+                    onTap: () {},
+                    child: StyledRow(
+                      inherit: true,
+                      children: [
+                        const Text("Item nr:"),
+                        Text("$index"),
+                      ],
+                    ),
+                  );
+                },
               ),
             ),
           ],
@@ -76,12 +88,7 @@ class StyledBottomSheet extends StatelessWidget {
     return Builder(
       builder: (BuildContext context) {
         return MoonBaseInteractiveWidget(
-          style: Style(
-            $box.color(Colors.deepPurpleAccent),
-            $box.padding(8, 16),
-            $box.borderRadius(8),
-            $text.style.color(Colors.white),
-          ),
+          style: getButtonStyle(),
           child: const StyledText("Show bottom sheet"),
           onTap: () => bottomSheetBuilder(context),
         );

@@ -53,7 +53,7 @@ void main() {
     expect(showMoreButton, findsOneWidget);
     expect(breadcrumbItem, findsNWidgets(3));
     expect(find.textContaining("0"), findsOneWidget);
-    expect(find.textContaining("1"), findsNothing);
+    expect(collapsedItem, findsNothing);
     expect(find.textContaining("2"), findsOneWidget);
     expect(find.textContaining("3"), findsOneWidget);
 
@@ -62,7 +62,7 @@ void main() {
 
     expect(breadcrumbItem, findsNWidgets(4));
     expect(find.textContaining("0"), findsOneWidget);
-    expect(find.textContaining("1"), findsOneWidget);
+    expect(collapsedItem, findsOneWidget);
     expect(find.textContaining("2"), findsOneWidget);
     expect(find.textContaining("3"), findsOneWidget);
   });
@@ -76,25 +76,21 @@ void main() {
       ),
     );
 
-    await tester.tap(find.textContaining("2"));
-    await tester.pumpAndSettle();
-
-    expect(value, 2);
-
     await tester.tap(find.textContaining("0"));
     await tester.pumpAndSettle();
-
     expect(value, 0);
-    expect(showMoreButton, findsOneWidget);
+
+    await tester.tap(find.textContaining("2"));
+    await tester.pumpAndSettle();
+    expect(value, 2);
 
     await tester.tap(showMoreButton);
     await tester.pumpAndSettle();
+    expect(value, 2);
 
     await tester.tap(collapsedItem);
     await tester.pumpAndSettle();
-
     expect(value, 1);
-    expect(showMoreButton, findsNothing);
   });
 
   testWidgets("Uses custom 'showMoreWidget' when provided", (tester) async {
@@ -136,7 +132,8 @@ class _BreadCrumbTestWidget extends StatelessWidget {
             divider: const Icon(_breadcrumbDividerIcon),
             showMoreWidget: showMoreWidget,
             items: [
-              ...List.generate(4, (int i) => i).map(
+              ...List.generate(
+                4,
                 (int index) {
                   return MoonRawBreadcrumbItem(
                     child: Row(

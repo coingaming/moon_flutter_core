@@ -12,6 +12,28 @@ class StyledAuthCode extends StatefulWidget {
 }
 
 class _StyledAuthCodeState extends State<StyledAuthCode> {
+  Style get _inputFieldStyle => Style(
+        $box.shapeDecoration.as(_getBorder(Colors.grey)),
+        $flex.chain
+          ..gap(12)
+          ..mainAxisAlignment(MainAxisAlignment.center),
+        $on.active(
+          $box.shapeDecoration.as(_getBorder(Colors.orange)),
+          $text.style.color(Colors.orange),
+        ),
+        $on.selected(
+          $box.shapeDecoration.as(_getBorder(Colors.purple, width: 2)),
+        ),
+        $on.error(
+          $box.shapeDecoration.as(_getBorder(Colors.red)),
+          $text.chain.style.color(Colors.red),
+        ),
+        ($on.selected & $on.error)(
+          $box.shapeDecoration.as(_getBorder(Colors.red, width: 2)),
+        ),
+        $with.defaultTextStyle.style.fontSize(24),
+      ).animate(duration: const Duration(milliseconds: 200));
+
   ShapeDecorationWithPremultipliedAlpha _getBorder(
     Color color, {
     double width = 1,
@@ -30,36 +52,9 @@ class _StyledAuthCodeState extends State<StyledAuthCode> {
       height: 95,
       child: MoonRawAuthCode(
         authInputFieldCount: 4,
-        errorAnimationType: ErrorAnimationType.shake,
         authFieldCursorColor: Colors.orange,
-        hint: const Padding(
-          padding: EdgeInsets.only(top: 8),
-          child: Text(
-            "This is hint",
-            style: TextStyle(color: Colors.grey),
-          ),
-        ),
-        inputFieldStyle: Style(
-          $box.shapeDecoration.as(_getBorder(Colors.grey)),
-          $flex.chain
-            ..gap(12)
-            ..mainAxisAlignment(MainAxisAlignment.center),
-          $on.active(
-            $box.shapeDecoration.as(_getBorder(Colors.orange)),
-            $text.style.color(Colors.orange),
-          ),
-          $on.selected(
-            $box.shapeDecoration.as(_getBorder(Colors.purple, width: 2)),
-          ),
-          $on.error(
-            $box.shapeDecoration.as(_getBorder(Colors.red)),
-            $text.chain.style.color(Colors.red),
-          ),
-          ($on.selected & $on.error)(
-            $box.shapeDecoration.as(_getBorder(Colors.red, width: 2)),
-          ),
-          $with.defaultTextStyle.style.fontSize(24),
-        ).animate(duration: const Duration(milliseconds: 200)),
+        errorAnimationType: ErrorAnimationType.shake,
+        inputFieldStyle: _inputFieldStyle,
         validator: (String? pin) =>
             (pin != null && pin != "0000" && pin.length == 4)
                 ? "The input must be exactly '0000'."
@@ -69,6 +64,13 @@ class _StyledAuthCodeState extends State<StyledAuthCode> {
           child: Text(
             errorText ?? "",
             style: const TextStyle(color: Colors.red),
+          ),
+        ),
+        hint: const Padding(
+          padding: EdgeInsets.only(top: 8),
+          child: Text(
+            "This is hint",
+            style: TextStyle(color: Colors.grey),
           ),
         ),
       ),

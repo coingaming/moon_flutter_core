@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 enum OverlayPosition {
   top,
@@ -37,11 +38,15 @@ class MoonBaseOverlay extends StatefulWidget {
   /// The semantic label for the overlay.
   final String? semanticLabel;
 
-  /// The callback that is called when the user taps anywhere on the screen.
+  /// The callback that is called when the [child] of the overlay is tapped.
   final VoidCallback? onTap;
 
-  /// The callback that is called when the user taps outside the overlay.
+  /// The callback that is called when the area outside of the overlay's [child]
+  /// is tapped.
   final VoidCallback? onTapOutside;
+
+  /// The callback that is called when the [target] of the overlay is hovered.
+  final VoidCallback? onTargetHover;
 
   /// The widget to display as the target of the overlay.
   final Widget target;
@@ -61,6 +66,7 @@ class MoonBaseOverlay extends StatefulWidget {
     this.semanticLabel,
     this.onTap,
     this.onTapOutside,
+    this.onTargetHover,
     required this.target,
     required this.child,
   });
@@ -239,7 +245,7 @@ class MoonBaseOverlayState extends State<MoonBaseOverlay>
     super.didUpdateWidget(oldWidget);
 
     if (widget.show != oldWidget.show) {
-      widget.show ? _showOverlay() : _hideOverlay();
+      _overlayController.isShowing ? _hideOverlay() : _showOverlay();
     }
   }
 
@@ -252,54 +258,78 @@ class MoonBaseOverlayState extends State<MoonBaseOverlay>
 
   @override
   Widget build(BuildContext context) {
-    return TapRegion(
-      groupId: _regionKey,
-      behavior: HitTestBehavior.translucent,
-      child: CompositedTransformTarget(
-        link: _layerLink,
-        child: OverlayPortal.targetsRootOverlay(
-          controller: _overlayController,
-          overlayChildBuilder: (BuildContext context) {
-            final overlayPositionParameters = _getOverlayPositionParameters();
+    return FocusTraversalGroup(
+      policy: OrderedTraversalPolicy(),
+      child: CallbackShortcuts(
+        bindings: {
+          const SingleActivator(LogicalKeyboardKey.escape): () {
+            setState(() => _overlayController.hide());
+          },
+        },
+        child: TapRegion(
+          groupId: _regionKey,
+          behavior: HitTestBehavior.translucent,
+          child: MouseRegion(
+            onEnter: (_) => widget.onTargetHover?.call(),
+            onExit: (_) => widget.onTargetHover?.call(),
+            child: FocusTraversalOrder(
+              order: const NumericFocusOrder(0),
+              child: CompositedTransformTarget(
+                link: _layerLink,
+                child: OverlayPortal.targetsRootOverlay(
+                  controller: _overlayController,
+                  overlayChildBuilder: (BuildContext context) {
+                    final overlayPositionParameters =
+                        _getOverlayPositionParameters();
 
-            return Semantics(
-              label: widget.semanticLabel,
-              child: GestureDetector(
-                excludeFromSemantics: true,
-                onTapDown: (TapDownDetails _) => widget.onTap?.call(),
-                child: UnconstrainedBox(
-                  child: CompositedTransformFollower(
-                    link: _layerLink,
-                    showWhenUnlinked: false,
-                    offset: overlayPositionParameters.offset,
-                    followerAnchor: overlayPositionParameters.followerAnchor,
-                    targetAnchor: overlayPositionParameters.targetAnchor,
-                    child: TapRegion(
-                      groupId: _regionKey,
-                      behavior: HitTestBehavior.translucent,
-                      onTapOutside: (PointerDownEvent _) {
-                        widget.onTapOutside?.call();
-                        widget.onTap?.call();
-                      },
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints(
-                          maxWidth: overlayPositionParameters.overlayMaxWidth,
-                        ),
-                        child: FadeTransition(
-                          opacity: _fadeAnimation,
-                          child: Directionality(
-                            textDirection: Directionality.of(context),
-                            child: widget.child,
+                    return Semantics(
+                      label: widget.semanticLabel,
+                      child: UnconstrainedBox(
+                        child: FocusTraversalOrder(
+                          order: const NumericFocusOrder(1),
+                          child: CompositedTransformFollower(
+                            link: _layerLink,
+                            showWhenUnlinked: false,
+                            offset: overlayPositionParameters.offset,
+                            followerAnchor:
+                                overlayPositionParameters.followerAnchor,
+                            targetAnchor:
+                                overlayPositionParameters.targetAnchor,
+                            child: TapRegion(
+                              groupId: _regionKey,
+                              behavior: HitTestBehavior.opaque,
+                              onTapOutside: (PointerDownEvent _) {
+                                widget.onTapOutside?.call();
+                              },
+                              child: GestureDetector(
+                                excludeFromSemantics: true,
+                                behavior: HitTestBehavior.opaque,
+                                onTap: widget.onTap,
+                                child: ConstrainedBox(
+                                  constraints: BoxConstraints(
+                                    maxWidth: overlayPositionParameters
+                                        .overlayMaxWidth,
+                                  ),
+                                  child: FadeTransition(
+                                    opacity: _fadeAnimation,
+                                    child: Directionality(
+                                      textDirection: Directionality.of(context),
+                                      child: widget.child,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
+                  child: widget.target,
                 ),
               ),
-            );
-          },
-          child: widget.target,
+            ),
+          ),
         ),
       ),
     );

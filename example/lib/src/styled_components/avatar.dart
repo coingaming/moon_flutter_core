@@ -18,6 +18,53 @@ class _StyledAvatarState extends State<StyledAvatar> {
   static const double _borderRadiusValue = 8;
   static const double _marginValue = 1;
 
+  Style get _customBadgeStyle => Style(
+        $box.chain
+          ..width(_badgeWidth)
+          ..height(_badgeHeight)
+          ..alignment.center()
+          ..color(Colors.purpleAccent)
+          ..borderRadiusDirectional.bottomEnd(_borderRadiusValue)
+          ..borderRadiusDirectional.topStart(_borderRadiusValue),
+        $text.chain
+          ..style.color(Colors.white)
+          ..style.fontSize(8),
+      );
+
+  Style get _customContentStyle => Style(
+        $box.chain
+          ..alignment.center()
+          ..shapeDecoration(
+            image: const DecorationImage(
+              image: AssetImage("assets/images/placeholder.png"),
+              fit: BoxFit.cover,
+            ),
+          ),
+        $text.chain
+          ..style.color(Colors.white)
+          ..style.fontSize(16),
+      );
+
+  Style get _badgeStyle => Style(
+        $box.chain
+          ..decoration.color(Colors.purpleAccent)
+          ..decoration.shape.circle()
+          ..alignment.center(),
+        $text.chain
+          ..style.color(Colors.white)
+          ..style.fontSize(8),
+      );
+
+  Style get _contentStyle => Style(
+        $box.chain
+          ..decoration.color(Colors.deepPurple)
+          ..borderRadius.circular(32),
+        $icon.chain
+          ..color(Colors.white)
+          ..size(40),
+        $text.style.fontSize(8),
+      );
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -39,30 +86,11 @@ class _StyledAvatarState extends State<StyledAvatar> {
               topStart: Radius.circular(_borderRadiusValue + 1),
             ),
             badge: Box(
-              style: Style(
-                $box.width(_badgeWidth),
-                $box.height(_badgeHeight),
-                $box.alignment.center(),
-                $box.color(Colors.purpleAccent),
-                $box.borderRadiusDirectional.bottomEnd(_borderRadiusValue),
-                $box.borderRadiusDirectional.topStart(_borderRadiusValue),
-                $text.style.color(Colors.white),
-                $text.style.fontSize(8),
-              ),
+              style: _customBadgeStyle,
               child: const StyledText("Flutter"),
             ),
             content: Box(
-              style: Style(
-                $box.alignment.center(),
-                $box.shapeDecoration(
-                  image: const DecorationImage(
-                    image: AssetImage("assets/images/placeholder.png"),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                $text.style.color(Colors.white),
-                $text.style.fontSize(16),
-              ),
+              style: _customContentStyle,
               child: const StyledText("MD"),
             ),
           ),
@@ -76,23 +104,11 @@ class _StyledAvatarState extends State<StyledAvatar> {
           badgeMarginValue: 3,
           avatarSize: _avatarSize,
           badge: Box(
-            style: Style(
-              $box.decoration.color(Colors.purpleAccent),
-              $box.decoration.shape.circle(),
-              $box.alignment.center(),
-              $text.style.color(Colors.white),
-              $text.style.fontSize(8),
-            ),
+            style: _badgeStyle,
             child: const StyledText("3"),
           ),
           content: Box(
-            style: Style(
-              $box.decoration.color(Colors.deepPurple),
-              $box.borderRadius.circular(32),
-              $text.style.fontSize(8),
-              $icon.color(Colors.white),
-              $icon.size(40),
-            ),
+            style: _contentStyle,
             child: const StyledIcon(Icons.person),
           ),
         ),

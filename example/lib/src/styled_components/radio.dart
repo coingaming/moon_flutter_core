@@ -18,67 +18,67 @@ class _StyledRadioState extends State<StyledRadio> {
 
   Duration get _animationDuration => const Duration(milliseconds: 150);
 
-  SelectedState _getVariant(_Choices? value) {
-    return value == _valueCustom
-        ? SelectedState.selected
-        : SelectedState.unselected;
-  }
+  Style get _outerCircleStyle => Style(
+        $box.chain
+          ..border.color.black54()
+          ..width(16)
+          ..shape.circle()
+          ..alignment.center(),
+        SelectedState.selected(
+          $box.border.color.deepPurple.shade600(),
+        ),
+      ).animate(duration: _animationDuration);
+
+  Style get _innerCircleStyle => Style(
+        $box.chain
+          ..color(Colors.deepPurple)
+          ..shape.circle()
+          ..width(0),
+        SelectedState.selected(
+          $box.width(9),
+        ),
+      ).animate(duration: _animationDuration);
+
+  Style get _focusStateStyle => Style(
+        $box.height(32),
+        $on.focus(
+          $box.chain
+            ..border.color.black12()
+            ..border.width(4)
+            ..shape.circle(),
+        ),
+      ).animate(duration: _animationDuration);
+
+  SelectedState _getVariant(_Choices? value) =>
+      value == _valueCustom ? SelectedState.selected : SelectedState.unselected;
 
   @override
   Widget build(BuildContext context) {
-    final Style outerCircleStyle = Style(
-      $box.border.color.black54(),
-      $box.width(16),
-      $box.shape.circle(),
-      $box.alignment.center(),
-      SelectedState.selected(
-        $box.border.color.deepPurple.shade600(),
-      ),
-    );
-
-    final Style innerCircleStyle = Style(
-      $box.color(Colors.deepPurple),
-      $box.shape.circle(),
-      $box.width(0),
-      SelectedState.selected(
-        $box.width(9),
-      ),
-    );
-
-    final Style focusStateStyle = Style(
-      $box.height(32),
-      $on.focus(
-        $box.border.color.black12(),
-        $box.border.width(4),
-        $box.shape.circle(),
-      ),
-    );
-
     return Column(
       children: List.generate(
         _Choices.values.length,
-        (int index) => Column(
-          children: [
-            MoonBaseSingleSelectWidget(
-              toggleable: true,
-              style: focusStateStyle.animate(duration: _animationDuration),
-              value: _Choices.values[index],
-              groupValue: _valueCustom,
-              onChanged: (_Choices? value) =>
-                  setState(() => _valueCustom = value),
-              child: Box(
-                style: outerCircleStyle
-                    .applyVariant(_getVariant(_Choices.values[index]))
-                    .animate(duration: _animationDuration),
+        (int index) {
+          final _Choices value = _Choices.values[index];
+
+          return Column(
+            children: [
+              MoonBaseSingleSelectWidget(
+                toggleable: true,
+                style: _focusStateStyle,
+                value: _Choices.values[index],
+                groupValue: _valueCustom,
+                onChanged: (_Choices? value) =>
+                    setState(() => _valueCustom = value),
                 child: Box(
-                  style: innerCircleStyle
-                      .applyVariant(_getVariant(_Choices.values[index]))
-                      .animate(duration: _animationDuration),
+                  style: _outerCircleStyle.applyVariant(_getVariant(value)),
+                  child: Box(
+                    style: _innerCircleStyle.applyVariant(_getVariant(value)),
+                  ),
                 ),
               ),
-            ),
-          ],
-        ),
+            ],
+          );
+        },
       ),
     );
   }

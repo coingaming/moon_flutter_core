@@ -164,9 +164,9 @@ void main() {
     );
 
     final Finder firstWidgetWithSemanticLabel =
-        find.bySemanticsLabel(firstSemanticLabel);
+        find.bySemanticsLabel(RegExp(firstSemanticLabel));
     final Finder secondWidgetWithSemanticLabel =
-        find.bySemanticsLabel(secondSemanticLabel);
+        find.bySemanticsLabel(RegExp(secondSemanticLabel));
 
     expect(firstWidgetWithSemanticLabel, findsOneWidget);
     expect(secondWidgetWithSemanticLabel, findsOneWidget);

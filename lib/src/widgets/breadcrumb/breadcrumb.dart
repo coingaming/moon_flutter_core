@@ -41,75 +41,67 @@ class _MoonBreadcrumbState extends State<MoonRawBreadcrumb> {
   bool showFullPath = false;
 
   List<Widget> _buildItems() {
-    final int resolvedItemCountToShow =
-        showFullPath ? widget.items.length : widget.visibleItemCount;
-
-    final List<MoonRawBreadcrumbItem> visibleItemsList = _getVisibleItems();
-
-    final List<Widget> customizedVisibleItemsList = visibleItemsList
-        .map(
-          (MoonRawBreadcrumbItem item) => Row(
-            children: [
-              _BreadcrumbItemBuilder(
-                onTap: item.onTap,
-                item: item,
-              ),
-              if (item != visibleItemsList.last) _buildDivider(),
-            ],
-          ),
-        )
+    final List<MoonRawBreadcrumbItem> visibleItems = _getVisibleItems();
+    final List<Widget> itemWidgets = visibleItems
+        .map((item) => _buildBreadcrumbItem(item, item != visibleItems.last))
         .toList();
 
-    final bool hasMoreItems = widget.items.length > resolvedItemCountToShow;
-    final bool hasMultipleItemsToShow = resolvedItemCountToShow > 1;
-
-    if (hasMoreItems && hasMultipleItemsToShow) {
-      customizedVisibleItemsList.insert(
-        1,
-        Row(
-          children: [
-            _BreadcrumbItemBuilder(
-              onTap: widget.showMoreWidget?.onTap ??
-                  () => setState(() => showFullPath = true),
-              item: widget.showMoreWidget ??
-                  const MoonRawBreadcrumbItem(
-                    semanticLabel: "Show full path",
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8),
-                      child: Text("..."),
-                    ),
-                  ),
-            ),
-            _buildDivider(),
-          ],
-        ),
-      );
+    if (_hasMoreItems() && !showFullPath) {
+      itemWidgets.insert(1, _buildShowMoreItem());
     }
 
-    // Restores the breadcrumb's initial collapsed state during every rebuild.
-    showFullPath = false;
-
-    return customizedVisibleItemsList;
+    return itemWidgets;
   }
 
   List<MoonRawBreadcrumbItem> _getVisibleItems() {
-    final int resolvedItemCountToShow =
+    final int itemCount =
         showFullPath ? widget.items.length : widget.visibleItemCount;
 
-    final List<MoonRawBreadcrumbItem> visibleItems =
-        resolvedItemCountToShow == 0
-            ? []
-            : widget.items.length > resolvedItemCountToShow
-                ? [
-                    widget.items[0],
-                    ...List.generate(
-                      resolvedItemCountToShow - 1,
-                      (int index) => widget.items.length - index,
-                    ).reversed.map((int index) => widget.items[index - 1]),
-                  ]
-                : widget.items;
+    if (itemCount == 0) return [];
 
-    return visibleItems;
+    return widget.items.length > itemCount
+        ? [
+            widget.items.first,
+            ...widget.items.sublist(widget.items.length - itemCount + 1),
+          ]
+        : widget.items;
+  }
+
+  bool _hasMoreItems() => widget.items.length > widget.visibleItemCount;
+
+  Widget _buildBreadcrumbItem(MoonRawBreadcrumbItem item, bool addDivider) {
+    return Row(
+      children: [
+        _BreadcrumbItemBuilder(
+          onTap: () {
+            setState(() => showFullPath = false);
+            item.onTap?.call();
+          },
+          item: item,
+        ),
+        if (addDivider) _buildDivider(),
+      ],
+    );
+  }
+
+  Widget _buildShowMoreItem() {
+    return Row(
+      children: [
+        _BreadcrumbItemBuilder(
+          onTap: widget.showMoreWidget?.onTap ??
+              () => setState(() => showFullPath = true),
+          item: widget.showMoreWidget ??
+              const MoonRawBreadcrumbItem(
+                semanticLabel: "Show full path",
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8),
+                  child: Text("..."),
+                ),
+              ),
+        ),
+        _buildDivider(),
+      ],
+    );
   }
 
   Widget _buildDivider() =>

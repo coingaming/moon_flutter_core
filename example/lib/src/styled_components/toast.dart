@@ -1,3 +1,5 @@
+import 'package:example/src/common_styles.dart';
+
 import 'package:flutter/material.dart';
 
 import 'package:mix/mix.dart';
@@ -7,26 +9,25 @@ import 'package:moon_core/moon_core.dart';
 class StyledToast extends StatelessWidget {
   const StyledToast({super.key});
 
+  Style get _toastStyle => Style(
+        $box.chain
+          ..color(Colors.black87)
+          ..margin(16)
+          ..padding(8, 16)
+          ..borderRadius(8),
+        $flex.chain
+          ..gap(8)
+          ..mainAxisSize.min(),
+        $text.style.color(Colors.white70),
+      );
+
   @override
   Widget build(BuildContext context) {
     return MoonBaseInteractiveWidget(
-      style: Style(
-        $box.color(Colors.deepPurpleAccent),
-        $box.padding(8, 16),
-        $box.borderRadius(8),
-        $text.style.color(Colors.white),
-      ),
+      style: getButtonStyle(),
       onTap: () => MoonRawToast.show(
         context,
-        style: Style(
-          $box.color(Colors.black87),
-          $box.margin(16),
-          $box.padding(8, 16),
-          $box.borderRadius(8),
-          $text.style.color(Colors.white70),
-          $flex.gap(8),
-          $flex.mainAxisSize.min(),
-        ),
+        style: _toastStyle,
         child: const StyledText("This is toast content!"),
       ),
       child: const StyledText("Show toast"),

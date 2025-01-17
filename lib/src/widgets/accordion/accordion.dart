@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:mix/mix.dart';
 
+import 'package:moon_core/moon_core.dart';
+
 typedef MoonRawAccordionTrailingWidgetBuilder = Widget Function(
   BuildContext context,
   Animation<double> animationView,
@@ -15,6 +17,12 @@ class MoonRawAccordion<T> extends StatefulWidget {
   /// {@macro flutter.widgets.Focus.autofocus}
   final bool autofocus;
 
+  /// Should gestures provide audible and/or haptic feedback.
+  /// On platforms like Android, enabling feedback will result in audible and
+  /// tactile responses to certain actions. For example, a tap may produce a
+  /// clicking sound, while a long-press may trigger a short vibration.
+  final bool enableFeedback;
+
   /// Whether to display the accordion content outside of its [header].
   final bool hasContentOutside;
 
@@ -25,8 +33,8 @@ class MoonRawAccordion<T> extends StatefulWidget {
   /// disregarded.
   final bool initiallyExpanded;
 
-  /// Whether the accordion is disabled.
-  final bool isDisabled;
+  /// Whether the accordion is enabled.
+  final bool enabled;
 
   /// Whether to preserve the state of the [children] when the accordion expands
   /// and collapses.
@@ -101,9 +109,10 @@ class MoonRawAccordion<T> extends StatefulWidget {
     super.key,
     this.propagateGesturesToChild = true,
     this.autofocus = false,
+    this.enableFeedback = false,
     this.hasContentOutside = false,
     this.initiallyExpanded = false,
-    this.isDisabled = false,
+    this.enabled = true,
     this.maintainState = false,
     this.showDivider = true,
     this.transitionDuration = const Duration(milliseconds: 200),
@@ -183,7 +192,7 @@ class _MoonRawAccordionState<T> extends State<MoonRawAccordion<T>>
     );
 
     _isExpanded = PageStorage.maybeOf(context)?.readState(context) as bool? ??
-        widget.initiallyExpanded || widget._selected;
+        (widget.initiallyExpanded || widget._selected) && widget.enabled;
 
     _expansionAnimationController.addListener(_animationListener);
 
@@ -195,6 +204,8 @@ class _MoonRawAccordionState<T> extends State<MoonRawAccordion<T>>
   @override
   void didUpdateWidget(MoonRawAccordion<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
+
+    if (!widget.enabled) return;
 
     if (widget.identityValue == null && widget.groupIdentityValue == null) {
       return;
@@ -235,19 +246,15 @@ class _MoonRawAccordionState<T> extends State<MoonRawAccordion<T>>
   }
 
   Widget _buildDecorationContainer({required Widget child}) {
-    return PressableBox(
+    return MoonBaseInteractiveWidget(
       autofocus: widget.autofocus,
       focusNode: _effectiveFocusNode,
-      enabled: !widget.isDisabled,
-      onPress: _handleTap,
+      enabled: widget.enabled,
+      onTap: widget.enabled ? _handleTap : null,
       style: Style(
-        $box.decoration(
-          border: Border.all(
-            color: Colors.transparent,
-            strokeAlign: BorderSide.strokeAlignOutside,
-          ),
-        ),
-        $box.clipBehavior.hardEdge(),
+        $box.chain
+          ..decoration()
+          ..clipBehavior(Clip.hardEdge),
       ).merge(widget.outerContainerStyle),
       child: child,
     );
@@ -279,9 +286,7 @@ class _MoonRawAccordionState<T> extends State<MoonRawAccordion<T>>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              _buildDecorationContainer(
-                child: header,
-              ),
+              _buildDecorationContainer(child: header),
               childWrapper,
             ],
           ),

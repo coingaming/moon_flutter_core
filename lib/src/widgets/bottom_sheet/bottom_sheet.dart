@@ -376,8 +376,9 @@ class MoonRawBottomSheetState extends State<MoonRawBottomSheet>
               label: widget.semanticLabel,
               child: Box(
                 style: Style(
-                  $box.height(MediaQuery.of(context).size.height * 0.8),
-                  $box.color(Colors.white),
+                  $box.chain
+                    ..height(MediaQuery.of(context).size.height * 0.8)
+                    ..color(Colors.white),
                 ).merge(widget.bottomSheetStyle),
                 child: widget.child,
               ),

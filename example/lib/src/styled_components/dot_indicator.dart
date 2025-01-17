@@ -14,7 +14,39 @@ class StyledDotIndicator extends StatefulWidget {
 class _StyledDotIndicatorState extends State<StyledDotIndicator> {
   int _selectedDot = 0;
 
-  Variant _variant(int index) =>
+  Style get _rowStyle => Style(
+        $flex.chain
+          ..mainAxisAlignment.center()
+          ..gap(16),
+      );
+
+  Style get _dotStyle => Style(
+        $box.chain
+          ..width(8)
+          ..height(8)
+          ..color(Colors.grey)
+          ..shape.circle(),
+        SelectedState.selected(
+          $box.color(Colors.purple),
+        ),
+      ).animate(duration: const Duration(milliseconds: 400));
+
+  Style get _boxStyle => Style(
+        $box.chain
+          ..height(32)
+          ..width(32)
+          ..borderRadius(4)
+          ..color(Colors.purple),
+        $text.style.color(Colors.white),
+        ($on.hover | $on.focus | $on.press | $on.longPress)(
+          $box.color(Colors.purple.shade300),
+        ),
+        SelectedState.selected(
+          $box.color(Colors.purple.shade300),
+        ),
+      ).animate(duration: const Duration(milliseconds: 400));
+
+  Variant _getVariant(int index) =>
       index == _selectedDot ? SelectedState.selected : SelectedState.unselected;
 
   @override
@@ -22,24 +54,13 @@ class _StyledDotIndicatorState extends State<StyledDotIndicator> {
     return Column(
       children: [
         StyledRow(
-          style: Style(
-            $flex.mainAxisAlignment.center(),
-            $flex.gap(16),
-          ),
+          style: _rowStyle,
           children: [
             ...List<Widget>.generate(
               4,
               (int index) {
                 return Box(
-                  style: Style(
-                    $box.width(8),
-                    $box.height(8),
-                    $box.color(Colors.grey),
-                    $box.shape.circle(),
-                    SelectedState.selected($box.color(Colors.purple)),
-                  )
-                      .applyVariant(_variant(index))
-                      .animate(duration: const Duration(milliseconds: 400)),
+                  style: _dotStyle.applyVariant(_getVariant(index)),
                 );
               },
             ),
@@ -47,26 +68,11 @@ class _StyledDotIndicatorState extends State<StyledDotIndicator> {
         ),
         const SizedBox(height: 16),
         StyledRow(
-          style: Style(
-            $flex.mainAxisAlignment.center(),
-            $flex.gap(16),
-          ),
+          style: _rowStyle,
           children: List<Widget>.generate(
             4,
             (int index) => MoonBaseInteractiveWidget(
-              style: Style(
-                $box.height(32),
-                $box.width(32),
-                $box.borderRadius(4),
-                $box.color(Colors.purple),
-                $text.style.color(Colors.white),
-                ($on.hover | $on.focus | $on.press | $on.longPress)(
-                  $box.color(Colors.purple.shade300),
-                ),
-                SelectedState.selected($box.color(Colors.purple.shade300)),
-              )
-                  .applyVariant(_variant(index))
-                  .animate(duration: const Duration(milliseconds: 200)),
+              style: _boxStyle.applyVariant(_getVariant(index)),
               onTap: () => setState(() => _selectedDot = index),
               child: Center(
                 child: StyledText('$index'),

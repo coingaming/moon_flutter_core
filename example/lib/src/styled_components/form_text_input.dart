@@ -1,3 +1,5 @@
+import 'package:example/src/common_styles.dart';
+
 import 'package:flutter/material.dart';
 
 import 'package:mix/mix.dart';
@@ -17,15 +19,7 @@ class _StyledFormTextInputState extends State<StyledFormTextInput> {
 
   bool _hidePassword = true;
 
-  ShapeDecoration _getBorder(Color color, {double width = 1.5}) =>
-      ShapeDecorationWithPremultipliedAlpha(
-        shape: MoonSquircleBorder(
-          borderRadius: BorderRadius.circular(8),
-          side: BorderSide(color: color, width: width),
-        ),
-      );
-
-  Style _getInputStyle() => Style(
+  Style get _inputStyle => Style(
         $box.chain
           ..width(300)
           ..padding(4, 12)
@@ -37,7 +31,7 @@ class _StyledFormTextInputState extends State<StyledFormTextInput> {
         $on.disabled($with.opacity(0.5)),
       ).animate(duration: const Duration(milliseconds: 300));
 
-  Style _getHelperStyle() => Style(
+  Style get _helperStyle => Style(
         $box.chain
           ..padding.vertical(8)
           ..width(300),
@@ -50,6 +44,22 @@ class _StyledFormTextInputState extends State<StyledFormTextInput> {
           $icon.color(Colors.red),
         ),
       ).animate(duration: const Duration(milliseconds: 300));
+
+  Style get _trailingStyle => Style(
+        $text.style.decoration.underline(),
+        $with.cursor.click(),
+        $with.intrinsicWidth(),
+        $with.align(alignment: Alignment.centerRight),
+        $on.focus($text.style.color(Colors.purple)),
+      );
+
+  ShapeDecoration _getBorder(Color color, {double width = 1.5}) =>
+      ShapeDecorationWithPremultipliedAlpha(
+        shape: MoonSquircleBorder(
+          borderRadius: BorderRadius.circular(8),
+          side: BorderSide(color: color, width: width),
+        ),
+      );
 
   @override
   void initState() {
@@ -81,15 +91,13 @@ class _StyledFormTextInputState extends State<StyledFormTextInput> {
                   textInputConfiguration: MoonTextInputConfiguration(
                     expands: true,
                     maxLines: null,
-                    inputStyle: _getInputStyle(),
-                    helperStyle: _getHelperStyle(),
+                    inputStyle: _inputStyle,
+                    helperStyle: _helperStyle,
                     controller: _textController,
-                    trailing: MouseRegion(
-                      cursor: SystemMouseCursors.click,
-                      child: GestureDetector(
-                        onTap: () => _textController.clear(),
-                        child: const Icon(Icons.close, size: 20),
-                      ),
+                    trailing: MoonBaseInteractiveWidget(
+                      style: getIconButtonStyle(),
+                      onTap: () => _textController.clear(),
+                      child: const Icon(Icons.close, size: 20),
                     ),
                     helper: const StyledText("Expanding text input field."),
                     hint: const Text(
@@ -107,25 +115,15 @@ class _StyledFormTextInputState extends State<StyledFormTextInput> {
                   textInputConfiguration: MoonTextInputConfiguration(
                     obscureText: _hidePassword,
                     keyboardType: TextInputType.visiblePassword,
-                    inputStyle: _getInputStyle(),
-                    helperStyle: _getHelperStyle(),
+                    inputStyle: _inputStyle,
+                    helperStyle: _helperStyle,
                     controller: _passwordController,
                     leading: const Icon(Icons.pin_outlined, size: 20),
-                    trailing: MouseRegion(
-                      cursor: SystemMouseCursors.click,
-                      child: GestureDetector(
-                        onTap: () =>
-                            setState(() => _hidePassword = !_hidePassword),
-                        child: Box(
-                          style: Style(
-                            $text.style.decoration.underline(),
-                            $with.cursor.click(),
-                            $with.intrinsicWidth(),
-                            $with.align(alignment: Alignment.centerRight),
-                          ),
-                          child: StyledText(_hidePassword ? "Show" : "Hide"),
-                        ),
-                      ),
+                    trailing: MoonBaseInteractiveWidget(
+                      style: _trailingStyle,
+                      onTap: () =>
+                          setState(() => _hidePassword = !_hidePassword),
+                      child: StyledText(_hidePassword ? "Show" : "Hide"),
                     ),
                     hint: const Text(
                       "Enter password (abc)",
@@ -140,8 +138,8 @@ class _StyledFormTextInputState extends State<StyledFormTextInput> {
                   textInputConfiguration: MoonTextInputConfiguration(
                     textAlignVertical: TextAlignVertical.top,
                     style: const TextStyle(fontSize: 16),
-                    helperStyle: _getHelperStyle(),
-                    inputStyle: _getInputStyle().add(
+                    helperStyle: _helperStyle,
+                    inputStyle: _inputStyle.add(
                       $box.chain
                         ..height(200)
                         ..padding(16),
@@ -157,15 +155,10 @@ class _StyledFormTextInputState extends State<StyledFormTextInput> {
                           : null,
                 ),
                 const SizedBox(height: 24),
-                PressableBox(
-                  style: Style(
-                    $box.chain
-                      ..padding(8)
-                      ..borderRadius(8)
-                      ..color(Colors.purpleAccent),
-                  ),
-                  onPress: () => Form.of(context).validate(),
-                  child: const Text("Submit"),
+                MoonBaseInteractiveWidget(
+                  style: getButtonStyle(),
+                  onTap: () => Form.of(context).validate(),
+                  child: const StyledText("Submit"),
                 ),
               ],
             );

@@ -1,3 +1,5 @@
+import 'package:example/src/common_styles.dart';
+
 import 'package:flutter/material.dart';
 
 import 'package:mix/mix.dart';
@@ -12,68 +14,81 @@ class StyledAlert extends StatefulWidget {
 }
 
 class _StyledAlertState extends State<StyledAlert> {
-  bool show = true;
+  bool _show = true;
+
+  Style get _alertStyle => Style(
+        $box.chain
+          ..padding(16.0)
+          ..width(400.0)
+          ..borderRadius(8.0),
+        $icon.size(16),
+      );
+
+  Style get _columnStyle => Style(
+        $flex.chain
+          ..crossAxisAlignment.start()
+          ..gap(8),
+        $with.defaultTextStyle.style(color: Colors.grey),
+      );
+
+  Style get _rowStyle => Style(
+        $flex.gap(12),
+        $text.style(
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+        ),
+      );
+
+  Color _getThemeColor(int index) => index == 0
+      ? Colors.black
+      : index == 1
+          ? Colors.red
+          : Colors.green;
+
+  Color _getBgColor(int index) => index == 0
+      ? Colors.white
+      : index == 1
+          ? Colors.red.shade50
+          : Colors.transparent;
 
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      shrinkWrap: true,
       itemCount: 3,
+      shrinkWrap: true,
       itemBuilder: (BuildContext _, int index) {
-        final Color themeColor = index == 0
-            ? Colors.black
-            : index == 1
-                ? Colors.red
-                : Colors.green;
-
-        final Color bgColor = index == 0
-            ? Colors.white
-            : index == 1
-                ? Colors.red.shade50
-                : Colors.transparent;
-
-        final Style alertStyle = Style(
-          $box.padding(16.0),
-          $box.width(400.0),
-          $box.color(bgColor),
-          $box.borderRadius(8.0),
-          index == 2 ? $box.border(color: themeColor) : null,
-          $icon.size(16),
-          $icon.color(themeColor),
-        );
+        final Color themeColor = _getThemeColor(index);
 
         return Column(
           children: [
             MoonRawAlert(
-              show: (index > 0) || index == 0 && show,
-              style: alertStyle,
+              show: (index > 0) || index == 0 && _show,
+              style: _alertStyle.add(
+                $box.chain
+                  ..color(_getBgColor(index))
+                  ..border(color: themeColor),
+                $icon.color(themeColor),
+              ),
               child: StyledColumn(
-                style: Style(
-                  $flex.crossAxisAlignment.start(),
-                  $flex.gap(8),
-                  $with.defaultTextStyle.style(
-                    color: Colors.grey,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
+                style: _columnStyle,
                 children: [
                   StyledRow(
-                    style: Style(
-                      $flex.gap(12),
-                      $with.defaultTextStyle.style(
-                        color: themeColor,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+                    style: _rowStyle.add($text.style.color(themeColor)),
                     children: [
-                      const Icon(Icons.info_outline),
-                      const Expanded(child: Text("MoonAlert")),
-                      IconButton(
-                        onPressed: () =>
-                            index == 0 ? setState(() => show = !show) : null,
-                        icon: const Icon(Icons.close),
+                      Icon(
+                        Icons.info_outline,
+                        color: themeColor,
+                      ),
+                      const Expanded(
+                        child: StyledText("MoonAlert"),
+                      ),
+                      MoonBaseInteractiveWidget(
+                        style: getIconButtonStyle().add(
+                          $icon.color(themeColor),
+                        ),
+                        onTap: () =>
+                            index == 0 ? setState(() => _show = !_show) : null,
+                        child: const StyledIcon(Icons.close),
                       ),
                     ],
                   ),
@@ -83,14 +98,9 @@ class _StyledAlertState extends State<StyledAlert> {
             ),
             if (index == 0)
               MoonBaseInteractiveWidget(
-                style: Style(
-                  $box.color(Colors.orange),
-                  $box.borderRadius(8),
-                  $box.margin(8),
-                  $box.padding(8.0, 16.0),
-                ),
-                onTap: () => setState(() => show = !show),
-                child: const Text('Toggle Alert'),
+                style: getButtonStyle(),
+                onTap: () => setState(() => _show = !_show),
+                child: const StyledText('Toggle Alert'),
               ),
           ],
         );

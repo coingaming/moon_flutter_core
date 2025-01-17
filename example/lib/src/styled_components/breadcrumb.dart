@@ -15,6 +15,28 @@ class _StyledBreadcrumbState extends State<StyledBreadcrumb> {
   Duration get _duration => const Duration(milliseconds: 150);
   int _pagesCount = 7;
 
+  Style get _showMoreWidgetStyle => Style(
+        $box.padding.horizontal(8),
+        $icon.chain
+          ..color(Colors.black54)
+          ..size(14),
+        ($on.hover | $on.focus)(
+          $box.padding.horizontal(12),
+          $icon.color(Colors.black),
+        ),
+      ).animate(duration: _duration);
+
+  Style get _breadcrumbItemStyle => Style(
+        $box.padding.horizontal(8),
+        $text.style.color(Colors.black54),
+        ($on.hover | $on.focus)(
+          $text.style.color(Colors.black),
+        ),
+        SelectedState.selected(
+          $text.style.color(Colors.black),
+        ),
+      ).animate(duration: _duration);
+
   Variant _getVariant(int index) => index == _pagesCount - 1
       ? SelectedState.selected
       : SelectedState.unselected;
@@ -23,15 +45,7 @@ class _StyledBreadcrumbState extends State<StyledBreadcrumb> {
   Widget build(BuildContext context) {
     return MoonRawBreadcrumb(
       showMoreWidget: MoonRawBreadcrumbItem(
-        style: Style(
-          $box.padding.horizontal(8),
-          $icon.color(Colors.black54),
-          $icon.size(14),
-          ($on.hover | $on.focus)(
-            $box.padding.horizontal(12),
-            $icon.color(Colors.black),
-          ),
-        ).animate(duration: _duration),
+        style: _showMoreWidgetStyle,
         child: const StyledIcon(Icons.menu),
       ),
       items: List.generate(
@@ -40,16 +54,7 @@ class _StyledBreadcrumbState extends State<StyledBreadcrumb> {
           final String itemName = index == 0 ? "Home" : "Page $index";
 
           return MoonRawBreadcrumbItem(
-            style: Style(
-              $box.padding.horizontal(8),
-              $text.style.color(Colors.black54),
-              ($on.hover | $on.focus)(
-                $text.style.color(Colors.black),
-              ),
-              SelectedState.selected(
-                $text.style.color(Colors.black),
-              ),
-            ).applyVariant(_getVariant(index)).animate(duration: _duration),
+            style: _breadcrumbItemStyle.applyVariant(_getVariant(index)),
             child: StyledText(itemName),
             onTap: () {
               ScaffoldMessenger.of(context).showSnackBar(

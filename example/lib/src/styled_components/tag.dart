@@ -7,31 +7,32 @@ import 'package:moon_core/moon_core.dart';
 class StyledTag extends StatelessWidget {
   const StyledTag({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return MoonBaseInteractiveWidget(
-      onTap: () {},
-      style: Style(
-        $box.color(Colors.white),
-        $box.borderRadius(4.0),
-        $box.padding(4.0, 8.0),
-        $flex.gap(2.0),
-        $flex.mainAxisSize.min(),
-        $with.iconTheme.data(
-          color: Colors.black,
-          size: 12,
-        ),
-        $with.defaultTextStyle.style(
-          color: Colors.black,
+  Style get _tagStyle => Style(
+        $box.chain
+          ..color(Colors.white)
+          ..borderRadius(4.0)
+          ..padding(4.0, 8.0),
+        $flex.chain
+          ..gap(2.0)
+          ..mainAxisSize.min(),
+        $icon.size(12),
+        $text.style(
           fontSize: 12,
           height: 1.0,
         ),
-      ),
+      );
+
+  @override
+  Widget build(BuildContext context) {
+    return MoonBaseInteractiveWidget(
+      focusNode: FocusNode(skipTraversal: true),
+      onTap: () {},
+      style: _tagStyle,
       child: const StyledRow(
         inherit: true,
         children: [
-          Text("MoonTag"),
-          Icon(Icons.close),
+          StyledText("MoonTag"),
+          StyledIcon(Icons.close),
         ],
       ),
     );

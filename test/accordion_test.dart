@@ -52,7 +52,7 @@ void main() {
         (tester) async {
       await tester.pumpWidget(
         const _SingleAccordionTestWidget(
-          isDisabled: true,
+          enabled: false,
         ),
       );
 
@@ -304,13 +304,13 @@ void main() {
 }
 
 class _SingleAccordionTestWidget extends StatelessWidget {
-  final bool isDisabled;
+  final bool enabled;
   final bool initiallyExpanded;
   final bool hasContentOutside;
   final Widget Function(BuildContext, Animation<double>)? trailingWidget;
 
   const _SingleAccordionTestWidget({
-    this.isDisabled = false,
+    this.enabled = true,
     this.initiallyExpanded = false,
     this.hasContentOutside = false,
     this.trailingWidget,
@@ -322,7 +322,7 @@ class _SingleAccordionTestWidget extends StatelessWidget {
       home: Scaffold(
         body: MoonRawAccordion<_AccordionItems>(
           key: _singleAccordionKey,
-          isDisabled: isDisabled,
+          enabled: enabled,
           initiallyExpanded: initiallyExpanded,
           hasContentOutside: hasContentOutside,
           header: const Text(_accordionLabel),
