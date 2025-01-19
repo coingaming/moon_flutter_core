@@ -12,35 +12,46 @@ class StyledSwitch extends StatefulWidget {
 }
 
 class _StyledSwitchState extends State<StyledSwitch> {
-  bool switchValue = false;
-  bool switchTextValue = false;
-  bool switchIconValue = false;
+  bool _switchValue = false;
+  bool _switchTextValue = false;
+  bool _switchIconValue = false;
+
+  Style get _switchStyle => Style(
+        $box.chain
+          ..width(64)
+          ..height(32),
+      );
+
+  Style get _thumbStyle => Style(
+        $box.chain
+          ..width(20)
+          ..height(20)
+          ..color(_switchValue ? Colors.deepPurple : Colors.purple)
+          ..borderRadius(_switchValue ? 6 : 14)
+          ..border(
+            color: Colors.transparent,
+            width: 0,
+            strokeAlign: BorderSide.strokeAlignOutside,
+          ),
+        $on.focus(
+          $box.border(
+            color: Colors.grey.shade400,
+            width: 4,
+            strokeAlign: BorderSide.strokeAlignOutside,
+          ),
+        ),
+      ).animate();
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         MoonRawSwitch(
-          value: switchValue,
+          value: _switchValue,
           thumbAnimatesWithOvershoot: false,
-          switchStyle: Style(
-            $box.width(64),
-            $box.height(32),
-          ),
-          thumbStyle: Style(
-            $box.width(24),
-            $box.height(24),
-            $box.color(switchValue ? Colors.deepPurple : Colors.purple),
-            $box.borderRadius(switchValue ? 6 : 14),
-            $on.focus(
-              $box.border(
-                color: Colors.grey.shade400,
-                width: 4,
-                strokeAlign: BorderSide.strokeAlignOutside,
-              ),
-            ),
-          ),
-          onChanged: (bool newValue) => setState(() => switchValue = newValue),
+          switchStyle: _switchStyle,
+          thumbStyle: _thumbStyle,
+          onChanged: (bool newValue) => setState(() => _switchValue = newValue),
           trackDecorationTween: DecorationTween(
             begin: BoxDecoration(
               color: Colors.purple.withOpacity(0.1),
@@ -56,9 +67,10 @@ class _StyledSwitchState extends State<StyledSwitch> {
         ),
         const SizedBox(height: 24),
         MoonRawSwitch(
-          value: switchTextValue,
+          value: _switchTextValue,
+          focusNode: FocusNode(skipTraversal: true),
           onChanged: (bool newValue) =>
-              setState(() => switchTextValue = newValue),
+              setState(() => _switchTextValue = newValue),
           activeThumbWidget: const Icon(Icons.check, size: 12),
           inactiveThumbWidget: const Icon(Icons.close, size: 12),
           activeTrackWidget: const Text(
@@ -74,9 +86,10 @@ class _StyledSwitchState extends State<StyledSwitch> {
         ),
         const SizedBox(height: 32),
         MoonRawSwitch(
-          value: switchIconValue,
+          value: _switchIconValue,
+          focusNode: FocusNode(skipTraversal: true),
           onChanged: (bool newValue) =>
-              setState(() => switchIconValue = newValue),
+              setState(() => _switchIconValue = newValue),
           activeTrackWidget: const Icon(
             Icons.nightlight_outlined,
             size: 12,

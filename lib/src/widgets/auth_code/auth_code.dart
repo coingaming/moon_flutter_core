@@ -596,8 +596,9 @@ class _MoonRawAuthCodeState extends State<MoonRawAuthCode>
 
                                       return Box(
                                         style: Style(
-                                          $box.height(_effectiveHeight),
-                                          $box.width(48),
+                                          $box.chain
+                                            ..height(_effectiveHeight)
+                                            ..width(48),
                                         ).merge(widget.inputFieldStyle),
                                         child: Center(
                                           child: _buildChild(index),

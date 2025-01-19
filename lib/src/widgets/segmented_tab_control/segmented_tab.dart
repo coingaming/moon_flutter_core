@@ -6,8 +6,8 @@ class MoonRawSegmentedTab {
   /// {@macro flutter.widgets.Focus.autofocus}
   final bool autoFocus;
 
-  /// Whether the segmented tab is disabled.
-  final bool disabled;
+  /// Whether the segmented tab is enabled.
+  final bool enabled;
 
   /// Should gestures provide audible and/or haptic feedback.
   ///
@@ -30,17 +30,17 @@ class MoonRawSegmentedTab {
   final ValueChanged<bool>? isSelected;
 
   /// The primary content of the segmented tab.
-  final Widget? child;
+  final Widget child;
 
   /// Creates a Moon Design raw segmented tab.
   const MoonRawSegmentedTab({
     this.autoFocus = false,
-    this.disabled = false,
+    this.enabled = true,
     this.enableFeedback = false,
     this.focusNode,
     this.tabStyle,
     this.semanticLabel,
     this.isSelected,
-    this.child,
+    required this.child,
   });
 }

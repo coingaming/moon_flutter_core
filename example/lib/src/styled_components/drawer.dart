@@ -1,3 +1,5 @@
+import 'package:example/src/common_styles.dart';
+
 import 'package:flutter/material.dart';
 
 import 'package:mix/mix.dart';
@@ -7,15 +9,18 @@ import 'package:moon_core/moon_core.dart';
 class StyledDrawer extends StatelessWidget {
   const StyledDrawer({super.key});
 
+  Style get _drawerStyle => Style(
+        $box.chain
+          ..color(Colors.lime)
+          ..borderRadiusDirectional.topEnd(16.0)
+          ..borderRadiusDirectional.bottomEnd(16.0)
+          ..width(300),
+      );
+
   @override
   Widget build(BuildContext context) {
     return Box(
-      style: Style(
-        $box.color(Colors.lime),
-        $box.borderRadiusDirectional.topEnd(16.0),
-        $box.borderRadiusDirectional.bottomEnd(16.0),
-        $box.width(MediaQuery.of(context).size.width * 0.75),
-      ),
+      style: _drawerStyle,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -24,14 +29,9 @@ class StyledDrawer extends StatelessWidget {
           Builder(
             builder: (BuildContext context) {
               return MoonBaseInteractiveWidget(
-                style: Style(
-                  $box.padding(8.0),
-                  $box.borderRadius(8.0),
-                  $box.color(Colors.deepPurpleAccent),
-                  $text.style.color(Colors.white),
-                ),
-                child: const StyledText("Close"),
+                style: getButtonStyle(),
                 onTap: () => Navigator.of(context).pop(),
+                child: const StyledText("Close"),
               );
             },
           ),

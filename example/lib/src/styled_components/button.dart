@@ -7,43 +7,34 @@ import 'package:moon_core/moon_core.dart';
 class StyledButton extends StatelessWidget {
   const StyledButton({super.key});
 
+  Style get _buttonStyle => Style(
+        $box.chain
+          ..color(Colors.white)
+          ..borderRadius(8)
+          ..border(color: Colors.black38)
+          ..padding(8.0),
+        $flex.chain
+          ..gap(8.0)
+          ..mainAxisSize.min(),
+        $with.scale(1),
+        $with.opacity(1),
+        $with.defaultTextStyle.style(color: Colors.black),
+        $with.iconTheme.data(color: Colors.black, size: 16),
+        ($on.hover | $on.focus)(
+          $box.color(Colors.grey.shade300),
+          $with.iconTheme.data(color: Colors.blue, size: 16),
+          $with.defaultTextStyle.style(color: Colors.blue),
+        ),
+        ($on.press | $on.longPress)(
+          $with.scale(0.95),
+        ),
+      ).animate(duration: const Duration(milliseconds: 200));
+
   @override
   Widget build(BuildContext context) {
-    final Style activeStateStyle = Style(
-      $box.color(Colors.grey.shade300),
-      $with.iconTheme.data(
-        color: Colors.blue,
-        size: 16,
-      ),
-      $with.defaultTextStyle.style(color: Colors.blue),
-    );
-
-    final Style buttonStyle = Style(
-      $box.color(Colors.white),
-      $box.borderRadius(8),
-      $box.border(color: Colors.black38),
-      $box.padding(8.0),
-      $flex.gap(8.0),
-      $flex.mainAxisSize.min(),
-      $with.scale(1),
-      $with.opacity(1),
-      $with.defaultTextStyle.style(color: Colors.black),
-      $with.iconTheme.data(
-        color: Colors.black,
-        size: 16,
-      ),
-      ($on.hover | $on.focus)(
-        activeStateStyle(),
-      ),
-      ($on.press | $on.longPress)(
-        activeStateStyle(),
-        $with.scale(0.95),
-      ),
-    ).animate(duration: const Duration(milliseconds: 200));
-
     return MoonBaseInteractiveWidget(
       onTap: () {},
-      style: buttonStyle,
+      style: _buttonStyle,
       child: StyledRow(
         inherit: true,
         children: [
@@ -66,10 +57,7 @@ class StyledButton extends StatelessWidget {
               child: Stack(
                 alignment: Alignment.topCenter,
                 children: [
-                  Icon(
-                    Icons.person,
-                    size: 24,
-                  ),
+                  Icon(Icons.person, size: 24),
                   Positioned(
                     bottom: 0,
                     child: Text("JD"),

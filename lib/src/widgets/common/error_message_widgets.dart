@@ -57,7 +57,9 @@ class _MoonErrorMessageState extends State<MoonErrorMessage>
       child: Row(
         children: [
           StyledIcon(
-            style: Style($icon.size(16)),
+            style: Style(
+              $icon.size(16),
+            ),
             Icons.info_outline,
           ),
           const SizedBox(width: 4),

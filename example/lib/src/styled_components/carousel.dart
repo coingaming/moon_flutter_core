@@ -19,7 +19,7 @@ class _StyledCarouselState extends State<StyledCarousel> {
         itemExtent: 114,
         isCentered: false,
         clampMaxExtent: true,
-        itemBuilder: (BuildContext context, int itemIndex, int index) {
+        itemBuilder: (BuildContext _, int itemIndex, int __) {
           return DecoratedBox(
             decoration: BoxDecoration(
               color: Colors.purple,

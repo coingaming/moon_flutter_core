@@ -68,8 +68,15 @@ class MoonRawTooltip extends StatelessWidget {
   /// The semantic label for the tooltip.
   final String? semanticLabel;
 
-  /// The callback that is called when the tooltip is tapped.
+  /// The callback that is called when the [child] of the tooltip is tapped.
   final VoidCallback? onTap;
+
+  /// The callback that is called when the area outside of the tooltip's [child]
+  /// is tapped.
+  final VoidCallback? onTapOutside;
+
+  /// The callback that is called when the [target] of the tooltip is hovered.
+  final VoidCallback? onTargetHover;
 
   /// The widget to display as the target of the tooltip.
   final Widget target;
@@ -97,12 +104,12 @@ class MoonRawTooltip extends StatelessWidget {
     this.tooltipShadows,
     this.tooltipAnchorPosition = OverlayPosition.top,
     this.semanticLabel,
+    this.onTargetHover,
     this.onTap,
+    this.onTapOutside,
     required this.target,
     required this.child,
   });
-
-  static final GlobalKey _targetKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -118,15 +125,14 @@ class MoonRawTooltip extends StatelessWidget {
       transitionCurve: transitionCurve,
       transitionDuration: transitionDuration,
       onTap: onTap,
-      target: SizedBox(
-        key: _targetKey,
-        child: target,
-      ),
+      onTapOutside: onTapOutside,
+      onTargetHover: onTargetHover,
+      target: target,
       child: useDefaultTooltipShape
           ? Builder(
               builder: (BuildContext context) {
                 final RenderBox? targetRenderBox =
-                    _targetKey.currentContext?.findRenderObject() as RenderBox?;
+                    context.findRenderObject() as RenderBox?;
 
                 return DecoratedBox(
                   decoration: ShapeDecoration(

@@ -9,8 +9,8 @@ class MoonRawSegmentedTabControl extends StatefulWidget {
   /// Axis direction of the segmented tab control.
   final Axis axisDirection;
 
-  /// Whether the segmented tab control is disabled.
-  final bool isDisabled;
+  /// Whether the segmented tab control is enabled.
+  final bool enabled;
 
   /// Whether the segmented tab control is expanded to its full available width
   /// horizontally.
@@ -41,7 +41,7 @@ class MoonRawSegmentedTabControl extends StatefulWidget {
   const MoonRawSegmentedTabControl({
     super.key,
     this.axisDirection = Axis.horizontal,
-    this.isDisabled = false,
+    this.enabled = true,
     this.isExpanded = false,
     this.initialIndex = 0,
     this.style,
@@ -110,14 +110,14 @@ class _MoonRawSegmentedTabControlState extends State<MoonRawSegmentedTabControl>
       widget.tabs.length,
       (int index) {
         final child = MoonBaseInteractiveWidget(
-          enabled: !widget.isDisabled && !widget.tabs[index].disabled,
+          enabled: widget.enabled && widget.tabs[index].enabled,
           enableFeedback: widget.tabs[index].enableFeedback,
           autofocus: widget.tabs[index].autoFocus,
           focusNode: widget.tabs[index].focusNode,
           semanticLabel: widget.tabs[index].semanticLabel,
           style: widget.tabs[index].tabStyle,
           onTap: () => _updateTabs(index),
-          child: widget.tabs[index].child!,
+          child: widget.tabs[index].child,
         );
 
         return widget.isExpanded ? Expanded(child: child) : child;
@@ -130,7 +130,9 @@ class _MoonRawSegmentedTabControlState extends State<MoonRawSegmentedTabControl>
             children: children,
           )
         : VBox(
-            style: widget.style,
+            style: Style(
+              $box.height(MediaQuery.of(context).size.height),
+            ).merge(widget.style),
             children: children,
           );
   }

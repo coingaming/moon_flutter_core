@@ -1,3 +1,5 @@
+import 'package:example/src/common_styles.dart';
+
 import 'package:flutter/material.dart';
 
 import 'package:mix/mix.dart';
@@ -14,15 +16,7 @@ class StyledTextInput extends StatefulWidget {
 class _StyledTextInputState extends State<StyledTextInput> {
   late final TextEditingController _searchController;
 
-  ShapeDecoration _getBorder(Color color, {double width = 1.5}) =>
-      ShapeDecorationWithPremultipliedAlpha(
-        shape: MoonSquircleBorder(
-          borderRadius: BorderRadius.circular(8),
-          side: BorderSide(color: color, width: width),
-        ),
-      );
-
-  Style _getInputStyle() => Style(
+  Style get _inputStyle => Style(
         $box.chain
           ..width(300)
           ..padding(4, 12)
@@ -33,7 +27,7 @@ class _StyledTextInputState extends State<StyledTextInput> {
         $on.disabled($with.opacity(0.5)),
       ).animate(duration: const Duration(milliseconds: 300));
 
-  Style _getHelperStyle() => Style(
+  Style get _helperStyle => Style(
         $box.chain
           ..padding.vertical(8)
           ..width(300),
@@ -42,6 +36,14 @@ class _StyledTextInputState extends State<StyledTextInput> {
           ..style.fontSize(10),
         $on.disabled($with.opacity(0.5)),
       ).animate(duration: const Duration(milliseconds: 300));
+
+  ShapeDecoration _getBorder(Color color, {double width = 1.5}) =>
+      ShapeDecorationWithPremultipliedAlpha(
+        shape: MoonSquircleBorder(
+          borderRadius: BorderRadius.circular(8),
+          side: BorderSide(color: color, width: width),
+        ),
+      );
 
   @override
   void initState() {
@@ -62,16 +64,18 @@ class _StyledTextInputState extends State<StyledTextInput> {
     return MoonRawTextInput(
       textInputConfiguration: MoonTextInputConfiguration(
         hasFloatingLabel: true,
-        helperStyle: _getHelperStyle(),
-        inputStyle: _getInputStyle(),
+        helperStyle: _helperStyle,
+        inputStyle: _inputStyle,
         controller: _searchController,
-        leading: const Icon(Icons.search, size: 20),
-        trailing: MouseRegion(
-          cursor: SystemMouseCursors.click,
-          child: GestureDetector(
-            onTap: () => _searchController.clear(),
-            child: const Icon(Icons.close, size: 20),
-          ),
+        leading: MoonBaseInteractiveWidget(
+          style: getIconButtonStyle(),
+          onTap: () => _searchController.clear(),
+          child: const Icon(Icons.close, size: 20),
+        ),
+        trailing: MoonBaseInteractiveWidget(
+          style: getIconButtonStyle(),
+          onTap: () => _searchController.clear(),
+          child: const Icon(Icons.close, size: 20),
         ),
         helper: const StyledText("Text input field with floating label."),
         hint: const Text(

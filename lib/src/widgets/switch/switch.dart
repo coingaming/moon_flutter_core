@@ -235,8 +235,9 @@ class _MoonRawSwitchState extends State<MoonRawSwitch>
         autofocus: widget.autofocus,
         focusNode: widget.focusNode,
         style: Style(
-          $box.height(24),
-          $box.width(44),
+          $box.chain
+            ..height(24)
+            ..width(44),
         ).merge(widget.switchStyle),
         onTap: _handleTap,
         child: RepaintBoundary(
@@ -278,10 +279,11 @@ class _MoonRawSwitchState extends State<MoonRawSwitch>
                         alignment: alignmentAnimation.value,
                         child: Box(
                           style: Style(
-                            $box.width(16),
-                            $box.height(16),
-                            $box.borderRadius(8),
-                            $box.color(Colors.white),
+                            $box.chain
+                              ..width(16)
+                              ..height(16)
+                              ..borderRadius(8)
+                              ..color(Colors.white),
                           )
                               .animate(duration: widget.duration)
                               .merge(widget.thumbStyle),
