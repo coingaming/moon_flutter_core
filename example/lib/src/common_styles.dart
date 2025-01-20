@@ -29,7 +29,7 @@ Style getEffects() => Style(
       $on.focus(
         $box.shapeDecoration.as(
           ShapeDecorationWithPremultipliedAlpha(
-            shape: MoonSquircleBorder(
+            shape: MoonBorder(
               side: BorderSide(color: Colors.purple.shade100, width: 2),
               borderRadius: BorderRadius.circular(8),
             ),

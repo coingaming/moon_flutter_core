@@ -40,7 +40,7 @@ class _StyledAuthCodeState extends State<StyledAuthCode> {
   }) =>
       ShapeDecorationWithPremultipliedAlpha(
         color: Colors.white,
-        shape: MoonSquircleBorder(
+        shape: MoonBorder(
           borderRadius: BorderRadius.circular(8),
           side: BorderSide(color: color, width: width),
         ),

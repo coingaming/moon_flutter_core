@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 
-import 'package:moon_core/src/utils/moon_squircle_border.dart';
+import 'package:moon_core/moon_core.dart';
 
-part 'moon_squircle_border_dto.g.dart';
+part 'moon_border_dto.g.dart';
 
 @MixableDto(generateUtility: false)
-final class MoonSquircleBorderDto extends OutlinedBorderDto<MoonSquircleBorder>
-    with _$MoonSquircleBorderDto {
+final class MoonBorderDto extends OutlinedBorderDto<MoonBorder>
+    with _$MoonBorderDto {
   final BorderRadiusGeometryDto? borderRadius;
   final BorderAlign? borderAlign;
 
-  const MoonSquircleBorderDto({
+  const MoonBorderDto({
     this.borderRadius,
     this.borderAlign,
     super.side,
@@ -24,11 +24,11 @@ final class MoonSquircleBorderDto extends OutlinedBorderDto<MoonSquircleBorder>
       borderRadius;
 
   @override
-  MoonSquircleBorder get defaultValue => const MoonSquircleBorder();
+  MoonBorder get defaultValue => const MoonBorder();
 
   @override
-  OutlinedBorderDto<MoonSquircleBorder> adapt(OutlinedBorderDto<OutlinedBorder> other) {
-    return MoonSquircleBorderDto(
+  OutlinedBorderDto<MoonBorder> adapt(OutlinedBorderDto<OutlinedBorder> other) {
+    return MoonBorderDto(
       borderRadius: other.borderRadiusGetter,
       side: other.side,
     );

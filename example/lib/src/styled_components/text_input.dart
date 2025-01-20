@@ -39,7 +39,7 @@ class _StyledTextInputState extends State<StyledTextInput> {
 
   ShapeDecoration _getBorder(Color color, {double width = 1.5}) =>
       ShapeDecorationWithPremultipliedAlpha(
-        shape: MoonSquircleBorder(
+        shape: MoonBorder(
           borderRadius: BorderRadius.circular(8),
           side: BorderSide(color: color, width: width),
         ),

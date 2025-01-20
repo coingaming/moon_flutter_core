@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 import 'package:mix/mix.dart';
 
-import 'package:moon_core/src/mix/attributes/moon_squircle_border_dto.dart';
+import 'package:moon_core/src/mix/attributes/moon_border_dto.dart';
 import 'package:moon_core/src/utils/color/color_premul_lerp.dart';
 
 enum BorderAlign {
@@ -15,15 +15,15 @@ enum BorderAlign {
   outside,
 }
 
-class MoonSquircleBorder extends MixOutlinedBorder {
+class MoonBorder extends MixOutlinedBorder {
   /// The radius for each corner.
   ///
   /// Negative radius values are clamped to 0.0 by [getInnerPath] and [getOuterPath].
   final BorderRadiusGeometry borderRadius;
   final BorderAlign borderAlign;
 
-  const MoonSquircleBorder({
-    super.side = MoonSquicleBorderSide.none,
+  const MoonBorder({
+    super.side = MoonBorderSide.none,
     this.borderRadius = BorderRadius.zero,
     this.borderAlign = BorderAlign.inside,
   });
@@ -43,7 +43,7 @@ class MoonSquircleBorder extends MixOutlinedBorder {
 
   @override
   ShapeBorder scale(double t) {
-    return MoonSquircleBorder(
+    return MoonBorder(
       side: side.scale(t),
       borderRadius: borderRadius * t,
     );
@@ -51,9 +51,9 @@ class MoonSquircleBorder extends MixOutlinedBorder {
 
   @override
   ShapeBorder? lerpFrom(ShapeBorder? a, double t) {
-    if (a is MoonSquircleBorder) {
-      return MoonSquircleBorder(
-        side: MoonSquicleBorderSide.lerp(a.side, side, t),
+    if (a is MoonBorder) {
+      return MoonBorder(
+        side: MoonBorderSide.lerp(a.side, side, t),
         borderRadius:
             BorderRadiusGeometry.lerp(a.borderRadius, borderRadius, t)!,
       );
@@ -63,9 +63,9 @@ class MoonSquircleBorder extends MixOutlinedBorder {
 
   @override
   ShapeBorder? lerpTo(ShapeBorder? b, double t) {
-    if (b is MoonSquircleBorder) {
-      return MoonSquircleBorder(
-        side: MoonSquicleBorderSide.lerp(side, b.side, t),
+    if (b is MoonBorder) {
+      return MoonBorder(
+        side: MoonBorderSide.lerp(side, b.side, t),
         borderRadius:
             BorderRadiusGeometry.lerp(borderRadius, b.borderRadius, t)!,
       );
@@ -122,12 +122,12 @@ class MoonSquircleBorder extends MixOutlinedBorder {
   }
 
   @override
-  MoonSquircleBorder copyWith({
+  MoonBorder copyWith({
     BorderSide? side,
     BorderRadius? borderRadius,
     BorderAlign? borderAlign,
   }) {
-    return MoonSquircleBorder(
+    return MoonBorder(
       side: side ?? this.side,
       borderRadius: borderRadius ?? this.borderRadius,
       borderAlign: borderAlign ?? this.borderAlign,
@@ -190,7 +190,7 @@ class MoonSquircleBorder extends MixOutlinedBorder {
   @override
   bool operator ==(Object other) {
     if (other.runtimeType != runtimeType) return false;
-    return other is MoonSquircleBorder &&
+    return other is MoonBorder &&
         other.side == side &&
         other.borderRadius == borderRadius &&
         other.borderAlign == borderAlign;
@@ -205,8 +205,8 @@ class MoonSquircleBorder extends MixOutlinedBorder {
   }
 
   @override
-  MoonSquircleBorderDto toDto() {
-    return MoonSquircleBorderDto(
+  MoonBorderDto toDto() {
+    return MoonBorderDto(
       side: side.toDto(),
       borderRadius: borderRadius.toDto(),
       borderAlign: borderAlign,
@@ -214,7 +214,7 @@ class MoonSquircleBorder extends MixOutlinedBorder {
   }
 }
 
-class MoonSquicleBorderSide with Diagnosticable {
+class MoonBorderSide with Diagnosticable {
   /// This constant represents the border being drawn fully inside the border path.
   ///
   /// This is used as the default value for the [strokeAlign] property.
@@ -319,7 +319,7 @@ class MoonSquicleBorderSide with Diagnosticable {
   /// Creates the side of a border with premultiplied alpha color.
   ///
   /// By default, the border is 1.0 logical pixels wide and solid black.
-  const MoonSquicleBorderSide({
+  const MoonBorderSide({
     this.color = const Color(0xFF000000),
     this.width = 1.0,
     this.style = BorderStyle.solid,
