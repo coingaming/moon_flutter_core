@@ -15,8 +15,10 @@ final class DefaultTextStyleModifierSpec
   final int? maxLines;
   final TextAlign? textAlign;
   final TextOverflow? overflow;
-  final TextHeightBehavior? textHeightBehavior;
   final TextWidthBasis? textWidthBasis;
+
+  @MixableProperty(dto: MixableFieldDto(type: TextHeightBehaviorDto))
+  final TextHeightBehavior? textHeightBehavior;
 
   const DefaultTextStyleModifierSpec({
     this.style,

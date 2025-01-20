@@ -100,7 +100,7 @@ final class DefaultTextStyleModifierSpecAttribute
   final int? maxLines;
   final TextAlign? textAlign;
   final TextOverflow? overflow;
-  final TextHeightBehavior? textHeightBehavior;
+  final TextHeightBehaviorDto? textHeightBehavior;
   final TextWidthBasis? textWidthBasis;
 
   const DefaultTextStyleModifierSpecAttribute({
@@ -129,7 +129,7 @@ final class DefaultTextStyleModifierSpecAttribute
       maxLines: maxLines,
       textAlign: textAlign,
       overflow: overflow,
-      textHeightBehavior: textHeightBehavior,
+      textHeightBehavior: textHeightBehavior?.resolve(mix),
       textWidthBasis: textWidthBasis,
     );
   }
@@ -153,7 +153,8 @@ final class DefaultTextStyleModifierSpecAttribute
       maxLines: other.maxLines ?? maxLines,
       textAlign: other.textAlign ?? textAlign,
       overflow: other.overflow ?? overflow,
-      textHeightBehavior: other.textHeightBehavior ?? textHeightBehavior,
+      textHeightBehavior: textHeightBehavior?.merge(other.textHeightBehavior) ??
+          other.textHeightBehavior,
       textWidthBasis: other.textWidthBasis ?? textWidthBasis,
     );
   }
@@ -220,7 +221,7 @@ class DefaultTextStyleModifierSpecUtility<T extends Attribute>
     int? maxLines,
     TextAlign? textAlign,
     TextOverflow? overflow,
-    TextHeightBehavior? textHeightBehavior,
+    TextHeightBehaviorDto? textHeightBehavior,
     TextWidthBasis? textWidthBasis,
   }) {
     return builder(DefaultTextStyleModifierSpecAttribute(
