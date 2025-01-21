@@ -1,6 +1,7 @@
 name: moon_core
 description: Moon Design System headless UI core widgets for Flutter.
 version: 0.0.1
+publish_to: none
 homepage: ''
 
 environment:
