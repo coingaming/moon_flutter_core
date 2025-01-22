@@ -12,31 +12,38 @@ class StyledCarousel extends StatefulWidget {
 class _StyledCarouselState extends State<StyledCarousel> {
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 114,
-      child: MoonRawCarousel(
-        itemCount: 10,
-        itemExtent: 114,
-        isCentered: false,
-        clampMaxExtent: true,
-        itemBuilder: (BuildContext _, int itemIndex, int __) {
-          return DecoratedBox(
-            decoration: BoxDecoration(
-              color: Colors.purple,
-              borderRadius: BorderRadius.circular(12),
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        return SizedBox(
+          height: 114,
+          child: OverflowBox(
+            maxWidth: constraints.maxWidth,
+            child: MoonRawCarousel(
+              itemCount: 10,
+              itemExtent: 114,
+              isCentered: false,
+              clampMaxExtent: true,
+              itemBuilder: (BuildContext _, int itemIndex, int __) {
+                return DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: Colors.purple,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Center(
+                    child: Text(
+                      "${itemIndex + 1}",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                );
+              },
             ),
-            child: Center(
-              child: Text(
-                "${itemIndex + 1}",
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }
