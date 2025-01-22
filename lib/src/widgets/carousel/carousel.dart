@@ -44,19 +44,18 @@ class MoonRawCarousel extends StatefulWidget {
   final double velocityFactor;
 
   /// The delay between the items in the carousel's automatic scrolling sequence.
-  final Duration? autoPlayDelay;
+  final Duration autoPlayDelay;
 
   /// The duration of the MoonCarousel [autoplay] transition animation.
-  final Duration? transitionDuration;
+  final Duration transitionDuration;
 
   /// The curve of the MoonCarousel [autoplay] transition animation.
-  final Curve? transitionCurve;
+  final Curve transitionCurve;
 
   /// The total number of items to build for the carousel.
   final int itemCount;
 
   /// The [ScrollController] used to control the carousel.
-  /// Defaults to [MoonCarouselScrollController], if not provided.
   final ScrollController? controller;
 
   /// The carousel's scroll physics.
@@ -257,27 +256,30 @@ class _MoonRawCarouselState extends State<MoonRawCarousel> {
           final double centeredAnchor = _getCenteredAnchor(constraints);
           final bool clampMaxExtent = _clampMaxExtent(constraints.maxWidth);
 
-          return _MoonCarouselScrollable(
-            anchor: centeredAnchor,
-            axisDirection: axisDirection,
-            controller: _scrollController,
-            clampMaxExtent: clampMaxExtent,
-            gap: _effectiveGap,
-            itemCount: widget.itemCount,
-            itemExtent: widget.itemExtent + _effectiveGap,
-            loop: widget.loop,
-            physics: widget.physics ?? const MoonCarouselScrollPhysics(),
-            scrollBehavior: effectiveScrollBehavior,
-            velocityFactor: widget.velocityFactor,
-            viewportBuilder: (BuildContext context, ViewportOffset position) {
-              return Viewport(
-                offset: position,
-                anchor: centeredAnchor,
-                center: _forwardListKey,
-                axisDirection: axisDirection,
-                slivers: _buildSlivers(context, axisDirection),
-              );
-            },
+          return OverflowBox(
+            maxWidth: constraints.maxWidth,
+            child: _MoonCarouselScrollable(
+              anchor: centeredAnchor,
+              axisDirection: axisDirection,
+              controller: _scrollController,
+              clampMaxExtent: clampMaxExtent,
+              gap: _effectiveGap,
+              itemCount: widget.itemCount,
+              itemExtent: widget.itemExtent + _effectiveGap,
+              loop: widget.loop,
+              physics: widget.physics ?? const MoonCarouselScrollPhysics(),
+              scrollBehavior: effectiveScrollBehavior,
+              velocityFactor: widget.velocityFactor,
+              viewportBuilder: (BuildContext context, ViewportOffset position) {
+                return Viewport(
+                  offset: position,
+                  anchor: centeredAnchor,
+                  center: _forwardListKey,
+                  axisDirection: axisDirection,
+                  slivers: _buildSlivers(context, axisDirection),
+                );
+              },
+            ),
           );
         },
       ),

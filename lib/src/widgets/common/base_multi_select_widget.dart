@@ -102,7 +102,6 @@ class MoonBaseMultiSelectWidget extends StatelessWidget {
     return Semantics(
       label: semanticLabel,
       selected: value,
-      checked: value,
       mixed: tristate ? value == null : null,
       child: MoonBaseInteractiveWidget(
         autofocus: autofocus,
