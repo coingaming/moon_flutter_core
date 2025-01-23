@@ -7,7 +7,6 @@ Style getButtonStyle() => Style(
       $box.chain
         ..color(Colors.purple)
         ..borderRadius(8)
-        ..margin(8)
         ..padding(8.0, 16.0),
       $text.style.color(Colors.white),
       $icon.color(Colors.white),

@@ -98,7 +98,9 @@ class _StyledAlertState extends State<StyledAlert> {
             ),
             if (index == 0)
               MoonBaseInteractiveWidget(
-                style: getButtonStyle(),
+                style: getButtonStyle().add(
+                  $box.margin.vertical(16),
+                ),
                 onTap: () => setState(() => _show = !_show),
                 child: const StyledText('Toggle Alert'),
               ),

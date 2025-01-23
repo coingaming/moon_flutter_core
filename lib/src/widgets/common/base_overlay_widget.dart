@@ -14,6 +14,48 @@ enum OverlayPosition {
   horizontal,
 }
 
+mixin OverlayPositionResolver {
+  OverlayPosition getResolvedOverlayPosition(
+    BuildContext context,
+    RenderBox targetRenderBox,
+    OverlayPosition tooltipAnchorPosition,
+  ) {
+    final RenderBox overlayRenderBox =
+        Overlay.of(context).context.findRenderObject()! as RenderBox;
+
+    final Offset overlayTargetGlobalCenter = targetRenderBox.localToGlobal(
+      targetRenderBox.size.center(Offset.zero),
+      ancestor: overlayRenderBox,
+    );
+
+    OverlayPosition overlayPosition = tooltipAnchorPosition;
+
+    if (Directionality.of(context) == TextDirection.rtl ||
+        overlayPosition == OverlayPosition.horizontal ||
+        overlayPosition == OverlayPosition.vertical) {
+      overlayPosition = switch (overlayPosition) {
+        OverlayPosition.left => OverlayPosition.right,
+        OverlayPosition.right => OverlayPosition.left,
+        OverlayPosition.topLeft => OverlayPosition.topRight,
+        OverlayPosition.topRight => OverlayPosition.topLeft,
+        OverlayPosition.bottomLeft => OverlayPosition.bottomRight,
+        OverlayPosition.bottomRight => OverlayPosition.bottomLeft,
+        OverlayPosition.vertical => overlayTargetGlobalCenter.dy <
+                overlayRenderBox.size.center(Offset.zero).dy
+            ? OverlayPosition.bottom
+            : OverlayPosition.top,
+        OverlayPosition.horizontal => overlayTargetGlobalCenter.dx <
+                overlayRenderBox.size.center(Offset.zero).dx
+            ? OverlayPosition.right
+            : OverlayPosition.left,
+        _ => overlayPosition,
+      };
+    }
+
+    return overlayPosition;
+  }
+}
+
 class MoonBaseOverlay extends StatefulWidget {
   /// Controls whether to show the overlay.
   final bool show;
@@ -76,7 +118,7 @@ class MoonBaseOverlay extends StatefulWidget {
 }
 
 class MoonBaseOverlayState extends State<MoonBaseOverlay>
-    with RouteAware, SingleTickerProviderStateMixin {
+    with RouteAware, SingleTickerProviderStateMixin, OverlayPositionResolver {
   late final ObjectKey _regionKey = ObjectKey(widget);
   final LayerLink _layerLink = LayerLink();
 
@@ -91,13 +133,13 @@ class MoonBaseOverlayState extends State<MoonBaseOverlay>
 
     final RenderBox targetRenderBox = context.findRenderObject()! as RenderBox;
 
-    final Offset overlayTargetGlobalCenter = targetRenderBox.localToGlobal(
-      targetRenderBox.size.center(Offset.zero),
+    final Offset overlayTargetGlobalLeft = targetRenderBox.localToGlobal(
+      targetRenderBox.size.centerLeft(Offset.zero),
       ancestor: overlayRenderBox,
     );
 
-    final Offset overlayTargetGlobalLeft = targetRenderBox.localToGlobal(
-      targetRenderBox.size.centerLeft(Offset.zero),
+    final Offset overlayTargetGlobalCenter = targetRenderBox.localToGlobal(
+      targetRenderBox.size.center(Offset.zero),
       ancestor: overlayRenderBox,
     );
 
@@ -105,29 +147,12 @@ class MoonBaseOverlayState extends State<MoonBaseOverlay>
       targetRenderBox.size.centerRight(Offset.zero),
       ancestor: overlayRenderBox,
     );
-    OverlayPosition overlayPosition = widget.overlayAnchorPosition;
 
-    if (Directionality.of(context) == TextDirection.rtl ||
-        overlayPosition == OverlayPosition.horizontal ||
-        overlayPosition == OverlayPosition.vertical) {
-      overlayPosition = switch (overlayPosition) {
-        OverlayPosition.left => OverlayPosition.right,
-        OverlayPosition.right => OverlayPosition.left,
-        OverlayPosition.topLeft => OverlayPosition.topRight,
-        OverlayPosition.topRight => OverlayPosition.topLeft,
-        OverlayPosition.bottomLeft => OverlayPosition.bottomRight,
-        OverlayPosition.bottomRight => OverlayPosition.bottomLeft,
-        OverlayPosition.vertical => overlayTargetGlobalCenter.dy <
-                overlayRenderBox.size.center(Offset.zero).dy
-            ? OverlayPosition.bottom
-            : OverlayPosition.top,
-        OverlayPosition.horizontal => overlayTargetGlobalCenter.dx <
-                overlayRenderBox.size.center(Offset.zero).dx
-            ? OverlayPosition.right
-            : OverlayPosition.left,
-        _ => overlayPosition,
-      };
-    }
+    final OverlayPosition overlayPosition = getResolvedOverlayPosition(
+      context,
+      targetRenderBox,
+      widget.overlayAnchorPosition,
+    );
 
     return _resolveOverlayPositionParameters(
       overlayPosition: overlayPosition,

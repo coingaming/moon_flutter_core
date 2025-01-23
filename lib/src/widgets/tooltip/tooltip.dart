@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:moon_core/src/widgets/common/base_overlay_widget.dart';
 import 'package:moon_core/src/widgets/tooltip/tooltip_shape.dart';
 
-class MoonRawTooltip extends StatelessWidget {
+class MoonRawTooltip extends StatelessWidget with OverlayPositionResolver {
   /// Whether the tooltip has an arrow (tail).
   final bool show;
 
@@ -115,6 +115,9 @@ class MoonRawTooltip extends StatelessWidget {
   Widget build(BuildContext context) {
     final double effectiveArrowLength = hasArrow ? arrowLength : 0.0;
 
+    final BorderRadius resolvedBorderRadius =
+        borderRadius!.resolve(Directionality.of(context));
+
     return MoonBaseOverlay(
       key: key,
       show: show,
@@ -130,9 +133,16 @@ class MoonRawTooltip extends StatelessWidget {
       target: target,
       child: useDefaultTooltipShape
           ? Builder(
-              builder: (BuildContext context) {
+              builder: (BuildContext _) {
                 final RenderBox? targetRenderBox =
                     context.findRenderObject() as RenderBox?;
+
+                final OverlayPosition overlayPosition =
+                    getResolvedOverlayPosition(
+                  context,
+                  targetRenderBox!,
+                  tooltipAnchorPosition,
+                );
 
                 return DecoratedBox(
                   decoration: ShapeDecoration(
@@ -144,11 +154,10 @@ class MoonRawTooltip extends StatelessWidget {
                       arrowOffset: arrowOffsetValue,
                       arrowTipDistance: distanceToTarget,
                       borderColor: borderColor,
-                      borderRadius:
-                          borderRadius!.resolve(Directionality.of(context)),
+                      borderRadius: resolvedBorderRadius,
                       borderWidth: borderWidth,
-                      childWidth: targetRenderBox?.size.width ?? 0.0,
-                      tooltipPosition: tooltipAnchorPosition,
+                      childWidth: targetRenderBox.size.width,
+                      tooltipPosition: overlayPosition,
                     ),
                   ),
                   child: child,
