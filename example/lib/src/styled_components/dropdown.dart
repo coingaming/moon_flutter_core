@@ -75,7 +75,7 @@ class _StyledDropdownState extends State<StyledDropdown> {
   Widget build(BuildContext context) {
     return MoonBaseOverlay(
       show: _showOptions,
-      overlayAnchorPosition: OverlayPosition.bottom,
+      overlayAnchorPosition: OverlayAnchorPosition.bottom,
       onTapOutside: () => setState(() => _showOptions = false),
       target: MoonBaseInteractiveWidget(
         focusNode: FocusNode(skipTraversal: true),
@@ -115,8 +115,13 @@ class _StyledDropdownState extends State<StyledDropdown> {
                 onTap: () => setState(() {
                   _options.updateAll((key, value) => false);
                   _options[choice] = true;
+                  _showOptions = !_showOptions;
                 }),
-                child: Text(choice.name),
+                child: Row(
+                  children: [
+                    Expanded(child: Text(choice.name)),
+                  ],
+                ),
               );
             },
           ),

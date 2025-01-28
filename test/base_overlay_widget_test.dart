@@ -153,11 +153,11 @@ void main() {
   testWidgets(
       "Overlay is positioned correctly relative to target based on 'overlayAnchorPosition' and 'distanceToTarget'",
       (tester) async {
-    final List<OverlayPosition> anchorPositions = [
-      OverlayPosition.top,
-      OverlayPosition.bottom,
-      OverlayPosition.left,
-      OverlayPosition.right,
+    final List<OverlayAnchorPosition> anchorPositions = [
+      OverlayAnchorPosition.top,
+      OverlayAnchorPosition.bottom,
+      OverlayAnchorPosition.left,
+      OverlayAnchorPosition.right,
     ];
 
     for (final position in anchorPositions) {
@@ -183,22 +183,22 @@ void main() {
       final double targetHeight = targetWidget.size.height;
       final double targetWidth = targetWidget.size.width;
 
-      if (position == OverlayPosition.top) {
+      if (position == OverlayAnchorPosition.top) {
         expect(
           childPosition.dy + childHeight,
           equals(targetPosition.dy - _distanceToTarget),
         );
-      } else if (position == OverlayPosition.bottom) {
+      } else if (position == OverlayAnchorPosition.bottom) {
         expect(
           childPosition.dy,
           equals(targetHeight + targetPosition.dy + _distanceToTarget),
         );
-      } else if (position == OverlayPosition.left) {
+      } else if (position == OverlayAnchorPosition.left) {
         expect(
           childPosition.dx + childWidth,
           equals(targetPosition.dx - _distanceToTarget),
         );
-      } else if (position == OverlayPosition.right) {
+      } else if (position == OverlayAnchorPosition.right) {
         expect(
           childPosition.dx,
           equals(targetWidth + targetPosition.dx + _distanceToTarget),
@@ -215,7 +215,7 @@ class _BaseOverlayTestWidget extends StatefulWidget {
   final bool isDismissible;
   final double distanceToTarget;
   final String? semanticLabel;
-  final OverlayPosition overlayAnchorPosition;
+  final OverlayAnchorPosition overlayAnchorPosition;
   final void Function()? onTap;
   final void Function()? onTapOutside;
 
@@ -223,7 +223,7 @@ class _BaseOverlayTestWidget extends StatefulWidget {
     this.isDismissible = true,
     this.distanceToTarget = 8.0,
     this.semanticLabel,
-    this.overlayAnchorPosition = OverlayPosition.bottom,
+    this.overlayAnchorPosition = OverlayAnchorPosition.bottom,
     this.onTap,
     this.onTapOutside,
   });

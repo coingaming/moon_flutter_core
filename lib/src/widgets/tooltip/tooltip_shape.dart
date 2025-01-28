@@ -13,7 +13,7 @@ class TooltipShape extends ShapeBorder {
   final double arrowLength;
   final double arrowTipDistance;
   final double childWidth;
-  final OverlayPosition tooltipPosition;
+  final OverlayAnchorPosition tooltipPosition;
 
   const TooltipShape({
     required this.borderRadius,
@@ -78,16 +78,16 @@ class TooltipShape extends ShapeBorder {
         );
     }
 
-    if (tooltipPosition == OverlayPosition.right) {
+    if (tooltipPosition == OverlayAnchorPosition.right) {
       tooltipCenter =
           rect.centerLeft.translate(-arrowLength - arrowTipDistance, 0);
-    } else if (tooltipPosition == OverlayPosition.left) {
+    } else if (tooltipPosition == OverlayAnchorPosition.left) {
       tooltipCenter =
           rect.centerRight.translate(arrowLength + arrowTipDistance, 0);
     }
 
     return switch (tooltipPosition) {
-      OverlayPosition.top => getLeftTopPath(rect)
+      OverlayAnchorPosition.top => getLeftTopPath(rect)
         ..lineTo(rect.right, rect.bottom - bottomRightRadius)
         ..arcToPoint(
           Offset(rect.right - bottomRightRadius, rect.bottom),
@@ -127,7 +127,7 @@ class TooltipShape extends ShapeBorder {
           Offset(rect.left + topLeftRadius, rect.top),
           radius: Radius.circular(topLeftRadius),
         ),
-      OverlayPosition.bottom => getBottomRightPath(rect)
+      OverlayAnchorPosition.bottom => getBottomRightPath(rect)
         // To corner of arrow base.
         ..lineTo(
           min(
@@ -164,7 +164,7 @@ class TooltipShape extends ShapeBorder {
           radius: Radius.circular(bottomLeftRadius),
           clockwise: false,
         ),
-      OverlayPosition.left => getLeftTopPath(rect)
+      OverlayAnchorPosition.left => getLeftTopPath(rect)
         // To corner of arrow base.
         ..lineTo(
           rect.right,
@@ -202,7 +202,7 @@ class TooltipShape extends ShapeBorder {
           Offset(rect.left, rect.bottom - bottomLeftRadius),
           radius: Radius.circular(bottomLeftRadius),
         ),
-      OverlayPosition.right => getBottomRightPath(rect)
+      OverlayAnchorPosition.right => getBottomRightPath(rect)
         ..lineTo(rect.left + topLeftRadius, rect.top)
         ..arcToPoint(
           Offset(rect.left, rect.top + topLeftRadius),
@@ -242,56 +242,7 @@ class TooltipShape extends ShapeBorder {
           radius: Radius.circular(bottomLeftRadius),
           clockwise: false,
         ),
-      OverlayPosition.topLeft => getLeftTopPath(rect)
-        ..lineTo(rect.right, rect.bottom - bottomRightRadius)
-        ..arcToPoint(
-          Offset(rect.right - bottomRightRadius, rect.bottom),
-          radius: Radius.circular(bottomRightRadius),
-        )
-        // To corner of arrow base.
-        ..lineTo(
-          min(
-            rect.right - bottomRightRadius,
-            max(
-              arrowOffset +
-                  rect.right -
-                  (childWidth / 2) +
-                  (arrowBaseWidth / 2),
-              rect.left + bottomLeftRadius + arrowBaseWidth,
-            ),
-          ),
-          rect.bottom,
-        )
-        // To arrow tip.
-        ..lineTo(
-          arrowOffset + rect.right - (childWidth / 2),
-          rect.bottom + arrowLength,
-        )
-        // To opposite corner of arrow base.
-        ..lineTo(
-          max(
-            min(
-              arrowOffset +
-                  rect.right -
-                  (childWidth / 2) -
-                  (arrowBaseWidth / 2),
-              rect.right - bottomRightRadius - arrowBaseWidth,
-            ),
-            rect.left + bottomLeftRadius,
-          ),
-          rect.bottom,
-        )
-        ..lineTo(rect.left + bottomLeftRadius, rect.bottom)
-        ..arcToPoint(
-          Offset(rect.left, rect.bottom - bottomLeftRadius),
-          radius: Radius.circular(bottomLeftRadius),
-        )
-        ..lineTo(rect.left, rect.top + topLeftRadius)
-        ..arcToPoint(
-          Offset(rect.left + topLeftRadius, rect.top),
-          radius: Radius.circular(topLeftRadius),
-        ),
-      OverlayPosition.topRight => getLeftTopPath(rect)
+      OverlayAnchorPosition.topLeft => getLeftTopPath(rect)
         ..lineTo(rect.right, rect.bottom - bottomRightRadius)
         ..arcToPoint(
           Offset(rect.right - bottomRightRadius, rect.bottom),
@@ -334,25 +285,30 @@ class TooltipShape extends ShapeBorder {
           Offset(rect.left + topLeftRadius, rect.top),
           radius: Radius.circular(topLeftRadius),
         ),
-      OverlayPosition.bottomLeft => getBottomRightPath(rect)
+      OverlayAnchorPosition.topRight => getLeftTopPath(rect)
+        ..lineTo(rect.right, rect.bottom - bottomRightRadius)
+        ..arcToPoint(
+          Offset(rect.right - bottomRightRadius, rect.bottom),
+          radius: Radius.circular(bottomRightRadius),
+        )
         // To corner of arrow base.
         ..lineTo(
           min(
+            rect.right - bottomRightRadius,
             max(
               arrowOffset +
                   rect.right -
                   (childWidth / 2) +
                   (arrowBaseWidth / 2),
-              rect.left + topRightRadius + arrowBaseWidth,
+              rect.left + bottomLeftRadius + arrowBaseWidth,
             ),
-            rect.right - topRightRadius,
           ),
-          rect.top,
+          rect.bottom,
         )
         // To arrow tip.
         ..lineTo(
           arrowOffset + rect.right - (childWidth / 2),
-          rect.top - arrowLength,
+          rect.bottom + arrowLength,
         )
         // To opposite corner of arrow base.
         ..lineTo(
@@ -362,6 +318,44 @@ class TooltipShape extends ShapeBorder {
                   rect.right -
                   (childWidth / 2) -
                   (arrowBaseWidth / 2),
+              rect.right - bottomRightRadius - arrowBaseWidth,
+            ),
+            rect.left + bottomLeftRadius,
+          ),
+          rect.bottom,
+        )
+        ..lineTo(rect.left + bottomLeftRadius, rect.bottom)
+        ..arcToPoint(
+          Offset(rect.left, rect.bottom - bottomLeftRadius),
+          radius: Radius.circular(bottomLeftRadius),
+        )
+        ..lineTo(rect.left, rect.top + topLeftRadius)
+        ..arcToPoint(
+          Offset(rect.left + topLeftRadius, rect.top),
+          radius: Radius.circular(topLeftRadius),
+        ),
+      OverlayAnchorPosition.bottomLeft => getBottomRightPath(rect)
+        // To corner of arrow base.
+        ..lineTo(
+          min(
+            max(
+              arrowOffset + rect.left + (childWidth / 2) + (arrowBaseWidth / 2),
+              rect.left + topRightRadius + arrowBaseWidth,
+            ),
+            rect.right - topRightRadius,
+          ),
+          rect.top,
+        )
+        // To arrow tip.
+        ..lineTo(
+          arrowOffset + rect.left + (childWidth / 2),
+          rect.top - arrowLength,
+        )
+        // To opposite corner of arrow base.
+        ..lineTo(
+          max(
+            min(
+              arrowOffset + rect.left + (childWidth / 2) - (arrowBaseWidth / 2),
               rect.right - bottomRightRadius - arrowBaseWidth,
             ),
             rect.left + topLeftRadius,
@@ -380,12 +374,15 @@ class TooltipShape extends ShapeBorder {
           radius: Radius.circular(bottomLeftRadius),
           clockwise: false,
         ),
-      OverlayPosition.bottomRight => getBottomRightPath(rect)
+      OverlayAnchorPosition.bottomRight => getBottomRightPath(rect)
         // To corner of arrow base.
         ..lineTo(
           min(
             max(
-              arrowOffset + rect.left + (childWidth / 2) + (arrowBaseWidth / 2),
+              arrowOffset +
+                  rect.right -
+                  (childWidth / 2) +
+                  (arrowBaseWidth / 2),
               rect.left + topRightRadius + arrowBaseWidth,
             ),
             rect.right - topRightRadius,
@@ -394,14 +391,17 @@ class TooltipShape extends ShapeBorder {
         )
         // To arrow tip.
         ..lineTo(
-          arrowOffset + rect.left + (childWidth / 2),
+          arrowOffset + rect.right - (childWidth / 2),
           rect.top - arrowLength,
         )
         // To opposite corner of arrow base.
         ..lineTo(
           max(
             min(
-              arrowOffset + rect.left + (childWidth / 2) - (arrowBaseWidth / 2),
+              arrowOffset +
+                  rect.right -
+                  (childWidth / 2) -
+                  (arrowBaseWidth / 2),
               rect.right - bottomRightRadius - arrowBaseWidth,
             ),
             rect.left + topLeftRadius,

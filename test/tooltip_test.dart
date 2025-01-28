@@ -141,11 +141,11 @@ void main() {
     (WidgetTester tester) async {
       const double distanceToTarget = 8.0;
 
-      final List<OverlayPosition> anchorPositions = [
-        OverlayPosition.top,
-        OverlayPosition.bottom,
-        OverlayPosition.left,
-        OverlayPosition.right,
+      final List<OverlayAnchorPosition> anchorPositions = [
+        OverlayAnchorPosition.top,
+        OverlayAnchorPosition.bottom,
+        OverlayAnchorPosition.left,
+        OverlayAnchorPosition.right,
       ];
 
       for (final position in anchorPositions) {
@@ -168,12 +168,12 @@ void main() {
         final Offset targetPosition = targetWidget.localToGlobal(Offset.zero);
         final Offset tooltipPosition = tooltipChild.localToGlobal(Offset.zero);
 
-        if (position == OverlayPosition.top) {
+        if (position == OverlayAnchorPosition.top) {
           expect(
             tooltipPosition.dy + tooltipChild.size.height,
             equals(targetPosition.dy - distanceToTarget - arrowLength),
           );
-        } else if (position == OverlayPosition.bottom) {
+        } else if (position == OverlayAnchorPosition.bottom) {
           expect(
             tooltipPosition.dy,
             equals(
@@ -183,12 +183,12 @@ void main() {
                   arrowLength,
             ),
           );
-        } else if (position == OverlayPosition.left) {
+        } else if (position == OverlayAnchorPosition.left) {
           expect(
             tooltipPosition.dx + tooltipChild.size.width,
             equals(targetPosition.dx - distanceToTarget - arrowLength),
           );
-        } else if (position == OverlayPosition.right) {
+        } else if (position == OverlayAnchorPosition.right) {
           expect(
             tooltipPosition.dx,
             equals(
@@ -268,7 +268,7 @@ class _TooltipTestWidget extends StatefulWidget {
   final bool useDefaultTooltipShape;
   final Color color;
   final double distanceToTarget;
-  final OverlayPosition tooltipAnchorPosition;
+  final OverlayAnchorPosition tooltipAnchorPosition;
 
   const _TooltipTestWidget({
     this.show = true,
@@ -276,7 +276,7 @@ class _TooltipTestWidget extends StatefulWidget {
     this.useDefaultTooltipShape = true,
     this.color = Colors.white,
     this.distanceToTarget = 8.0,
-    this.tooltipAnchorPosition = OverlayPosition.top,
+    this.tooltipAnchorPosition = OverlayAnchorPosition.top,
   });
 
   @override

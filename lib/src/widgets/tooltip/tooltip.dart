@@ -7,6 +7,23 @@ class MoonRawTooltip extends StatelessWidget with OverlayPositionResolver {
   /// Whether the tooltip has an arrow (tail).
   final bool show;
 
+  /// Determines whether multiple overlays can be open simultaneously.
+  /// Defaults to 'false'.
+  /// - If [hideOnTap] is 'true', the overlay will always be dismissed on tap,
+  ///   even if [allowMultipleOverlays] is 'true'.
+  /// - If [hideOnTap] is 'false' but [onTapOutside] specifies dismissal behavior,
+  ///   the overlay will still be dismissed when tapped outside,
+  ///   regardless of [allowMultipleOverlays].
+  final bool allowMultipleOverlays;
+
+  /// Determines whether the overlay should be dismissed when tapped. For finer
+  /// control over dismissal, use [show], [onTap] and [onTapOutside] properties.
+  /// If true, the overlay will always be dismissed on tap, regardless of any
+  /// logic in [onTap] or [onTapOutside]. The [onTap] and [onTapOutside] callbacks
+  /// will still be executed, but the dismissal behavior will take precedence.
+  /// Defaults to true.
+  final bool hideOnTap;
+
   /// Whether the preset tooltip has an arrow (tail).
   /// Applies only when [useDefaultTooltipShape] is true.
   final bool hasArrow;
@@ -61,9 +78,9 @@ class MoonRawTooltip extends StatelessWidget with OverlayPositionResolver {
   final List<BoxShadow>? tooltipShadows;
 
   /// The tooltip anchor position relative to the [target].
-  /// Defaults to [OverlayPosition.top].
   /// Applies only when [useDefaultTooltipShape] is true.
-  final OverlayPosition tooltipAnchorPosition;
+  /// Defaults to [OverlayAnchorPosition.top].
+  final OverlayAnchorPosition tooltipAnchorPosition;
 
   /// The semantic label for the tooltip.
   final String? semanticLabel;
@@ -71,12 +88,9 @@ class MoonRawTooltip extends StatelessWidget with OverlayPositionResolver {
   /// The callback that is called when the [child] of the tooltip is tapped.
   final VoidCallback? onTap;
 
-  /// The callback that is called when the area outside of the tooltip's [child]
-  /// is tapped.
+  /// The callback that is called when the area outside of the overlay's [target]
+  /// and [child] is tapped.
   final VoidCallback? onTapOutside;
-
-  /// The callback that is called when the [target] of the tooltip is hovered.
-  final VoidCallback? onTargetHover;
 
   /// The widget to display as the target of the tooltip.
   final Widget target;
@@ -88,12 +102,14 @@ class MoonRawTooltip extends StatelessWidget with OverlayPositionResolver {
   const MoonRawTooltip({
     super.key,
     required this.show,
+    this.allowMultipleOverlays = false,
+    this.hideOnTap = true,
     this.hasArrow = true,
     this.useDefaultTooltipShape = true,
     this.borderRadius = BorderRadius.zero,
     this.backgroundColor,
     this.borderColor = Colors.transparent,
-    this.tooltipMargin = 8.0,
+    this.tooltipMargin = 0.0,
     this.arrowBaseWidth = 16.0,
     this.arrowLength = 8.0,
     this.arrowOffsetValue = 0.0,
@@ -102,9 +118,8 @@ class MoonRawTooltip extends StatelessWidget with OverlayPositionResolver {
     this.transitionDuration = const Duration(milliseconds: 200),
     this.transitionCurve = Curves.easeInOutCubic,
     this.tooltipShadows,
-    this.tooltipAnchorPosition = OverlayPosition.top,
+    this.tooltipAnchorPosition = OverlayAnchorPosition.top,
     this.semanticLabel,
-    this.onTargetHover,
     this.onTap,
     this.onTapOutside,
     required this.target,
@@ -121,6 +136,8 @@ class MoonRawTooltip extends StatelessWidget with OverlayPositionResolver {
     return MoonBaseOverlay(
       key: key,
       show: show,
+      allowMultipleOverlays: allowMultipleOverlays,
+      hideOnTap: hideOnTap,
       semanticLabel: semanticLabel,
       overlayAnchorPosition: tooltipAnchorPosition,
       distanceToTarget: distanceToTarget + effectiveArrowLength,
@@ -129,7 +146,6 @@ class MoonRawTooltip extends StatelessWidget with OverlayPositionResolver {
       transitionDuration: transitionDuration,
       onTap: onTap,
       onTapOutside: onTapOutside,
-      onTargetHover: onTargetHover,
       target: target,
       child: useDefaultTooltipShape
           ? Builder(
@@ -137,7 +153,7 @@ class MoonRawTooltip extends StatelessWidget with OverlayPositionResolver {
                 final RenderBox? targetRenderBox =
                     context.findRenderObject() as RenderBox?;
 
-                final OverlayPosition overlayPosition =
+                final OverlayAnchorPosition overlayPosition =
                     getResolvedOverlayPosition(
                   context,
                   targetRenderBox!,

@@ -1,7 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-enum OverlayPosition {
+enum OverlayAnchorPosition {
   top,
   topLeft,
   topRight,
@@ -15,10 +17,10 @@ enum OverlayPosition {
 }
 
 mixin OverlayPositionResolver {
-  OverlayPosition getResolvedOverlayPosition(
+  OverlayAnchorPosition getResolvedOverlayPosition(
     BuildContext context,
     RenderBox targetRenderBox,
-    OverlayPosition tooltipAnchorPosition,
+    OverlayAnchorPosition overlayAnchorPosition,
   ) {
     final RenderBox overlayRenderBox =
         Overlay.of(context).context.findRenderObject()! as RenderBox;
@@ -28,26 +30,26 @@ mixin OverlayPositionResolver {
       ancestor: overlayRenderBox,
     );
 
-    OverlayPosition overlayPosition = tooltipAnchorPosition;
+    OverlayAnchorPosition overlayPosition = overlayAnchorPosition;
 
     if (Directionality.of(context) == TextDirection.rtl ||
-        overlayPosition == OverlayPosition.horizontal ||
-        overlayPosition == OverlayPosition.vertical) {
+        overlayPosition == OverlayAnchorPosition.horizontal ||
+        overlayPosition == OverlayAnchorPosition.vertical) {
       overlayPosition = switch (overlayPosition) {
-        OverlayPosition.left => OverlayPosition.right,
-        OverlayPosition.right => OverlayPosition.left,
-        OverlayPosition.topLeft => OverlayPosition.topRight,
-        OverlayPosition.topRight => OverlayPosition.topLeft,
-        OverlayPosition.bottomLeft => OverlayPosition.bottomRight,
-        OverlayPosition.bottomRight => OverlayPosition.bottomLeft,
-        OverlayPosition.vertical => overlayTargetGlobalCenter.dy <
+        OverlayAnchorPosition.left => OverlayAnchorPosition.right,
+        OverlayAnchorPosition.right => OverlayAnchorPosition.left,
+        OverlayAnchorPosition.topLeft => OverlayAnchorPosition.topRight,
+        OverlayAnchorPosition.topRight => OverlayAnchorPosition.topLeft,
+        OverlayAnchorPosition.bottomLeft => OverlayAnchorPosition.bottomRight,
+        OverlayAnchorPosition.bottomRight => OverlayAnchorPosition.bottomLeft,
+        OverlayAnchorPosition.vertical => overlayTargetGlobalCenter.dy <
                 overlayRenderBox.size.center(Offset.zero).dy
-            ? OverlayPosition.bottom
-            : OverlayPosition.top,
-        OverlayPosition.horizontal => overlayTargetGlobalCenter.dx <
+            ? OverlayAnchorPosition.bottom
+            : OverlayAnchorPosition.top,
+        OverlayAnchorPosition.horizontal => overlayTargetGlobalCenter.dx <
                 overlayRenderBox.size.center(Offset.zero).dx
-            ? OverlayPosition.right
-            : OverlayPosition.left,
+            ? OverlayAnchorPosition.right
+            : OverlayAnchorPosition.left,
         _ => overlayPosition,
       };
     }
@@ -57,8 +59,28 @@ mixin OverlayPositionResolver {
 }
 
 class MoonBaseOverlay extends StatefulWidget {
+  // This is required to show only one overlay at a time.
+  static final List<MoonBaseOverlayState> _openedOverlays = [];
+
   /// Controls whether to show the overlay.
   final bool show;
+
+  /// Determines whether multiple overlays can be open simultaneously.
+  /// Defaults to 'false'.
+  /// - If [hideOnTap] is 'true', the overlay will always be dismissed on tap,
+  ///   even if [allowMultipleOverlays] is 'true'.
+  /// - If [hideOnTap] is 'false' but [onTapOutside] specifies dismissal behavior,
+  ///   the overlay will still be dismissed when tapped outside,
+  ///   regardless of [allowMultipleOverlays].
+  final bool allowMultipleOverlays;
+
+  /// Determines whether the overlay should be dismissed when tapped. For finer
+  /// control over dismissal, use [show], [onTap] and [onTapOutside] properties.
+  /// If true, the overlay will always be dismissed on tap, regardless of any
+  /// logic in [onTap] or [onTapOutside]. The [onTap] and [onTapOutside] callbacks
+  /// will still be executed, but the dismissal behavior will take precedence.
+  /// Defaults to false.
+  final bool hideOnTap;
 
   /// The distance between the overlay and the [target].
   final double distanceToTarget;
@@ -74,8 +96,8 @@ class MoonBaseOverlay extends StatefulWidget {
   final Curve transitionCurve;
 
   /// Sets the overlay anchor position relative to the [target].
-  /// Defaults to [OverlayPosition.top].
-  final OverlayPosition overlayAnchorPosition;
+  /// Defaults to [OverlayAnchorPosition.top].
+  final OverlayAnchorPosition overlayAnchorPosition;
 
   /// The semantic label for the overlay.
   final String? semanticLabel;
@@ -83,12 +105,9 @@ class MoonBaseOverlay extends StatefulWidget {
   /// The callback that is called when the [child] of the overlay is tapped.
   final VoidCallback? onTap;
 
-  /// The callback that is called when the area outside of the overlay's [child]
-  /// is tapped.
+  /// The callback that is called when the area outside of the overlay's [target]
+  /// and [child] is tapped.
   final VoidCallback? onTapOutside;
-
-  /// The callback that is called when the [target] of the overlay is hovered.
-  final VoidCallback? onTargetHover;
 
   /// The widget to display as the target of the overlay.
   final Widget target;
@@ -100,18 +119,36 @@ class MoonBaseOverlay extends StatefulWidget {
   const MoonBaseOverlay({
     super.key,
     required this.show,
+    this.allowMultipleOverlays = false,
+    this.hideOnTap = false,
     this.distanceToTarget = 8.0,
     this.overlayMargin = 8.0,
     this.transitionDuration = const Duration(milliseconds: 200),
     this.transitionCurve = Curves.easeInOutCubic,
-    this.overlayAnchorPosition = OverlayPosition.top,
+    this.overlayAnchorPosition = OverlayAnchorPosition.top,
     this.semanticLabel,
     this.onTap,
     this.onTapOutside,
-    this.onTargetHover,
     required this.target,
     required this.child,
   });
+
+  // Clear existing overlays, excluding the current one.
+  static void _removeOtherOverLays(MoonBaseOverlayState current) {
+    if (_openedOverlays.isNotEmpty) {
+      final List<MoonBaseOverlayState> openedOverlays =
+          _openedOverlays.toList();
+
+      for (final MoonBaseOverlayState state in openedOverlays) {
+        if (state == current) continue;
+
+        state._overlayController.hide();
+        state._isVisible = false;
+
+        state._clearOverlayEntry();
+      }
+    }
+  }
 
   @override
   MoonBaseOverlayState createState() => MoonBaseOverlayState();
@@ -126,6 +163,8 @@ class MoonBaseOverlayState extends State<MoonBaseOverlay>
   late Animation<double> _fadeAnimation;
 
   final OverlayPortalController _overlayController = OverlayPortalController();
+
+  bool _isVisible = false;
 
   _OverlayPositionProperties _getOverlayPositionParameters() {
     final RenderBox overlayRenderBox =
@@ -148,7 +187,7 @@ class MoonBaseOverlayState extends State<MoonBaseOverlay>
       ancestor: overlayRenderBox,
     );
 
-    final OverlayPosition overlayPosition = getResolvedOverlayPosition(
+    final OverlayAnchorPosition overlayPosition = getResolvedOverlayPosition(
       context,
       targetRenderBox,
       widget.overlayAnchorPosition,
@@ -165,65 +204,72 @@ class MoonBaseOverlayState extends State<MoonBaseOverlay>
   }
 
   _OverlayPositionProperties _resolveOverlayPositionParameters({
-    required OverlayPosition overlayPosition,
+    required OverlayAnchorPosition overlayPosition,
     required double distanceToTarget,
     required double overlayWidth,
     required double overlayTargetGlobalLeft,
     required double overlayTargetGlobalCenter,
     required double overlayTargetGlobalRight,
   }) {
-    final double screenSize = MediaQuery.of(context).size.width;
-
     return switch (overlayPosition) {
-      OverlayPosition.top => _OverlayPositionProperties(
+      OverlayAnchorPosition.top => _OverlayPositionProperties(
           offset: Offset(0, -distanceToTarget),
           targetAnchor: Alignment.topCenter,
           followerAnchor: Alignment.bottomCenter,
-          overlayMaxWidth: screenSize - 2 * widget.overlayMargin,
+          overlayMaxWidth: overlayWidth -
+              ((overlayWidth / 2 - overlayTargetGlobalCenter) * 2).abs() -
+              widget.overlayMargin * 2,
         ),
-      OverlayPosition.bottom => _OverlayPositionProperties(
+      OverlayAnchorPosition.bottom => _OverlayPositionProperties(
           offset: Offset(0, distanceToTarget),
           targetAnchor: Alignment.bottomCenter,
           followerAnchor: Alignment.topCenter,
-          overlayMaxWidth: screenSize - 2 * widget.overlayMargin,
+          overlayMaxWidth: overlayWidth -
+              ((overlayWidth / 2 - overlayTargetGlobalCenter) * 2).abs() -
+              widget.overlayMargin * 2,
         ),
-      OverlayPosition.left => _OverlayPositionProperties(
+      OverlayAnchorPosition.left => _OverlayPositionProperties(
           offset: Offset(-distanceToTarget, 0),
           targetAnchor: Alignment.centerLeft,
           followerAnchor: Alignment.centerRight,
-          overlayMaxWidth:
-              overlayTargetGlobalLeft - distanceToTarget - widget.overlayMargin,
+          overlayMaxWidth: max(
+            0,
+            overlayTargetGlobalLeft - distanceToTarget - widget.overlayMargin,
+          ),
         ),
-      OverlayPosition.right => _OverlayPositionProperties(
+      OverlayAnchorPosition.right => _OverlayPositionProperties(
           offset: Offset(distanceToTarget, 0),
           targetAnchor: Alignment.centerRight,
           followerAnchor: Alignment.centerLeft,
-          overlayMaxWidth: overlayWidth -
-              overlayTargetGlobalRight -
-              distanceToTarget -
-              widget.overlayMargin,
+          overlayMaxWidth: max(
+            0,
+            overlayWidth -
+                overlayTargetGlobalRight -
+                distanceToTarget -
+                widget.overlayMargin,
+          ),
         ),
-      OverlayPosition.topLeft => _OverlayPositionProperties(
+      OverlayAnchorPosition.topLeft => _OverlayPositionProperties(
           offset: Offset(0, -distanceToTarget),
           targetAnchor: Alignment.topLeft,
           followerAnchor: Alignment.bottomLeft,
           overlayMaxWidth:
               overlayWidth - overlayTargetGlobalLeft - widget.overlayMargin,
         ),
-      OverlayPosition.topRight => _OverlayPositionProperties(
+      OverlayAnchorPosition.topRight => _OverlayPositionProperties(
           offset: Offset(0, -distanceToTarget),
           targetAnchor: Alignment.topRight,
           followerAnchor: Alignment.bottomRight,
           overlayMaxWidth: overlayTargetGlobalRight - widget.overlayMargin,
         ),
-      OverlayPosition.bottomLeft => _OverlayPositionProperties(
+      OverlayAnchorPosition.bottomLeft => _OverlayPositionProperties(
           offset: Offset(0, distanceToTarget),
           targetAnchor: Alignment.bottomLeft,
           followerAnchor: Alignment.topLeft,
           overlayMaxWidth:
               overlayWidth - overlayTargetGlobalLeft - widget.overlayMargin,
         ),
-      OverlayPosition.bottomRight => _OverlayPositionProperties(
+      OverlayAnchorPosition.bottomRight => _OverlayPositionProperties(
           offset: Offset(0, distanceToTarget),
           targetAnchor: Alignment.bottomRight,
           followerAnchor: Alignment.topRight,
@@ -233,17 +279,40 @@ class MoonBaseOverlayState extends State<MoonBaseOverlay>
     };
   }
 
+  void _clearOverlayEntry() => MoonBaseOverlay._openedOverlays.remove(this);
+
+  void _changeVisibility() => _isVisible ? _showOverlay() : _hideOverlay();
+
+  void _hideOnTap() {
+    if (widget.hideOnTap && _isVisible) _hideOverlay();
+  }
+
   void _showOverlay() {
+    if (!mounted) return;
+
     _animationController.stop();
 
     Future.microtask(() {
+      MoonBaseOverlay._openedOverlays.add(this);
+
+      if (!widget.allowMultipleOverlays) {
+        MoonBaseOverlay._removeOtherOverLays(this);
+      }
+
       _overlayController.show();
       _animationController.forward();
     });
   }
 
   void _hideOverlay() {
-    _animationController.reverse().then((_) => _overlayController.hide());
+    if (!mounted) return;
+
+    _clearOverlayEntry();
+
+    _animationController.reverse().then((_) {
+      _overlayController.hide();
+      _isVisible = false;
+    });
   }
 
   @override
@@ -260,6 +329,8 @@ class MoonBaseOverlayState extends State<MoonBaseOverlay>
       curve: widget.transitionCurve,
     );
 
+    _isVisible = widget.show;
+
     if (widget.show) {
       WidgetsBinding.instance.addPostFrameCallback((_) => _showOverlay());
     }
@@ -269,14 +340,18 @@ class MoonBaseOverlayState extends State<MoonBaseOverlay>
   void didUpdateWidget(MoonBaseOverlay oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (widget.show != oldWidget.show) {
-      _overlayController.isShowing ? _hideOverlay() : _showOverlay();
+    if (widget.show != oldWidget.show || widget.show != _isVisible) {
+      _isVisible = !_isVisible;
+
+      _changeVisibility();
     }
   }
 
   @override
   void dispose() {
     _animationController.dispose();
+
+    MoonBaseOverlay._openedOverlays.clear();
 
     super.dispose();
   }
@@ -288,53 +363,55 @@ class MoonBaseOverlayState extends State<MoonBaseOverlay>
       child: CallbackShortcuts(
         bindings: {
           const SingleActivator(LogicalKeyboardKey.escape): () {
-            setState(() => _overlayController.hide());
+            _isVisible = false;
+            _changeVisibility();
           },
         },
         child: TapRegion(
           groupId: _regionKey,
           behavior: HitTestBehavior.translucent,
-          child: MouseRegion(
-            onEnter: (_) => widget.onTargetHover?.call(),
-            onExit: (_) => widget.onTargetHover?.call(),
-            child: FocusTraversalOrder(
-              order: const NumericFocusOrder(0),
-              child: CompositedTransformTarget(
-                link: _layerLink,
-                child: OverlayPortal.targetsRootOverlay(
-                  controller: _overlayController,
-                  overlayChildBuilder: (BuildContext context) {
-                    final overlayPositionParameters =
-                        _getOverlayPositionParameters();
+          child: FocusTraversalOrder(
+            order: const NumericFocusOrder(0),
+            child: CompositedTransformTarget(
+              link: _layerLink,
+              child: OverlayPortal.targetsRootOverlay(
+                controller: _overlayController,
+                overlayChildBuilder: (BuildContext context) {
+                  final overlayPositionParameters =
+                      _getOverlayPositionParameters();
 
-                    return Semantics(
-                      label: widget.semanticLabel,
-                      child: UnconstrainedBox(
-                        child: FocusTraversalOrder(
-                          order: const NumericFocusOrder(1),
-                          child: CompositedTransformFollower(
-                            link: _layerLink,
-                            showWhenUnlinked: false,
-                            offset: overlayPositionParameters.offset,
-                            followerAnchor:
-                                overlayPositionParameters.followerAnchor,
-                            targetAnchor:
-                                overlayPositionParameters.targetAnchor,
-                            child: TapRegion(
-                              groupId: _regionKey,
-                              behavior: HitTestBehavior.opaque,
-                              onTapOutside: (PointerDownEvent _) {
-                                widget.onTapOutside?.call();
+                  return Semantics(
+                    label: widget.semanticLabel,
+                    child: UnconstrainedBox(
+                      child: FocusTraversalOrder(
+                        order: const NumericFocusOrder(1),
+                        child: CompositedTransformFollower(
+                          link: _layerLink,
+                          showWhenUnlinked: false,
+                          offset: overlayPositionParameters.offset,
+                          followerAnchor:
+                              overlayPositionParameters.followerAnchor,
+                          targetAnchor: overlayPositionParameters.targetAnchor,
+                          child: TapRegion(
+                            groupId: _regionKey,
+                            behavior: HitTestBehavior.translucent,
+                            onTapOutside: (PointerDownEvent _) {
+                              _hideOnTap();
+                              widget.onTapOutside?.call();
+                            },
+                            child: GestureDetector(
+                              excludeFromSemantics: true,
+                              behavior: HitTestBehavior.translucent,
+                              onTapDown: (TapDownDetails details) {
+                                _hideOnTap();
+                                widget.onTap?.call();
                               },
-                              child: GestureDetector(
-                                excludeFromSemantics: true,
-                                behavior: HitTestBehavior.opaque,
-                                onTap: widget.onTap,
-                                child: ConstrainedBox(
-                                  constraints: BoxConstraints(
-                                    maxWidth: overlayPositionParameters
-                                        .overlayMaxWidth,
-                                  ),
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxWidth:
+                                      overlayPositionParameters.overlayMaxWidth,
+                                ),
+                                child: RepaintBoundary(
                                   child: FadeTransition(
                                     opacity: _fadeAnimation,
                                     child: Directionality(
@@ -348,10 +425,10 @@ class MoonBaseOverlayState extends State<MoonBaseOverlay>
                           ),
                         ),
                       ),
-                    );
-                  },
-                  child: widget.target,
-                ),
+                    ),
+                  );
+                },
+                child: widget.target,
               ),
             ),
           ),

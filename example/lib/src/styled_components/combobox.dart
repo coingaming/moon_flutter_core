@@ -104,7 +104,7 @@ class _StyledComboboxState extends State<StyledCombobox> {
   @override
   Widget build(BuildContext context) {
     return MoonBaseOverlay(
-      overlayAnchorPosition: OverlayPosition.bottom,
+      overlayAnchorPosition: OverlayAnchorPosition.bottom,
       show: _showOptions,
       onTapOutside: () => setState(() => _showOptions = false),
       target: MoonRawTextInput(
