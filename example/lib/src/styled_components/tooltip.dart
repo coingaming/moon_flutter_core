@@ -30,6 +30,8 @@ class _StyledTooltipState extends State<StyledTooltip> {
           (int index) => StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
               return MoonRawTooltip(
+                hideOnTap: false,
+                isPersistent: index == 1,
                 show: index == 0
                     ? _showHoveredTooltip
                     : index == 1

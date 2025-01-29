@@ -65,14 +65,13 @@ class MoonBaseOverlay extends StatefulWidget {
   /// Controls whether to show the overlay.
   final bool show;
 
-  /// Determines whether multiple overlays can be open simultaneously.
-  /// Defaults to 'false'.
+  /// Determines whether the overlay is persistent. Defaults to 'false'.
   /// - If [hideOnTap] is 'true', the overlay will always be dismissed on tap,
-  ///   even if [allowMultipleOverlays] is 'true'.
+  ///   even if [isPersistent] is 'true'.
   /// - If [hideOnTap] is 'false' but [onTapOutside] specifies dismissal behavior,
   ///   the overlay will still be dismissed when tapped outside,
-  ///   regardless of [allowMultipleOverlays].
-  final bool allowMultipleOverlays;
+  ///   regardless of [isPersistent].
+  final bool isPersistent;
 
   /// Determines whether the overlay should be dismissed when tapped. For finer
   /// control over dismissal, use [show], [onTap] and [onTapOutside] properties.
@@ -82,11 +81,11 @@ class MoonBaseOverlay extends StatefulWidget {
   /// Defaults to false.
   final bool hideOnTap;
 
-  /// The distance between the overlay and the [target].
+  /// The distance between the [child] and the [target].
   final double distanceToTarget;
 
   /// The margin around the overlay. Prevents the overlay from touching the
-  /// horizontal edges of the viewport.
+  /// edges of the viewport horizontally.
   final double overlayMargin;
 
   /// The duration of the overlay transition animation (fade in and out).
@@ -96,7 +95,7 @@ class MoonBaseOverlay extends StatefulWidget {
   final Curve transitionCurve;
 
   /// Sets the overlay anchor position relative to the [target].
-  /// Defaults to [OverlayAnchorPosition.top].
+  /// Defaults to [OverlayAnchorPosition.vertical].
   final OverlayAnchorPosition overlayAnchorPosition;
 
   /// The semantic label for the overlay.
@@ -119,13 +118,13 @@ class MoonBaseOverlay extends StatefulWidget {
   const MoonBaseOverlay({
     super.key,
     required this.show,
-    this.allowMultipleOverlays = false,
+    this.isPersistent = false,
     this.hideOnTap = false,
     this.distanceToTarget = 8.0,
     this.overlayMargin = 8.0,
     this.transitionDuration = const Duration(milliseconds: 200),
     this.transitionCurve = Curves.easeInOutCubic,
-    this.overlayAnchorPosition = OverlayAnchorPosition.top,
+    this.overlayAnchorPosition = OverlayAnchorPosition.vertical,
     this.semanticLabel,
     this.onTap,
     this.onTapOutside,
@@ -133,14 +132,14 @@ class MoonBaseOverlay extends StatefulWidget {
     required this.child,
   });
 
-  // Clear existing overlays, excluding the current one.
+  // Clear existing overlays, excluding the current and all persistent ones.
   static void _removeOtherOverLays(MoonBaseOverlayState current) {
     if (_openedOverlays.isNotEmpty) {
       final List<MoonBaseOverlayState> openedOverlays =
           _openedOverlays.toList();
 
       for (final MoonBaseOverlayState state in openedOverlays) {
-        if (state == current) continue;
+        if (state == current || state.widget.isPersistent) continue;
 
         state._overlayController.hide();
         state._isVisible = false;
@@ -294,10 +293,7 @@ class MoonBaseOverlayState extends State<MoonBaseOverlay>
 
     Future.microtask(() {
       MoonBaseOverlay._openedOverlays.add(this);
-
-      if (!widget.allowMultipleOverlays) {
-        MoonBaseOverlay._removeOtherOverLays(this);
-      }
+      MoonBaseOverlay._removeOtherOverLays(this);
 
       _overlayController.show();
       _animationController.forward();
