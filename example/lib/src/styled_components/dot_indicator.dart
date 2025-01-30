@@ -20,17 +20,6 @@ class _StyledDotIndicatorState extends State<StyledDotIndicator> {
           ..gap(16),
       );
 
-  Style get _dotStyle => Style(
-        $box.chain
-          ..width(8)
-          ..height(8)
-          ..color(Colors.grey)
-          ..shape.circle(),
-        SelectedState.selected(
-          $box.color(Colors.purple),
-        ),
-      ).animate(duration: const Duration(milliseconds: 400));
-
   Style get _boxStyle => Style(
         $box.chain
           ..height(32)
@@ -46,6 +35,14 @@ class _StyledDotIndicatorState extends State<StyledDotIndicator> {
         ),
       ).animate(duration: const Duration(milliseconds: 400));
 
+  Style getDotStyle(Color color) => Style(
+        $box.chain
+          ..width(12)
+          ..height(12)
+          ..color(color)
+          ..shape.circle(),
+      );
+
   Variant _getVariant(int index) =>
       index == _selectedDot ? SelectedState.selected : SelectedState.unselected;
 
@@ -53,18 +50,15 @@ class _StyledDotIndicatorState extends State<StyledDotIndicator> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        StyledRow(
-          style: _rowStyle,
-          children: [
-            ...List<Widget>.generate(
-              4,
-              (int index) {
-                return Box(
-                  style: _dotStyle.applyVariant(_getVariant(index)),
-                );
-              },
-            ),
-          ],
+        MoonRawDotIndicator(
+          dotCount: 4,
+          selectedDot: _selectedDot,
+          dotIndicatorStyle: _rowStyle,
+          dotBuilder: (int index, Color color) {
+            return Box(
+              style: getDotStyle(color),
+            );
+          },
         ),
         const SizedBox(height: 16),
         StyledRow(
