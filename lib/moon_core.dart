@@ -3,11 +3,13 @@ library moon_core;
 
 export 'package:moon_core/src/mix/context_variants/active_state_variant.dart';
 export 'package:moon_core/src/mix/variants/selected_state_variants.dart';
+
 export 'package:moon_core/src/utils/color/color_tween_premul.dart';
 export 'package:moon_core/src/utils/extensions.dart';
 export 'package:moon_core/src/utils/methods.dart';
 export 'package:moon_core/src/utils/moon_border.dart';
 export 'package:moon_core/src/utils/shape_decoration_premul.dart';
+
 export 'package:moon_core/src/widgets/accordion/accordion.dart';
 export 'package:moon_core/src/widgets/alert/alert.dart';
 export 'package:moon_core/src/widgets/auth_code/auth_code.dart';
@@ -24,6 +26,7 @@ export 'package:moon_core/src/widgets/common/base_multi_select_widget.dart';
 export 'package:moon_core/src/widgets/common/base_overlay_widget.dart';
 export 'package:moon_core/src/widgets/common/base_single_select_widget.dart';
 export 'package:moon_core/src/widgets/common/error_message_widgets.dart';
+export 'package:moon_core/src/widgets/dot_indicator/dot_indicator.dart';
 export 'package:moon_core/src/widgets/loaders/circular_loader.dart';
 export 'package:moon_core/src/widgets/loaders/linear_loader.dart';
 export 'package:moon_core/src/widgets/modal/modal.dart';
