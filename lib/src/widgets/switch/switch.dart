@@ -203,6 +203,12 @@ class _MoonRawSwitchState extends State<MoonRawSwitch>
             ? Curves.easeOutBack.flipped
             : widget.curve.flipped;
     }
+
+    if (widget.trackDecorationTween != null &&
+        widget.trackDecorationTween != oldWidget.trackDecorationTween) {
+      _trackDecorationAnimation =
+          widget.trackDecorationTween!.animate(_curvedAnimation);
+    }
   }
 
   @override

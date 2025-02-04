@@ -26,7 +26,7 @@ class _StyledAuthCodeState extends State<StyledAuthCode> {
         ),
         $on.error(
           $box.shapeDecoration.as(_getBorder(Colors.red)),
-          $text.chain.style.color(Colors.red),
+          $text.style.color(Colors.red),
         ),
         ($on.selected & $on.error)(
           $box.shapeDecoration.as(_getBorder(Colors.red, width: 2)),
