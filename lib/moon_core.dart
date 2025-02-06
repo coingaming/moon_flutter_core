@@ -9,6 +9,7 @@ export 'package:moon_core/src/utils/extensions.dart';
 export 'package:moon_core/src/utils/methods.dart';
 export 'package:moon_core/src/utils/moon_border.dart';
 export 'package:moon_core/src/utils/shape_decoration_premul.dart';
+export 'package:moon_core/src/utils/touch_target_padding.dart';
 
 export 'package:moon_core/src/widgets/accordion/accordion.dart';
 export 'package:moon_core/src/widgets/alert/alert.dart';

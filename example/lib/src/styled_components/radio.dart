@@ -18,29 +18,29 @@ class _StyledRadioState extends State<StyledRadio> {
 
   Duration get _animationDuration => const Duration(milliseconds: 150);
 
-  Style get _outerCircleStyle => Style(
+  Style get _dotStyle => Style(
         $box.chain
-          ..border.color.black54()
+          ..width(0)
+          ..color(Colors.deepPurple)
+          ..shape.circle(),
+        SelectedState.selected(
+          $box.width(7.5),
+        ),
+      ).animate(duration: _animationDuration);
+
+  Style get _baseStyle => Style(
+        $box.chain
           ..width(16)
-          ..shape.circle()
-          ..alignment.center(),
+          ..height(16)
+          ..border.color.black54()
+          ..alignment.center()
+          ..shape.circle(),
         SelectedState.selected(
           $box.border.color.deepPurple.shade600(),
         ),
       ).animate(duration: _animationDuration);
 
-  Style get _innerCircleStyle => Style(
-        $box.chain
-          ..color(Colors.deepPurple)
-          ..shape.circle()
-          ..width(0),
-        SelectedState.selected(
-          $box.width(9),
-        ),
-      ).animate(duration: _animationDuration);
-
   Style get _focusStateStyle => Style(
-        $box.height(32),
         $on.focus(
           $box.chain
             ..border.color.black12()
@@ -63,16 +63,16 @@ class _StyledRadioState extends State<StyledRadio> {
           return Column(
             children: [
               MoonBaseSingleSelectWidget(
+                value: value,
+                groupValue: _valueCustom,
                 toggleable: true,
                 style: _focusStateStyle,
-                value: _Choices.values[index],
-                groupValue: _valueCustom,
                 onChanged: (_Choices? value) =>
                     setState(() => _valueCustom = value),
                 child: Box(
-                  style: _outerCircleStyle.applyVariant(_getVariant(value)),
+                  style: _baseStyle.applyVariant(_getVariant(value)),
                   child: Box(
-                    style: _innerCircleStyle.applyVariant(_getVariant(value)),
+                    style: _dotStyle.applyVariant(_getVariant(value)),
                   ),
                 ),
               ),

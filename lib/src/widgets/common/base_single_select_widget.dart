@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:mix/mix.dart';
 
+import 'package:moon_core/src/utils/touch_target_padding.dart';
 import 'package:moon_core/src/widgets/common/base_interactive_widget.dart';
 
 class MoonBaseSingleSelectWidget<T> extends StatelessWidget {
@@ -27,6 +28,11 @@ class MoonBaseSingleSelectWidget<T> extends StatelessWidget {
   /// [groupValue] != [value], and only by selecting another widget in the
   /// group (i.e. changing the value of [groupValue]) can this widget be unselected.
   final bool toggleable;
+
+  /// The size of the widget's tap target.
+  ///
+  /// Defaults to 40.
+  final double tapAreaSizeValue;
 
   /// {@macro flutter.widgets.Focus.focusNode}
   final FocusNode? focusNode;
@@ -72,6 +78,7 @@ class MoonBaseSingleSelectWidget<T> extends StatelessWidget {
     this.autofocus = false,
     this.enableFeedback = false,
     this.toggleable = false,
+    this.tapAreaSizeValue = 40,
     this.focusNode,
     this.semanticLabel,
     this.style,
@@ -90,16 +97,19 @@ class MoonBaseSingleSelectWidget<T> extends StatelessWidget {
       label: semanticLabel,
       inMutuallyExclusiveGroup: true,
       selected: _isSelected,
-      child: MoonBaseInteractiveWidget(
-        autofocus: autofocus,
-        focusNode: focusNode,
-        enableFeedback: enableFeedback,
-        style: style,
-        onFocusChange: onFocusChange,
-        onTap: onChanged == null
-            ? null
-            : () => onChanged!(_isSelected && toggleable ? null : value),
-        child: child,
+      child: TouchTargetPadding(
+        minSize: Size(tapAreaSizeValue, tapAreaSizeValue),
+        child: MoonBaseInteractiveWidget(
+          autofocus: autofocus,
+          focusNode: focusNode,
+          enableFeedback: enableFeedback,
+          style: style,
+          onFocusChange: onFocusChange,
+          onTap: onChanged == null
+              ? null
+              : () => onChanged!(_isSelected && toggleable ? null : value),
+          child: child,
+        ),
       ),
     );
   }
