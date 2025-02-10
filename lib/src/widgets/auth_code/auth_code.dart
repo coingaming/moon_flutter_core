@@ -539,6 +539,11 @@ class _MoonRawAuthCodeState extends State<MoonRawAuthCode>
 
   @override
   Widget build(BuildContext context) {
+    final FlexSpecAttribute? flexAttributes =
+        widget.inputFieldStyle?.of(context).attributeOf<FlexSpecAttribute>();
+
+    final Style authCodeRowStyle = Style(flexAttributes);
+
     return Semantics(
       label: widget.semanticLabel,
       child: RepaintBoundary(
@@ -558,64 +563,62 @@ class _MoonRawAuthCodeState extends State<MoonRawAuthCode>
                     left: 0,
                     right: 0,
                     child: StyledRow(
-                      style: widget.inputFieldStyle,
+                      style: authCodeRowStyle,
                       children: List.generate(
                         _inputFieldCount,
-                        (int index) => RepaintBoundary(
-                          child: Focus(
-                            descendantsAreFocusable: false,
-                            focusNode: _focusNode,
-                            onFocusChange: (bool hasFocus) {
-                              for (final controller in _stateControllers) {
-                                controller.selected = false;
-                              }
+                        (int index) => Focus(
+                          focusNode: _focusNode,
+                          descendantsAreFocusable: false,
+                          onFocusChange: (bool hasFocus) {
+                            for (final controller in _stateControllers) {
+                              controller.selected = false;
+                            }
 
-                              if (hasFocus) {
-                                final index = _selectedIndex == _inputFieldCount
-                                    ? _selectedIndex - 1
-                                    : _selectedIndex;
-                                _stateControllers[index].selected = true;
-                              }
-                            },
-                            child: GestureDetector(
-                              onTap: () => _onFocus(),
-                              child: Pressable(
-                                enabled: widget.enabled,
-                                mouseCursor: widget.enabled
-                                    ? SystemMouseCursors.text
-                                    : SystemMouseCursors.forbidden,
-                                controller: _stateControllers[index],
-                                child: ActiveStateVariant(
-                                  isActive: _selectedIndex > index,
-                                  child: Builder(
-                                    builder: (BuildContext context) {
-                                      final MixData? mixData =
-                                          widget.inputFieldStyle?.of(context);
+                            if (hasFocus) {
+                              final index = _selectedIndex == _inputFieldCount
+                                  ? _selectedIndex - 1
+                                  : _selectedIndex;
+                              _stateControllers[index].selected = true;
+                            }
+                          },
+                          child: RepaintBoundary(
+                            child: Pressable(
+                              enabled: widget.enabled,
+                              mouseCursor: widget.enabled
+                                  ? SystemMouseCursors.text
+                                  : SystemMouseCursors.forbidden,
+                              controller: _stateControllers[index],
+                              onPress: () => _onFocus(),
+                              child: ActiveStateVariant(
+                                isActive: _selectedIndex > index,
+                                child: Builder(
+                                  builder: (BuildContext context) {
+                                    final MixData? mixData =
+                                        widget.inputFieldStyle?.of(context);
 
-                                      _effectiveTextStyle = mixData
-                                              ?.resolvableOf<TextSpec,
-                                                  TextSpecAttribute>()
-                                              ?.style ??
-                                          const TextStyle(fontSize: 24);
+                                    _effectiveTextStyle = mixData
+                                            ?.resolvableOf<TextSpec,
+                                                TextSpecAttribute>()
+                                            ?.style ??
+                                        const TextStyle(fontSize: 24);
 
-                                      _effectiveHeight = mixData
-                                              ?.resolvableOf<BoxSpec,
-                                                  BoxSpecAttribute>()
-                                              ?.height ??
-                                          56;
+                                    _effectiveHeight = mixData
+                                            ?.resolvableOf<BoxSpec,
+                                                BoxSpecAttribute>()
+                                            ?.height ??
+                                        56;
 
-                                      return Box(
-                                        style: Style(
-                                          $box.chain
-                                            ..height(_effectiveHeight)
-                                            ..width(48),
-                                        ).merge(widget.inputFieldStyle),
-                                        child: Center(
-                                          child: _buildChild(index),
-                                        ),
-                                      );
-                                    },
-                                  ),
+                                    return Box(
+                                      style: Style(
+                                        $box.chain
+                                          ..height(_effectiveHeight)
+                                          ..width(48),
+                                      ).merge(widget.inputFieldStyle),
+                                      child: Center(
+                                        child: _buildChild(index),
+                                      ),
+                                    );
+                                  },
                                 ),
                               ),
                             ),
