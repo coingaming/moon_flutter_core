@@ -581,7 +581,9 @@ class _MoonRawAuthCodeState extends State<MoonRawAuthCode>
                               onTap: () => _onFocus(),
                               child: Pressable(
                                 enabled: widget.enabled,
-                                mouseCursor: SystemMouseCursors.text,
+                                mouseCursor: widget.enabled
+                                    ? SystemMouseCursors.text
+                                    : SystemMouseCursors.forbidden,
                                 controller: _stateControllers[index],
                                 child: ActiveStateVariant(
                                   isActive: _selectedIndex > index,
