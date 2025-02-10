@@ -41,13 +41,16 @@ class MoonRawAuthCode extends StatefulWidget {
   final bool peekWhenObscuring;
 
   /// Whether to show the cursor in the selected auth code input field.
-  final bool showAuthFieldCursor;
+  final bool showCursor;
 
   /// Whether to use haptic feedback (vibration) for auth code error state.
   final bool useHapticFeedback;
 
-  /// The cursor color of the auth code input field.
-  final Color? authFieldCursorColor;
+  /// The cursor color of the selected auth code input field.
+  final Color? cursorColor;
+
+  /// The cursor color of the selected auth code input field in error state.
+  final Color? cursorErrorColor;
 
   /// The duration of the auth code error state animation.
   final Duration errorAnimationDuration;
@@ -123,13 +126,13 @@ class MoonRawAuthCode extends StatefulWidget {
   /// A builder to build the auth code error widget.
   final MoonAuthCodeErrorBuilder errorBuilder;
 
-  /// The hint to display below the auth code when provided.
-  /// Auth code hint is not be visible in error state.
-  final Widget? hint;
+  /// The helper text to display below the auth code when provided.
+  /// Auth code helper text is not be visible in error state.
+  final Widget? helperText;
 
   /// The character or placeholder to display in the auth code input field when
   /// its value is empty.
-  final Widget? hintCharacter;
+  final Widget? hint;
 
   /// The widget to obscure the auth code input field text.
   ///
@@ -145,9 +148,10 @@ class MoonRawAuthCode extends StatefulWidget {
     this.enabled = true,
     this.obscureText = false,
     this.peekWhenObscuring = false,
-    this.showAuthFieldCursor = true,
+    this.showCursor = true,
     this.useHapticFeedback = false,
-    this.authFieldCursorColor,
+    this.cursorColor,
+    this.cursorErrorColor,
     this.errorAnimationDuration = const Duration(milliseconds: 200),
     this.peekDuration = const Duration(milliseconds: 200),
     this.errorAnimationCurve = Curves.easeInOutCubic,
@@ -168,8 +172,8 @@ class MoonRawAuthCode extends StatefulWidget {
     this.onSubmitted,
     this.onEditingComplete,
     required this.errorBuilder,
+    this.helperText,
     this.hint,
-    this.hintCharacter,
     this.obscuringWidget,
   }) : assert(authInputFieldCount > 0);
 
@@ -282,7 +286,7 @@ class _MoonRawAuthCodeState extends State<MoonRawAuthCode>
       ),
     );
 
-    if (widget.showAuthFieldCursor) _cursorController.repeat();
+    if (widget.showCursor) _cursorController.repeat();
   }
 
   void _debounceBlink() {
@@ -411,12 +415,16 @@ class _MoonRawAuthCodeState extends State<MoonRawAuthCode>
         _selectedIndex == index + 1 && _inputFieldCount == index + 1;
     final bool shouldShowCursor = isFieldSelected || isLastFieldSelected;
 
-    if (shouldShowCursor && _focusNode.hasFocus && widget.showAuthFieldCursor) {
+    final Color effectiveCursorColor =
+        widget.cursorColor ?? _effectiveTextStyle?.color ?? Colors.black;
+
+    final Color effectiveErrorCursorColor =
+        widget.cursorErrorColor ?? _effectiveTextStyle?.color ?? Colors.red;
+
+    if (shouldShowCursor && _focusNode.hasFocus && widget.showCursor) {
       final double fontSize = _effectiveTextStyle?.fontSize ?? 24;
-      final Color effectiveCursorColor = widget.authFieldCursorColor ??
-          (_isInErrorMode
-              ? _effectiveTextStyle?.color ?? Colors.red
-              : Colors.black);
+      final Color resolvedCursorColor =
+          _isInErrorMode ? effectiveErrorCursorColor : effectiveCursorColor;
 
       final Widget cursorChild = Center(
         child: Padding(
@@ -427,7 +435,7 @@ class _MoonRawAuthCodeState extends State<MoonRawAuthCode>
             opacity: _cursorAnimation,
             child: CustomPaint(
               size: Size(0, fontSize),
-              painter: _CursorPainter(cursorColor: effectiveCursorColor),
+              painter: _CursorPainter(cursorColor: resolvedCursorColor),
             ),
           ),
         ),
@@ -460,10 +468,10 @@ class _MoonRawAuthCodeState extends State<MoonRawAuthCode>
       return widget.obscuringWidget!;
     }
 
-    if (!isFieldFilled && widget.hintCharacter != null) {
+    if (!isFieldFilled && widget.hint != null) {
       return SizedBox(
         key: ValueKey(_inputList[index]),
-        child: widget.hintCharacter,
+        child: widget.hint,
       );
     }
 
@@ -549,28 +557,28 @@ class _MoonRawAuthCodeState extends State<MoonRawAuthCode>
                     top: 0,
                     left: 0,
                     right: 0,
-                    child: GestureDetector(
-                      onTap: () => _onFocus(),
-                      child: Focus(
-                        descendantsAreFocusable: false,
-                        focusNode: _focusNode,
-                        onFocusChange: (bool hasFocus) {
-                          for (final controller in _stateControllers) {
-                            controller.selected = false;
-                          }
+                    child: StyledRow(
+                      style: widget.inputFieldStyle,
+                      children: List.generate(
+                        _inputFieldCount,
+                        (int index) => RepaintBoundary(
+                          child: Focus(
+                            descendantsAreFocusable: false,
+                            focusNode: _focusNode,
+                            onFocusChange: (bool hasFocus) {
+                              for (final controller in _stateControllers) {
+                                controller.selected = false;
+                              }
 
-                          if (hasFocus) {
-                            final index = _selectedIndex == _inputFieldCount
-                                ? _selectedIndex - 1
-                                : _selectedIndex;
-                            _stateControllers[index].selected = true;
-                          }
-                        },
-                        child: StyledRow(
-                          style: widget.inputFieldStyle,
-                          children: List.generate(
-                            _inputFieldCount,
-                            (int index) => RepaintBoundary(
+                              if (hasFocus) {
+                                final index = _selectedIndex == _inputFieldCount
+                                    ? _selectedIndex - 1
+                                    : _selectedIndex;
+                                _stateControllers[index].selected = true;
+                              }
+                            },
+                            child: GestureDetector(
+                              onTap: () => _onFocus(),
                               child: Pressable(
                                 enabled: widget.enabled,
                                 mouseCursor: SystemMouseCursors.text,
@@ -617,7 +625,8 @@ class _MoonRawAuthCodeState extends State<MoonRawAuthCode>
                 ],
               ),
             ),
-            if (!_isInErrorMode && widget.hint != null) widget.hint!,
+            if (!_isInErrorMode && widget.helperText != null)
+              widget.helperText!,
             if (_isInErrorMode)
               widget.errorBuilder(
                 context,

@@ -52,7 +52,7 @@ class _StyledAuthCodeState extends State<StyledAuthCode> {
       height: 95,
       child: MoonRawAuthCode(
         authInputFieldCount: 4,
-        authFieldCursorColor: Colors.orange,
+        cursorColor: Colors.orange,
         errorAnimationType: ErrorAnimationType.shake,
         inputFieldStyle: _inputFieldStyle,
         validator: (String? pin) =>
@@ -66,7 +66,7 @@ class _StyledAuthCodeState extends State<StyledAuthCode> {
             style: const TextStyle(color: Colors.red),
           ),
         ),
-        hint: const Padding(
+        helperText: const Padding(
           padding: EdgeInsets.only(top: 8),
           child: Text(
             "This is hint",
