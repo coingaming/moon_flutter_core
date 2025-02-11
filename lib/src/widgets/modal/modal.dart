@@ -9,12 +9,14 @@ Future<T?> showMoonRawModal<T>({
   Color barrierColor = Colors.black54,
   Curve transitionCurve = Curves.easeInOutCubic,
   Duration transitionDuration = const Duration(milliseconds: 200),
-  String? barrierLabel,
+  String? barrierLabel = "Dismiss",
+  Offset? anchorPoint,
   RouteSettings? routeSettings,
   RouteTransitionsBuilder? customTransitionBuilder,
   required BuildContext context,
   required WidgetBuilder builder,
 }) {
+  assert(!barrierDismissible || barrierLabel != null);
   assert(_debugIsActive(context));
 
   final CapturedThemes themes = InheritedTheme.capture(
@@ -34,6 +36,7 @@ Future<T?> showMoonRawModal<T>({
       transitionDuration: transitionDuration,
       barrierLabel: effectiveBarrierLabel,
       settings: routeSettings,
+      anchorPoint: anchorPoint,
       themes: themes,
       customTransitionBuilder: customTransitionBuilder,
       builder: builder,
@@ -62,16 +65,17 @@ class _MoonRawModalRoute<T> extends RawDialogRoute<T> {
   /// A Moon Design raw modal route with entrance and exit animations, modal
   /// barrier color, and dismissal functionality.
   _MoonRawModalRoute({
+    super.settings,
+    super.anchorPoint,
+    super.barrierLabel,
     super.barrierDismissible,
     required bool useSafeArea,
-    CapturedThemes? themes,
-    required super.barrierColor,
     required Curve transitionCurve,
     required super.transitionDuration,
-    super.settings,
-    super.barrierLabel,
-    RouteTransitionsBuilder? customTransitionBuilder,
+    required super.barrierColor,
     required WidgetBuilder builder,
+    CapturedThemes? themes,
+    RouteTransitionsBuilder? customTransitionBuilder,
   }) : super(
           pageBuilder: (_, __, ___) {
             Widget modal = Builder(builder: builder);
@@ -82,12 +86,14 @@ class _MoonRawModalRoute<T> extends RawDialogRoute<T> {
           },
           transitionBuilder: customTransitionBuilder ??
               (_, Animation<double> animation, __, Widget child) {
-                return FadeTransition(
-                  opacity: CurvedAnimation(
-                    parent: animation,
-                    curve: transitionCurve,
+                return RepaintBoundary(
+                  child: FadeTransition(
+                    opacity: CurvedAnimation(
+                      parent: animation,
+                      curve: transitionCurve,
+                    ),
+                    child: child,
                   ),
-                  child: child,
                 );
               },
         );
