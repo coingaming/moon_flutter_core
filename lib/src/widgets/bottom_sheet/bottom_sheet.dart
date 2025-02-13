@@ -18,6 +18,10 @@ class MoonRawBottomSheet extends StatefulWidget {
   /// swiping downwards.
   final bool enableDrag;
 
+  /// Whether the bottom sheet is expanded to its full available width or
+  /// resizes to fit its content.
+  final bool isExpanded;
+
   /// The minimum velocity required for the bottom sheet to close when flung.
   final double minFlingVelocity;
 
@@ -71,6 +75,7 @@ class MoonRawBottomSheet extends StatefulWidget {
   const MoonRawBottomSheet({
     super.key,
     this.enableDrag = true,
+    this.isExpanded = false,
     this.closeProgressThreshold = 0.6,
     this.minFlingVelocity = 500.0,
     this.transitionDuration = const Duration(milliseconds: 350),
@@ -356,7 +361,10 @@ class MoonRawBottomSheetState extends State<MoonRawBottomSheet>
 
           return ClipRect(
             child: CustomSingleChildLayout(
-              delegate: _ModalBottomSheetLayout(progress: animationValue),
+              delegate: _ModalBottomSheetLayout(
+                progress: animationValue,
+                isExpanded: widget.isExpanded,
+              ),
               child: draggableChild,
             ),
           );
@@ -391,15 +399,18 @@ class MoonRawBottomSheetState extends State<MoonRawBottomSheet>
 }
 
 class _ModalBottomSheetLayout extends SingleChildLayoutDelegate {
+  final bool isExpanded;
   final double progress;
 
-  _ModalBottomSheetLayout({required this.progress});
+  _ModalBottomSheetLayout({required this.isExpanded, required this.progress});
 
   @override
   BoxConstraints getConstraintsForChild(BoxConstraints constraints) {
     return BoxConstraints(
       minWidth: constraints.maxWidth,
       maxWidth: constraints.maxWidth,
+      minHeight: isExpanded ? constraints.maxHeight : 0,
+      maxHeight: isExpanded ? constraints.maxHeight : constraints.minHeight,
     );
   }
 

@@ -11,6 +11,7 @@ Future<T?> showMoonRawModalBottomSheet<T>({
   required BuildContext context,
   bool enableDrag = true,
   bool isDismissible = true,
+  bool isExpanded = false,
   bool useRootNavigator = false,
   Color barrierColor = Colors.black54,
   double closeProgressThreshold = 0.6,
@@ -43,6 +44,7 @@ Future<T?> showMoonRawModalBottomSheet<T>({
     _MoonModalBottomSheetRoute<T>(
       enableDrag: enableDrag,
       isDismissible: isDismissible,
+      isExpanded: isExpanded,
       themes: themes,
       modalBarrierColor: barrierColor,
       closeProgressThreshold: closeProgressThreshold,
@@ -63,6 +65,7 @@ Future<T?> showMoonRawModalBottomSheet<T>({
 class _MoonModalBottomSheetRoute<T> extends PageRoute<T> {
   final bool enableDrag;
   final bool isDismissible;
+  final bool isExpanded;
   final CapturedThemes? themes;
   final Color modalBarrierColor;
   final double closeProgressThreshold;
@@ -78,6 +81,7 @@ class _MoonModalBottomSheetRoute<T> extends PageRoute<T> {
     super.settings,
     this.enableDrag = true,
     this.isDismissible = true,
+    this.isExpanded = false,
     this.themes,
     required this.modalBarrierColor,
     required this.closeProgressThreshold,
@@ -260,6 +264,7 @@ class _ModalBottomSheetState<T> extends State<_ModalBottomSheet<T>> {
               scopesRoute: true,
               child: MoonRawBottomSheet(
                 enableDrag: widget.enableDrag,
+                isExpanded: widget.route.isExpanded,
                 closeProgressThreshold: widget.closeProgressThreshold,
                 transitionDuration: widget.transitionDuration,
                 transitionCurve: widget.transitionCurve,
