@@ -47,7 +47,9 @@ class MoonRawFormTextInput extends FormField<String> {
               bucket: field.bucket,
               child: MoonRawTextInput(
                 textInputConfiguration: configuration.copyWith(
-                  restorationId: "editable",
+                  restorationId: field.restorationId ??
+                      textInputConfiguration?.restorationId ??
+                      "editable",
                   errorText:
                       field.errorText ?? textInputConfiguration?.errorText,
                   controller:
