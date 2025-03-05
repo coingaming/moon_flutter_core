@@ -2,25 +2,29 @@ import 'package:flutter/material.dart';
 
 import 'package:mix/mix.dart';
 
-class MoonErrorMessage extends StatefulWidget {
-  final String errorText;
+class MoonMessage extends StatefulWidget {
+  final String text;
+  final Icon? icon;
+  final double horizontalGap;
   final Duration duration;
   final Curve curve;
 
-  /// Creates a default error message widget, utilized in [MoonRawTextInput]
-  /// and [MoonRawTextFormInput].
-  const MoonErrorMessage({
+  /// Creates a default error message widget, utilized in [MoonRawTextInput] and
+  /// [MoonRawTextFormInput].
+  const MoonMessage({
     super.key,
-    required this.errorText,
+    required this.text,
+    this.icon,
+    this.horizontalGap = 4,
     this.duration = const Duration(milliseconds: 167),
     this.curve = Curves.fastOutSlowIn,
   });
 
   @override
-  State<MoonErrorMessage> createState() => _MoonErrorMessageState();
+  State<MoonMessage> createState() => _MoonMessageState();
 }
 
-class _MoonErrorMessageState extends State<MoonErrorMessage>
+class _MoonMessageState extends State<MoonMessage>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _opacityAnimation;
@@ -56,15 +60,14 @@ class _MoonErrorMessageState extends State<MoonErrorMessage>
       opacity: _opacityAnimation,
       child: Row(
         children: [
-          StyledIcon(
-            style: Style(
-              $icon.size(16),
-            ),
-            Icons.info_outline,
-          ),
-          const SizedBox(width: 4),
+          widget.icon ??
+              StyledIcon(
+                style: Style($icon.size(16)),
+                Icons.error_outline_rounded,
+              ),
+          SizedBox(width: widget.horizontalGap),
           Flexible(
-            child: StyledText(widget.errorText),
+            child: StyledText(widget.text),
           ),
         ],
       ),

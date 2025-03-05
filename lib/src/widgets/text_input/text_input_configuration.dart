@@ -30,9 +30,9 @@ class MoonTextInputConfiguration {
   /// Whether the text input has floating label.
   final bool hasFloatingLabel;
 
-  /// The vertical offset applied to the input text. Provides more detailed
-  /// control over text input vertical positioning.
-  /// Does not apply to the [hint] widget.
+  /// The vertical offset applied to the input text and hint.
+  /// Provides finer control over text input and hint vertical positioning.
+  /// Does not apply to the [label] widget.
   final double inputTextVerticalOffsetValue;
 
   /// Scale value for floating label animation.
@@ -45,7 +45,7 @@ class MoonTextInputConfiguration {
   final Curve? transitionCurve;
 
   /// A builder to build and customise the text input [errorText] widget.
-  /// If errorBuilder is not provided, default [MoonErrorMessage] is used to
+  /// If errorBuilder is not provided, default [MoonMessage] is used to
   /// display the [errorText].
   final MoonTextInputErrorBuilder? errorBuilder;
 
@@ -53,7 +53,7 @@ class MoonTextInputConfiguration {
   /// (useful for asynchronous errors).
   ///
   /// In order to customise the error, use the [errorBuilder] property.
-  /// If [errorBuilder] is not provided, default [MoonErrorMessage] is used to
+  /// If [errorBuilder] is not provided, default [MoonMessage] is used to
   /// display the errorText.
   ///
   /// The validator errors take precedence over the provided [errorText].
@@ -66,8 +66,8 @@ class MoonTextInputConfiguration {
   /// The style of the text input container.
   final Style? inputStyle;
 
-  /// The style of the both helper and error container based on the state.
-  final Style? helperStyle;
+  /// The style of the both helper and error based on the state.
+  final Style? helperErrorStyle;
 
   /// The widget to display before the text input.
   final Widget? leading;
@@ -78,7 +78,14 @@ class MoonTextInputConfiguration {
   /// The widget to display below the text input. Not displayed in error state.
   final Widget? helper;
 
-  /// The widget to display as the hint text.
+  /// The widget to display within the input field.
+  /// If [hasFloatingLabel] is false, the label is displayed only when the input
+  /// is empty and not focused. If [hasFloatingLabel] is true, label will float
+  /// to the top of the text input when the text input is focused.
+  final Widget? label;
+
+  /// The widget to display as the hint within the input.
+  /// Visible when the text input is empty and focused.
   final Widget? hint;
 
   // Flutter properties.
@@ -371,8 +378,11 @@ class MoonTextInputConfiguration {
   /// {@macro flutter.widgets.editableText.textAlign}
   final TextAlign textAlign;
 
-  /// {@macro flutter.material.InputDecorator.textAlignVertical}
+  /// Vertical text alignment of the text and [hint] within the input.
   final TextAlignVertical? textAlignVertical;
+
+  /// Vertical text alignment of the [label] within the input.
+  final TextAlignVertical? labelTextAlignVertical;
 
   /// {@macro flutter.widgets.editableText.textCapitalization}
   final TextCapitalization textCapitalization;
@@ -466,12 +476,14 @@ class MoonTextInputConfiguration {
     this.errorText,
     this.floatingLabelScaleValue = 0.75,
     this.hasFloatingLabel = false,
+    this.helperErrorStyle,
     this.helper,
-    this.helperStyle,
     this.hint,
     this.initialValue,
     this.inputStyle,
     this.inputTextVerticalOffsetValue = 0,
+    this.labelTextAlignVertical,
+    this.label,
     this.leading,
     this.trailing,
     this.transitionCurve = Curves.easeInOutCubic,
@@ -578,20 +590,22 @@ class MoonTextInputConfiguration {
 
   MoonTextInputConfiguration copyWith({
     // Moon Design System properties.
-    bool? hasFloatingLabel,
-    Duration? transitionDuration,
-    Curve? transitionCurve,
+    Widget Function(BuildContext, String?)? errorBuilder,
     String? errorText,
+    double? floatingLabelScaleValue,
+    bool? hasFloatingLabel,
+    Widget? helper,
+    Style? helperErrorStyle,
     Widget? hint,
     String? initialValue,
-    Style? helperStyle,
-    Widget Function(BuildContext, String?)? errorBuilder,
-    Widget? leading,
-    Widget? helper,
-    Widget? trailing,
     Style? inputStyle,
     double? inputTextVerticalOffsetValue,
-    double? floatingLabelScaleValue,
+    TextAlignVertical? labelTextAlignVertical,
+    Widget? label,
+    Widget? leading,
+    Widget? trailing,
+    Duration? transitionDuration,
+    Curve? transitionCurve,
 
     // Flutter properties.
     bool? autocorrect,
@@ -689,13 +703,16 @@ class MoonTextInputConfiguration {
       focusNode: focusNode ?? this.focusNode,
       hasFloatingLabel: hasFloatingLabel ?? this.hasFloatingLabel,
       helper: helper ?? this.helper,
-      helperStyle: helperStyle ?? this.helperStyle,
+      helperErrorStyle: helperErrorStyle ?? this.helperErrorStyle,
       hint: hint ?? this.hint,
       initialValue: initialValue ?? this.initialValue,
       inputFormatters: inputFormatters ?? this.inputFormatters,
       inputStyle: inputStyle ?? this.inputStyle,
       keyboardAppearance: keyboardAppearance ?? this.keyboardAppearance,
       keyboardType: keyboardType ?? this.keyboardType,
+      label: label ?? this.label,
+      labelTextAlignVertical:
+          labelTextAlignVertical ?? this.labelTextAlignVertical,
       leading: leading ?? this.leading,
       magnifierConfiguration:
           magnifierConfiguration ?? this.magnifierConfiguration,
@@ -902,6 +919,34 @@ void textInputDebugFillProperties(
       "textAlignVertical",
       textInputConfiguration.textAlignVertical,
       defaultValue: null,
+    ),
+  );
+  properties.add(
+    DiagnosticsProperty<TextAlignVertical>(
+      "labelTextAlignVertical",
+      textInputConfiguration.labelTextAlignVertical,
+      defaultValue: null,
+    ),
+  );
+  properties.add(
+    DiagnosticsProperty<Widget>(
+      "label",
+      textInputConfiguration.label,
+      defaultValue: null,
+    ),
+  );
+  properties.add(
+    DiagnosticsProperty<bool>(
+      "hasFloatingLabel",
+      textInputConfiguration.hasFloatingLabel,
+      defaultValue: false,
+    ),
+  );
+  properties.add(
+    DoubleProperty(
+      "floatingLabelScaleValue",
+      textInputConfiguration.floatingLabelScaleValue,
+      defaultValue: 0.75,
     ),
   );
   properties.add(

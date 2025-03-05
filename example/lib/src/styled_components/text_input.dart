@@ -27,7 +27,7 @@ class _StyledTextInputState extends State<StyledTextInput> {
         $on.disabled($with.opacity(0.5)),
       ).animate(duration: const Duration(milliseconds: 300));
 
-  Style get _helperStyle => Style(
+  Style get _helperErrorStyle => Style(
         $box.chain
           ..padding.vertical(8)
           ..width(300),
@@ -64,7 +64,8 @@ class _StyledTextInputState extends State<StyledTextInput> {
     return MoonRawTextInput(
       textInputConfiguration: MoonTextInputConfiguration(
         hasFloatingLabel: true,
-        helperStyle: _helperStyle,
+        textAlignVertical: TextAlignVertical.bottom,
+        helperErrorStyle: _helperErrorStyle,
         inputStyle: _inputStyle,
         controller: _searchController,
         leading: MoonBaseInteractiveWidget(
@@ -78,8 +79,12 @@ class _StyledTextInputState extends State<StyledTextInput> {
           child: const Icon(Icons.close, size: 20),
         ),
         helper: const StyledText("Text input field with floating label."),
+        label: const Text(
+          "Label",
+          style: TextStyle(color: Colors.grey),
+        ),
         hint: const Text(
-          "Search for something...",
+          "Hint",
           style: TextStyle(color: Colors.grey),
         ),
       ),

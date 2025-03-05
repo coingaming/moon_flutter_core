@@ -31,7 +31,7 @@ class _StyledFormTextInputState extends State<StyledFormTextInput> {
         $on.disabled($with.opacity(0.5)),
       ).animate(duration: const Duration(milliseconds: 300));
 
-  Style get _helperStyle => Style(
+  Style get _helperErrorStyle => Style(
         $box.chain
           ..padding.vertical(8)
           ..width(300),
@@ -92,7 +92,7 @@ class _StyledFormTextInputState extends State<StyledFormTextInput> {
                     expands: true,
                     maxLines: null,
                     inputStyle: _inputStyle,
-                    helperStyle: _helperStyle,
+                    helperErrorStyle: _helperErrorStyle,
                     controller: _textController,
                     trailing: MoonBaseInteractiveWidget(
                       style: getIconButtonStyle(),
@@ -102,6 +102,10 @@ class _StyledFormTextInputState extends State<StyledFormTextInput> {
                     helper: const StyledText("Expanding text input field."),
                     hint: const Text(
                       "Enter text (over 3 characters)",
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    label: const Text(
+                      "Label",
                       style: TextStyle(color: Colors.grey),
                     ),
                   ),
@@ -116,7 +120,7 @@ class _StyledFormTextInputState extends State<StyledFormTextInput> {
                     obscureText: _hidePassword,
                     keyboardType: TextInputType.visiblePassword,
                     inputStyle: _inputStyle,
-                    helperStyle: _helperStyle,
+                    helperErrorStyle: _helperErrorStyle,
                     controller: _passwordController,
                     leading: const Icon(Icons.pin_outlined, size: 20),
                     trailing: MoonBaseInteractiveWidget(
@@ -129,6 +133,10 @@ class _StyledFormTextInputState extends State<StyledFormTextInput> {
                       "Enter password (abc)",
                       style: TextStyle(color: Colors.grey),
                     ),
+                    label: const Text(
+                      "Label",
+                      style: TextStyle(color: Colors.grey),
+                    ),
                   ),
                   validator: (String? value) =>
                       value != "abc" ? "Wrong password." : null,
@@ -137,15 +145,20 @@ class _StyledFormTextInputState extends State<StyledFormTextInput> {
                 MoonRawFormTextInput(
                   textInputConfiguration: MoonTextInputConfiguration(
                     textAlignVertical: TextAlignVertical.top,
+                    labelTextAlignVertical: TextAlignVertical.top,
                     style: const TextStyle(fontSize: 16),
-                    helperStyle: _helperStyle,
+                    helperErrorStyle: _helperErrorStyle,
                     inputStyle: _inputStyle.add(
                       $box.chain
                         ..height(200)
                         ..padding(16),
                     ),
                     hint: const Text(
-                      "Enter your text here...",
+                      "Hint...",
+                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                    ),
+                    label: const Text(
+                      "Label",
                       style: TextStyle(fontSize: 16, color: Colors.grey),
                     ),
                   ),

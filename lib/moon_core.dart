@@ -26,7 +26,7 @@ export 'package:moon_core/src/widgets/common/base_interactive_widget.dart';
 export 'package:moon_core/src/widgets/common/base_multi_select_widget.dart';
 export 'package:moon_core/src/widgets/common/base_overlay_widget.dart';
 export 'package:moon_core/src/widgets/common/base_single_select_widget.dart';
-export 'package:moon_core/src/widgets/common/error_message_widgets.dart';
+export 'package:moon_core/src/widgets/common/message_widget.dart';
 export 'package:moon_core/src/widgets/dot_indicator/dot_indicator.dart';
 export 'package:moon_core/src/widgets/loaders/circular_loader.dart';
 export 'package:moon_core/src/widgets/loaders/linear_loader.dart';
