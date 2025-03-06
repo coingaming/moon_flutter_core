@@ -46,7 +46,7 @@ class MoonTextInputConfiguration {
 
   /// A builder to build and customise the text input [errorText] widget.
   /// If errorBuilder is not provided, default [MoonMessage] is used to
-  /// display the [errorText].
+  /// display the [errorText]. If non-null, the [helper] is not shown.
   final MoonTextInputErrorBuilder? errorBuilder;
 
   /// The error text can be used to force text input into an error state
@@ -54,7 +54,7 @@ class MoonTextInputConfiguration {
   ///
   /// In order to customise the error, use the [errorBuilder] property.
   /// If [errorBuilder] is not provided, default [MoonMessage] is used to
-  /// display the errorText.
+  /// display the errorText. If non-null, the [helper] is not shown.
   ///
   /// The validator errors take precedence over the provided [errorText].
   final String? errorText;
@@ -69,23 +69,36 @@ class MoonTextInputConfiguration {
   /// The style of the both helper and error based on the state.
   final Style? helperErrorStyle;
 
+  /// Defines where the floating [label] should be displayed.
+  final AlignmentDirectional? floatingLabelTextAlign;
+
+  /// Defines where the input text and [hint] should be displayed.
+  final TextAlignVertical? textAlignVertical;
+
+  /// Defines where the [label] should be displayed.
+  final TextAlignVertical? labelTextAlignVertical;
+
   /// The widget to display before the text input.
   final Widget? leading;
 
   /// The widget to display after the text input.
   final Widget? trailing;
 
-  /// The widget to display below the text input. Not displayed in error state.
+  /// The widget to display below the text input.
+  /// If a non-null [errorBuilder] or [errorText] value is specified then
+  /// the [helper] is not shown.
   final Widget? helper;
 
-  /// The widget to display within the input field.
-  /// If [hasFloatingLabel] is false, the label is displayed only when the input
-  /// is empty and not focused. If [hasFloatingLabel] is true, label will float
-  /// to the top of the text input when the text input is focused.
+  /// Widget that describes the input field.
+  /// When the input field is empty and unfocused, the label is displayed in the
+  /// input field. When the input field receives focus (or if the field is non-empty),
+  /// depending on [hasFloatingLabel] value, the label either moves to the top
+  /// of the input field or disappears.
   final Widget? label;
 
-  /// The widget to display as the hint within the input.
-  /// Visible when the text input is empty and focused.
+  /// Widget that suggests what sort of input the field accepts.
+  /// Visible when the text input is empty and either (a) [label] is null
+  /// or (b) the input has the focus.
   final Widget? hint;
 
   // Flutter properties.
@@ -378,12 +391,6 @@ class MoonTextInputConfiguration {
   /// {@macro flutter.widgets.editableText.textAlign}
   final TextAlign textAlign;
 
-  /// Vertical text alignment of the text and [hint] within the input.
-  final TextAlignVertical? textAlignVertical;
-
-  /// Vertical text alignment of the [label] within the input.
-  final TextAlignVertical? labelTextAlignVertical;
-
   /// {@macro flutter.widgets.editableText.textCapitalization}
   final TextCapitalization textCapitalization;
 
@@ -475,6 +482,7 @@ class MoonTextInputConfiguration {
     this.errorBuilder,
     this.errorText,
     this.floatingLabelScaleValue = 0.75,
+    this.floatingLabelTextAlign,
     this.hasFloatingLabel = false,
     this.helperErrorStyle,
     this.helper,
@@ -486,6 +494,7 @@ class MoonTextInputConfiguration {
     this.label,
     this.leading,
     this.trailing,
+    this.textAlignVertical,
     this.transitionCurve = Curves.easeInOutCubic,
     this.transitionDuration = const Duration(milliseconds: 200),
 
@@ -541,7 +550,6 @@ class MoonTextInputConfiguration {
     this.strutStyle,
     this.style = const TextStyle(fontSize: 14),
     this.textAlign = TextAlign.start,
-    this.textAlignVertical,
     this.textCapitalization = TextCapitalization.none,
     this.textDirection,
     this.textInputAction,
@@ -593,6 +601,7 @@ class MoonTextInputConfiguration {
     Widget Function(BuildContext, String?)? errorBuilder,
     String? errorText,
     double? floatingLabelScaleValue,
+    AlignmentDirectional? floatingLabelTextAlign,
     bool? hasFloatingLabel,
     Widget? helper,
     Style? helperErrorStyle,
@@ -604,6 +613,7 @@ class MoonTextInputConfiguration {
     Widget? label,
     Widget? leading,
     Widget? trailing,
+    TextAlignVertical? textAlignVertical,
     Duration? transitionDuration,
     Curve? transitionCurve,
 
@@ -663,7 +673,6 @@ class MoonTextInputConfiguration {
     StrutStyle? strutStyle,
     TextStyle? style,
     TextAlign? textAlign,
-    TextAlignVertical? textAlignVertical,
     TextCapitalization? textCapitalization,
     TextDirection? textDirection,
     TextInputAction? textInputAction,
@@ -700,6 +709,8 @@ class MoonTextInputConfiguration {
           inputTextVerticalOffsetValue ?? this.inputTextVerticalOffsetValue,
       floatingLabelScaleValue:
           floatingLabelScaleValue ?? this.floatingLabelScaleValue,
+      floatingLabelTextAlign:
+          floatingLabelTextAlign ?? this.floatingLabelTextAlign,
       focusNode: focusNode ?? this.focusNode,
       hasFloatingLabel: hasFloatingLabel ?? this.hasFloatingLabel,
       helper: helper ?? this.helper,
@@ -925,6 +936,13 @@ void textInputDebugFillProperties(
     DiagnosticsProperty<TextAlignVertical>(
       "labelTextAlignVertical",
       textInputConfiguration.labelTextAlignVertical,
+      defaultValue: null,
+    ),
+  );
+  properties.add(
+    DiagnosticsProperty<AlignmentDirectional>(
+      "floatingLabelTextAlign",
+      textInputConfiguration.floatingLabelTextAlign,
       defaultValue: null,
     ),
   );
