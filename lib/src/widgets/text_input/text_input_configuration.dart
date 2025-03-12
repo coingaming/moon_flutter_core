@@ -91,9 +91,9 @@ class MoonTextInputConfiguration {
 
   /// Widget that describes the input field.
   /// When the input field is empty and unfocused, the label is displayed in the
-  /// input field. When the input field receives focus (or if the field is non-empty),
-  /// depending on [hasFloatingLabel] value, the label either moves to the top
-  /// of the input field or disappears.
+  /// input field. When the input field receives focus, depending on
+  /// [hasFloatingLabel] value, the label either moves to the top of the input
+  /// field or disappears.
   final Widget? label;
 
   /// Widget that suggests what sort of input the field accepts.

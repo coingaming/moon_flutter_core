@@ -12,9 +12,11 @@ mixin _$IconThemeModifierSpec on WidgetModifierSpec<IconThemeModifierSpec> {
   @override
   IconThemeModifierSpec copyWith({
     IconThemeData? data,
+    AnimatedData? animate,
   }) {
     return IconThemeModifierSpec(
       data: data ?? _$this.data,
+      animate: animate ?? _$this.animate,
     );
   }
 
@@ -31,7 +33,7 @@ mixin _$IconThemeModifierSpec on WidgetModifierSpec<IconThemeModifierSpec> {
   ///
   /// - [IconThemeData.lerp] for [data].
 
-  /// For , the interpolation is performed using a step function.
+  /// For [animate], the interpolation is performed using a step function.
   /// If [t] is less than 0.5, the value from the current [IconThemeModifierSpec] is used. Otherwise, the value
   /// from the [other] [IconThemeModifierSpec] is used.
   ///
@@ -43,6 +45,7 @@ mixin _$IconThemeModifierSpec on WidgetModifierSpec<IconThemeModifierSpec> {
 
     return IconThemeModifierSpec(
       data: IconThemeData.lerp(_$this.data, other.data, t),
+      animate: t < 0.5 ? _$this.animate : other.animate,
     );
   }
 
@@ -52,8 +55,9 @@ mixin _$IconThemeModifierSpec on WidgetModifierSpec<IconThemeModifierSpec> {
   /// compare two [IconThemeModifierSpec] instances for equality.
   @override
   List<Object?> get props => [
-    _$this.data,
-  ];
+        _$this.data,
+        _$this.animate,
+      ];
 
   IconThemeModifierSpec get _$this => this as IconThemeModifierSpec;
 }
@@ -68,9 +72,11 @@ mixin _$IconThemeModifierSpec on WidgetModifierSpec<IconThemeModifierSpec> {
 final class IconThemeModifierSpecAttribute
     extends WidgetModifierSpecAttribute<IconThemeModifierSpec> {
   final IconThemeDataDto? data;
+  final AnimatedDataDto? animate;
 
   const IconThemeModifierSpecAttribute({
     this.data,
+    this.animate,
   });
 
   /// Resolves to [IconThemeModifierSpec] using the provided [MixData].
@@ -85,6 +91,7 @@ final class IconThemeModifierSpecAttribute
   IconThemeModifierSpec resolve(MixData mix) {
     return IconThemeModifierSpec(
       data: data?.resolve(mix),
+      animate: animate?.resolve(mix) ?? mix.animation,
     );
   }
 
@@ -102,6 +109,7 @@ final class IconThemeModifierSpecAttribute
 
     return IconThemeModifierSpecAttribute(
       data: other.data ?? data,
+      animate: animate?.merge(other.animate) ?? other.animate,
     );
   }
 
@@ -111,30 +119,40 @@ final class IconThemeModifierSpecAttribute
   /// compare two [IconThemeModifierSpecAttribute] instances for equality.
   @override
   List<Object?> get props => [
-    data,
-  ];
+        data,
+        animate,
+      ];
 }
 
-/// Utility class for configuring [IconThemeModifierSpecAttribute] properties.
+/// Utility class for configuring [IconThemeModifierSpec] properties.
 ///
-/// This class provides methods to set individual properties of a [IconThemeModifierSpecAttribute].
-/// Use the methods of this class to configure specific properties of a [IconThemeModifierSpecAttribute].
+/// This class provides methods to set individual properties of a [IconThemeModifierSpec].
+/// Use the methods of this class to configure specific properties of a [IconThemeModifierSpec].
 class IconThemeModifierSpecUtility<T extends Attribute>
     extends SpecUtility<T, IconThemeModifierSpecAttribute> {
   /// Utility for defining [IconThemeModifierSpecAttribute.data]
   late final data = IconThemeDataUtility((v) => only(data: v));
 
-  IconThemeModifierSpecUtility(super.builder);
+  /// Utility for defining [IconThemeModifierSpecAttribute.animate]
+  late final animate = AnimatedUtility((v) => only(animate: v));
 
-  static final self = IconThemeModifierSpecUtility((v) => v);
+  IconThemeModifierSpecUtility(super.builder, {super.mutable});
+
+  IconThemeModifierSpecUtility<T> get chain =>
+      IconThemeModifierSpecUtility(attributeBuilder, mutable: true);
+
+  static IconThemeModifierSpecUtility<IconThemeModifierSpecAttribute>
+      get self => IconThemeModifierSpecUtility((v) => v);
 
   /// Returns a new [IconThemeModifierSpecAttribute] with the specified properties.
   @override
   T only({
     IconThemeDataDto? data,
+    AnimatedDataDto? animate,
   }) {
     return builder(IconThemeModifierSpecAttribute(
       data: data,
+      animate: animate,
     ));
   }
 }

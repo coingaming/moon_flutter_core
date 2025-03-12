@@ -22,14 +22,30 @@ class _StyledFormTextInputState extends State<StyledFormTextInput> {
   Style get _inputStyle => Style(
         $box.chain
           ..width(300)
-          ..padding(4, 12)
-          ..shapeDecoration.as(_getBorder(Colors.grey, width: 1)),
+          ..padding(4, 12),
         $flex.gap(8),
-        $on.hover($box.shapeDecoration.as(_getBorder(Colors.grey))),
-        $on.focus($box.shapeDecoration.as(_getBorder(Colors.purple))),
-        $on.error($box.shapeDecoration.as(_getBorder(Colors.red))),
+        $text.color(Colors.black),
+        $with.defaultTextStyle.style.color(Colors.grey),
+        $with.iconTheme.data.color(Colors.black),
+        $with.animatedShapeDecoration(
+          bgColor: Colors.white,
+          border: _getBorder(Colors.grey, width: 1),
+          duration: const Duration(milliseconds: 400),
+        ),
+        $on.hover(
+          $with.animatedShapeDecoration(hoverColor: Colors.black12),
+        ),
+        $on.focus(
+          $with.animatedShapeDecoration(
+            hoverColor: Colors.white,
+            border: _getBorder(Colors.purple),
+          ),
+        ),
+        $on.error(
+          $with.animatedShapeDecoration(border: _getBorder(Colors.red)),
+        ),
         $on.disabled($with.opacity(0.5)),
-      ).animate(duration: const Duration(milliseconds: 300));
+      );
 
   Style get _helperErrorStyle => Style(
         $box.chain
@@ -46,19 +62,16 @@ class _StyledFormTextInputState extends State<StyledFormTextInput> {
       ).animate(duration: const Duration(milliseconds: 300));
 
   Style get _trailingStyle => Style(
-        $text.style.decoration.underline(),
+        $text.chain
+          ..style.decoration.underline()
+          ..color(Colors.black),
         $with.cursor.click(),
-        $with.intrinsicWidth(),
         $with.align(alignment: Alignment.centerRight),
-        $on.focus($text.style.color(Colors.purple)),
       );
 
-  ShapeDecoration _getBorder(Color color, {double width = 1.5}) =>
-      ShapeDecorationWithPremultipliedAlpha(
-        shape: MoonBorder(
-          borderRadius: BorderRadius.circular(8),
-          side: BorderSide(color: color, width: width),
-        ),
+  MoonBorder _getBorder(Color borderColor, {double? width}) => MoonBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(color: borderColor, width: width ?? 2),
       );
 
   @override
@@ -99,15 +112,9 @@ class _StyledFormTextInputState extends State<StyledFormTextInput> {
                       onTap: () => _textController.clear(),
                       child: const Icon(Icons.close, size: 20),
                     ),
+                    label: const Text("Label"),
+                    hint: const Text("Enter text (over 3 characters)"),
                     helper: const StyledText("Expanding text input field."),
-                    hint: const Text(
-                      "Enter text (over 3 characters)",
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                    label: const Text(
-                      "Label",
-                      style: TextStyle(color: Colors.grey),
-                    ),
                   ),
                   validator: (String? value) =>
                       value != null && value.length < 3
@@ -129,14 +136,8 @@ class _StyledFormTextInputState extends State<StyledFormTextInput> {
                           setState(() => _hidePassword = !_hidePassword),
                       child: StyledText(_hidePassword ? "Show" : "Hide"),
                     ),
-                    hint: const Text(
-                      "Enter password (abc)",
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                    label: const Text(
-                      "Label",
-                      style: TextStyle(color: Colors.grey),
-                    ),
+                    label: const Text("Label"),
+                    hint: const Text("Enter password (abc)"),
                   ),
                   validator: (String? value) =>
                       value != "abc" ? "Wrong password." : null,
@@ -153,14 +154,8 @@ class _StyledFormTextInputState extends State<StyledFormTextInput> {
                         ..height(200)
                         ..padding(16),
                     ),
-                    hint: const Text(
-                      "Hint...",
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
-                    ),
-                    label: const Text(
-                      "Label",
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
-                    ),
+                    label: const Text("Label"),
+                    hint: const Text("Hint..."),
                   ),
                   validator: (String? value) =>
                       value?.length != null && value!.trim().isEmpty

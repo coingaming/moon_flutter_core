@@ -19,6 +19,7 @@ mixin _$DefaultTextStyleModifierSpec
     TextOverflow? overflow,
     TextHeightBehavior? textHeightBehavior,
     TextWidthBasis? textWidthBasis,
+    AnimatedData? animate,
   }) {
     return DefaultTextStyleModifierSpec(
       style: style ?? _$this.style,
@@ -28,6 +29,7 @@ mixin _$DefaultTextStyleModifierSpec
       overflow: overflow ?? _$this.overflow,
       textHeightBehavior: textHeightBehavior ?? _$this.textHeightBehavior,
       textWidthBasis: textWidthBasis ?? _$this.textWidthBasis,
+      animate: animate ?? _$this.animate,
     );
   }
 
@@ -44,7 +46,7 @@ mixin _$DefaultTextStyleModifierSpec
   ///
   /// - [MixHelpers.lerpTextStyle] for [style].
 
-  /// For [softWrap] and [maxLines] and [textAlign] and [overflow] and [textHeightBehavior] and [textWidthBasis], the interpolation is performed using a step function.
+  /// For [softWrap] and [maxLines] and [textAlign] and [overflow] and [textHeightBehavior] and [textWidthBasis] and [animate], the interpolation is performed using a step function.
   /// If [t] is less than 0.5, the value from the current [DefaultTextStyleModifierSpec] is used. Otherwise, the value
   /// from the [other] [DefaultTextStyleModifierSpec] is used.
   ///
@@ -64,6 +66,7 @@ mixin _$DefaultTextStyleModifierSpec
       textHeightBehavior:
           t < 0.5 ? _$this.textHeightBehavior : other.textHeightBehavior,
       textWidthBasis: t < 0.5 ? _$this.textWidthBasis : other.textWidthBasis,
+      animate: t < 0.5 ? _$this.animate : other.animate,
     );
   }
 
@@ -80,6 +83,7 @@ mixin _$DefaultTextStyleModifierSpec
         _$this.overflow,
         _$this.textHeightBehavior,
         _$this.textWidthBasis,
+        _$this.animate,
       ];
 
   DefaultTextStyleModifierSpec get _$this =>
@@ -102,6 +106,7 @@ final class DefaultTextStyleModifierSpecAttribute
   final TextOverflow? overflow;
   final TextHeightBehaviorDto? textHeightBehavior;
   final TextWidthBasis? textWidthBasis;
+  final AnimatedDataDto? animate;
 
   const DefaultTextStyleModifierSpecAttribute({
     this.style,
@@ -111,6 +116,7 @@ final class DefaultTextStyleModifierSpecAttribute
     this.overflow,
     this.textHeightBehavior,
     this.textWidthBasis,
+    this.animate,
   });
 
   /// Resolves to [DefaultTextStyleModifierSpec] using the provided [MixData].
@@ -131,6 +137,7 @@ final class DefaultTextStyleModifierSpecAttribute
       overflow: overflow,
       textHeightBehavior: textHeightBehavior?.resolve(mix),
       textWidthBasis: textWidthBasis,
+      animate: animate?.resolve(mix) ?? mix.animation,
     );
   }
 
@@ -156,6 +163,7 @@ final class DefaultTextStyleModifierSpecAttribute
       textHeightBehavior: textHeightBehavior?.merge(other.textHeightBehavior) ??
           other.textHeightBehavior,
       textWidthBasis: other.textWidthBasis ?? textWidthBasis,
+      animate: animate?.merge(other.animate) ?? other.animate,
     );
   }
 
@@ -172,6 +180,7 @@ final class DefaultTextStyleModifierSpecAttribute
         overflow,
         textHeightBehavior,
         textWidthBasis,
+        animate,
       ];
 }
 
@@ -204,6 +213,9 @@ class DefaultTextStyleModifierSpecUtility<T extends Attribute>
   late final textWidthBasis =
       TextWidthBasisUtility((v) => only(textWidthBasis: v));
 
+  /// Utility for defining [DefaultTextStyleModifierSpecAttribute.animate]
+  late final animate = AnimatedUtility((v) => only(animate: v));
+
   DefaultTextStyleModifierSpecUtility(super.builder, {super.mutable});
 
   DefaultTextStyleModifierSpecUtility<T> get chain =>
@@ -223,6 +235,7 @@ class DefaultTextStyleModifierSpecUtility<T extends Attribute>
     TextOverflow? overflow,
     TextHeightBehaviorDto? textHeightBehavior,
     TextWidthBasis? textWidthBasis,
+    AnimatedDataDto? animate,
   }) {
     return builder(DefaultTextStyleModifierSpecAttribute(
       style: style,
@@ -232,6 +245,7 @@ class DefaultTextStyleModifierSpecUtility<T extends Attribute>
       overflow: overflow,
       textHeightBehavior: textHeightBehavior,
       textWidthBasis: textWidthBasis,
+      animate: animate,
     ));
   }
 }
