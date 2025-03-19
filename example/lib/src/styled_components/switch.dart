@@ -22,7 +22,7 @@ class _StyledSwitchState extends State<StyledSwitch> {
           ..height(32),
       );
 
-  Style get _thumbStyle => Style(
+  Style get _customThumbStyle => Style(
         $box.chain
           ..width(20)
           ..height(20)
@@ -30,7 +30,6 @@ class _StyledSwitchState extends State<StyledSwitch> {
           ..borderRadius(_switchValue ? 6 : 14)
           ..border(
             color: Colors.transparent,
-            width: 0,
             strokeAlign: BorderSide.strokeAlignOutside,
           ),
         $on.focus(
@@ -42,6 +41,14 @@ class _StyledSwitchState extends State<StyledSwitch> {
         ),
       ).animate();
 
+  Style get _thumbStyle => Style(
+        $box.chain
+          ..width(16)
+          ..height(16)
+          ..color(Colors.white)
+          ..borderRadius(32),
+      );
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -50,7 +57,7 @@ class _StyledSwitchState extends State<StyledSwitch> {
           value: _switchValue,
           thumbAnimatesWithOvershoot: false,
           switchStyle: _switchStyle,
-          thumbStyle: _thumbStyle,
+          thumbStyle: _customThumbStyle,
           onChanged: (bool newValue) => setState(() => _switchValue = newValue),
           trackDecorationTween: DecorationTween(
             begin: BoxDecoration(
@@ -73,6 +80,7 @@ class _StyledSwitchState extends State<StyledSwitch> {
               setState(() => _switchTextValue = newValue),
           activeThumbWidget: const Icon(Icons.check, size: 12),
           inactiveThumbWidget: const Icon(Icons.close, size: 12),
+          thumbStyle: _thumbStyle,
           activeTrackWidget: const Text(
             "ON",
             textAlign: TextAlign.center,
@@ -90,6 +98,7 @@ class _StyledSwitchState extends State<StyledSwitch> {
           focusNode: FocusNode(skipTraversal: true),
           onChanged: (bool newValue) =>
               setState(() => _switchIconValue = newValue),
+          thumbStyle: _thumbStyle,
           activeTrackWidget: const Icon(
             Icons.nightlight_outlined,
             size: 12,

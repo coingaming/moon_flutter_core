@@ -284,15 +284,7 @@ class _MoonRawSwitchState extends State<MoonRawSwitch>
                       Align(
                         alignment: alignmentAnimation.value,
                         child: Box(
-                          style: Style(
-                            $box.chain
-                              ..width(16)
-                              ..height(16)
-                              ..borderRadius(8)
-                              ..color(Colors.white),
-                          )
-                              .animate(duration: widget.duration)
-                              .merge(widget.thumbStyle),
+                          style: widget.thumbStyle,
                           child: FadeTransition(
                             opacity: _thumbFadeAnimation,
                             child: _curvedAnimation.value > 0.5
