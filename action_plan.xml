@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<todoPlan project="moon_flutter_core" focus="mix-v2-migration" generated="2025-02-14T00:00:00Z">
+  <context>
+    <diagnosticsSummary total="956" errors="889" warnings="21" info="46" source="dart analyze"/>
+    <note>Analyzer failures are dominated by legacy Mix v1 APIs across example widgets (704 issues) and core library code (251 issues), plus missing lint includes.</note>
+  </context>
+
+  <task id="lint-config" priority="high" status="todo">
+    <title>Point analysis options to Mix lint configuration</title>
+    <description>Fix missing include errors by adopting the Mix-provided lint package and ensuring both root and example analysis options extend the new file.</description>
+    <targets>
+      <diagnostic file="analysis_options.yaml:2" code="include_file_not_found"/>
+      <diagnostic file="example/analysis_options.yaml:2" code="include_file_not_found"/>
+    </targets>
+    <docs>
+      <doc path=".llms/mix-context7.md:3070" summary="Instructions for adding mix_lint and related tooling."/>
+    </docs>
+    <steps>
+      <step>Replace legacy lint include with `package:mix_lint/analysis_options.yaml` and keep local overrides that remain relevant.</step>
+      <step>Ensure `mix_lint` and `custom_lint` dev dependencies are present and run analyzer to verify include resolves.</step>
+    </steps>
+  </task>
+
+  <task id="core-architecture" priority="critical" status="todo">
+    <title>Realign Moon Core Mix abstractions with Mix v2 Spec→Mix→Styling pattern</title>
+    <description>Refactor core mix attributes, modifiers, and DTOs to match Mix v2 generics and lifecycle so that legacy DTO types and superclasses compile again.</description>
+    <targets>
+      <diagnostic file="lib/src/mix/attributes/moon_border_dto.dart:11" code="undefined_named_parameter"/>
+      <diagnostic file="lib/src/mix/modifiers/animated_shape_decoration_modifier.dart:17" code="undefined_named_parameter"/>
+      <diagnostic file="lib/src/mix/modifiers/default_text_style_modifier.dart:24" code="deprecated_member_use"/>
+    </targets>
+    <docs>
+      <doc path=".llms/mix-architecture-consolidation-plan.md:1" summary="Defines Spec→Mix→Styling pipeline and phased consolidation tasks."/>
+      <doc path=".llms/token-migration-guide.md:11" summary="Explains new MixToken<T> contracts needed by attributes and modifiers."/>
+    </docs>
+    <steps>
+      <step>Audit each custom DTO/modifier to replace removed `MixableFieldDto` usage with the new `MixableFieldType`/Prop APIs described in Mix v2.</step>
+      <step>Implement dedicated `*Mix` classes (e.g., `IconMix`, `TextMix`, `BoxMix`) and update corresponding styling factories per consolidation plan phases.</step>
+      <step>Reconcile modifier constructors with updated annotations/utilities so that generated code and runtime behavior align with Mix v2 expectations.</step>
+    </steps>
+  </task>
+
+  <task id="widget-refactor" priority="critical" status="todo">
+    <title>Migrate Moon widgets to BoxMix/TextMix/IconMix usage</title>
+    <description>Update Moon widget implementations that still depend on `Style`, `$on`, and other Mix v1 helpers to the new fluent Mix builders and token-based styling.</description>
+    <targets>
+      <diagnostic file="lib/src/widgets/auth_code/auth_code.dart:200" code="non_type_as_type_argument"/>
+      <diagnostic file="lib/src/widgets/text_input/text_input.dart:2" code="undefined_class"/>
+      <diagnostic file="lib/src/widgets/accordion/accordion.dart:255" code="type_argument_not_matching_bounds"/>
+      <diagnostic file="lib/src/widgets/common/message_widget.dart:78" code="extra_positional_arguments_could_be_named"/>
+    </targets>
+    <docs>
+      <doc path=".llms/mix-context7.md:600" summary="Shows BoxMix sizing and chaining in Mix v2."/>
+      <doc path=".llms/mix-context7.md:1199" summary="Demonstrates composing reusable BoxMix fragments."/>
+      <doc path=".llms/mix-scope-and-theming.md:126" summary="Example of applying tokens within new styler APIs."/>
+    </docs>
+    <steps>
+      <step>Replace legacy `Style`/`$box` constructs in widget defaults with `BoxMix`/`TextMix` equivalents, preserving variants via new builder APIs.</step>
+      <step>Rewrite state handling (`MixWidgetStateController`, `$on`) to use updated variant/state APIs supported by Mix v2 or create compatibility shims.</step>
+      <step>Adapt widget constructors to accept new mix types (e.g., `BoxMix? style`) and update downstream usage/tests accordingly.</step>
+    </steps>
+  </task>
+
+  <task id="border-utils" priority="high" status="todo">
+    <title>Update MoonBorder to extended Mix v2 border contracts</title>
+    <description>Resolve inheritance and override errors in `MoonBorder` by aligning with the current `MixOutlinedBorder` (or replacement) APIs shipped with Mix v2.</description>
+    <targets>
+      <diagnostic file="lib/src/utils/moon_border.dart:19" code="extends_non_class"/>
+      <diagnostic file="lib/src/utils/moon_border.dart:248" code="override_on_non_overriding_member"/>
+    </targets>
+    <docs>
+      <doc path=".llms/mix-architecture-consolidation-plan.md:29" summary="Phase guidance covering spec updates for icons/box that also apply to border specs."/>
+    </docs>
+    <steps>
+      <step>Inspect the Mix v2 border base classes and update MoonBorder to extend the correct type and override the supported methods only.</step>
+      <step>Refactor associated DTOs and serialization (`moon_border_dto`) to use the new prop/value registration patterns.</step>
+      <step>Write regression tests covering painting, lerp, and DTO round-trips under the updated API.</step>
+    </steps>
+  </task>
+
+  <task id="token-strategy" priority="medium" status="todo">
+    <title>Adopt MixToken-driven theming across Moon components</title>
+    <description>Ensure tokens and scopes in Moon core and examples use the new `MixToken<T>` reference/resolve workflow to unlock Mix v2 theme resolution.</description>
+    <targets>
+      <diagnostic file="lib/src/widgets/text_input/text_input.dart:1" code="deprecated_member_use"/>
+      <diagnostic file="lib/src/utils/color/color_premul_lerp.dart:4" code="deprecated_member_use"/>
+    </targets>
+    <docs>
+      <doc path=".llms/token-migration-guide.md:11" summary="Defines new token classes and reference helpers."/>
+      <doc path=".llms/mix-scope-and-theming.md:35" summary="Guides MixScope configuration with typed token maps."/>
+    </docs>
+    <steps>
+      <step>Replace deprecated token DTO usages with concrete `MixToken` declarations and update scope provisioning to typed maps.</step>
+      <step>Audit styling code for direct color/space constants and swap to token calls to align with v2 references.</step>
+      <step>Update documentation and examples to reflect token-first usage, verifying analyzer passes without deprecated member warnings.</step>
+    </steps>
+  </task>
+
+  <task id="example-overhaul" priority="high" status="todo">
+    <title>Rewrite example styled components for Mix v2 API</title>
+    <description>Port all example `Style`/`$on` driven components to the new spec/mix syntax so the example app compiles and serves as migration guidance.</description>
+    <targets>
+      <diagnostic file="example/lib/src/common_styles.dart:7" code="type_argument_not_matching_bounds"/>
+      <diagnostic file="example/lib/src/styled_components/segmented_tab_control.dart:14" code="undefined_method"/>
+      <diagnostic file="example/lib/src/styled_components/combobox.dart:46" code="type_argument_not_matching_bounds"/>
+    </targets>
+    <docs>
+      <doc path=".llms/mix-context7.md:600" summary="BoxMix usage example for constraints and chaining."/>
+      <doc path=".llms/mix-context7.md:1959" summary="Square sizing with BoxMix constructors."/>
+      <doc path=".llms/mix-scope-and-theming.md:185" summary="Hands-on tutorial for tokens and scopes to mirror in examples."/>
+    </docs>
+    <steps>
+      <step>Define shared Mix v2 styles (`BoxMix`, `TextMix`, etc.) in `common_styles.dart` and refactor each component to consume them.</step>
+      <step>Update state/variant handling to new APIs, ensuring hover/press/dark modes use the supported variant syntax.</step>
+      <step>Run example app builds (`flutter run`) to validate runtime behavior once analyzer issues are cleared.</step>
+    </steps>
+  </task>
+
+  <task id="validation" priority="medium" status="todo">
+    <title>Restore CI signals after migration</title>
+    <description>Re-enable analyzer and tests once code compiles under Mix v2 by wiring lint tooling and running targeted suites.</description>
+    <targets>
+      <diagnostic file="dart analyze" code="command"/>
+    </targets>
+    <docs>
+      <doc path=".llms/mix-architecture-consolidation-plan.md:21" summary="Recommends running tests after each migration phase."/>
+    </docs>
+    <steps>
+      <step>Execute `dart analyze` and `flutter test -r expanded` locally to confirm zero diagnostics post-migration.</step>
+      <step>Document migration steps and outcomes in CHANGELOG and project docs for team onboarding.</step>
+    </steps>
+  </task>
+</todoPlan>

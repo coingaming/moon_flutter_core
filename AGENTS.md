@@ -42,4 +42,5 @@ This repository is a Flutter package that provides Moon Design System headless U
 - Scope: these guidelines apply repo-wide. Prefer minimal, focused changes; avoid breaking the public API without discussion. When adding APIs, update exports and tests in the same PR.
 
 # IMPORTANT
+- You can and should make liberal usage of dart MCP!!!
 - This projects foundation is a package called mix which we are using as a dependency. All documentation related to usage of mix, it's patterns, migration paths etc are included in the `.llms` directory. Do note that the file `.llms/mix-context7.md` contains full AI optimised codebase and documentation but is very large (8809 lines) thus use it pragmatically.
