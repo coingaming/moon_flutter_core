@@ -1,36 +1,70 @@
 import 'package:flutter/material.dart';
 
 import 'package:mix/mix.dart';
-import 'package:mix_annotations/mix_annotations.dart';
 
 import 'package:moon_core/moon_core.dart';
 
-part 'moon_border_dto.g.dart';
+/// Mix representation of [MoonBorder] for Mix v2 styling pipeline.
+final class MoonBorderMix extends OutlinedBorderMix<MoonBorder>
+    with DefaultValue<MoonBorder> {
+  final Prop<BorderRadiusGeometry>? $borderRadius;
+  final Prop<BorderAlign>? $borderAlign;
 
-@MixableDto(generateUtility: false)
-final class MoonBorderDto extends OutlinedBorderDto<MoonBorder>
-    with _$MoonBorderDto {
-  final BorderRadiusGeometryDto? borderRadius;
-  final BorderAlign? borderAlign;
+  MoonBorderMix({
+    BorderRadiusGeometryMix? borderRadius,
+    BorderSideMix? side,
+    BorderAlign? borderAlign,
+  }) : this.create(
+         borderRadius: Prop.maybeMix(borderRadius),
+         side: Prop.maybeMix(side),
+         borderAlign: Prop.maybe(borderAlign),
+       );
 
-  const MoonBorderDto({
-    this.borderRadius,
-    this.borderAlign,
-    super.side,
-  });
+  const MoonBorderMix.create({
+    Prop<BorderRadiusGeometry>? borderRadius,
+    Prop<BorderSide>? side,
+    Prop<BorderAlign>? borderAlign,
+  })  : $borderRadius = borderRadius,
+        $borderAlign = borderAlign,
+        super(side: side);
+
+  factory MoonBorderMix.value(MoonBorder border) {
+    return MoonBorderMix(
+      borderRadius: BorderRadiusGeometryMix.maybeValue(border.borderRadius),
+      side: BorderSideMix.maybeValue(border.side),
+      borderAlign: border.borderAlign,
+    );
+  }
+
+  static MoonBorderMix? maybeValue(MoonBorder? border) {
+    return border == null ? null : MoonBorderMix.value(border);
+  }
 
   @override
-  BorderRadiusGeometryDto<BorderRadiusGeometry>? get borderRadiusGetter =>
-      borderRadius;
+  MoonBorder resolve(BuildContext context) {
+    return MoonBorder(
+      borderRadius:
+          MixOps.resolve(context, $borderRadius) ?? defaultValue.borderRadius,
+      side: MixOps.resolve(context, $side) ?? defaultValue.side,
+      borderAlign:
+          MixOps.resolve(context, $borderAlign) ?? defaultValue.borderAlign,
+    );
+  }
+
+  @override
+  MoonBorderMix merge(MoonBorderMix? other) {
+    if (other == null) return this;
+
+    return MoonBorderMix.create(
+      borderRadius: MixOps.merge($borderRadius, other.$borderRadius),
+      side: MixOps.merge($side, other.$side),
+      borderAlign: MixOps.merge($borderAlign, other.$borderAlign),
+    );
+  }
+
+  @override
+  List<Object?> get props => [$borderRadius, $borderAlign, $side];
 
   @override
   MoonBorder get defaultValue => const MoonBorder();
-
-  @override
-  OutlinedBorderDto<MoonBorder> adapt(OutlinedBorderDto<OutlinedBorder> other) {
-    return MoonBorderDto(
-      borderRadius: other.borderRadiusGetter,
-      side: other.side,
-    );
-  }
 }

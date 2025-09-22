@@ -4,8 +4,6 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'package:mix/mix.dart';
-
 import 'package:moon_core/src/mix/attributes/moon_border_dto.dart';
 import 'package:moon_core/src/utils/color/color_premul_lerp.dart';
 
@@ -15,7 +13,7 @@ enum BorderAlign {
   outside,
 }
 
-class MoonBorder extends MixOutlinedBorder {
+class MoonBorder extends OutlinedBorder {
   /// The radius for each corner.
   ///
   /// Negative radius values are clamped to 0.0 by [getInnerPath] and [getOuterPath].
@@ -23,10 +21,10 @@ class MoonBorder extends MixOutlinedBorder {
   final BorderAlign borderAlign;
 
   const MoonBorder({
-    super.side = MoonBorderSide.none,
+    BorderSide side = MoonBorderSide.none,
     this.borderRadius = BorderRadius.zero,
     this.borderAlign = BorderAlign.inside,
-  });
+  }) : super(side: side);
 
   @override
   EdgeInsetsGeometry get dimensions {
@@ -205,13 +203,7 @@ class MoonBorder extends MixOutlinedBorder {
   }
 
   @override
-  MoonBorderDto toDto() {
-    return MoonBorderDto(
-      side: side.toDto(),
-      borderRadius: borderRadius.toDto(),
-      borderAlign: borderAlign,
-    );
-  }
+  MoonBorderMix toMix() => MoonBorderMix.value(this);
 }
 
 class MoonBorderSide with Diagnosticable {
