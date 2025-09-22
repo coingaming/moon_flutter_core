@@ -16,6 +16,8 @@ analyzer:
     - "/pubspec.lock"
   errors:
     deprecated_member_use: info
+  enable-experiment:
+    - dot-shorthands
 
 linter:
   rules:
