@@ -1,0 +1,45 @@
+# Repository Guidelines
+
+This repository is a Flutter package that provides Moon Design System headless UI core widgets.
+
+## Project Structure & Module Organization
+- `lib/` Public API entry at `lib/moon_core.dart` (barrel exports). Implementation lives in `lib/src/**` using snake_case files.
+- `test/` Widget and unit tests (`*_test.dart`).
+- `example/` Runnable example app for manual verification across platforms.
+- Tooling: `analysis_options.yaml` (lints), `.editorconfig` (80-char line length), `pubspec.yaml` (SDK and deps).
+
+## Build, Test, and Development Commands
+- Install deps: `flutter pub get`
+- Analyze lints: `dart analyze`
+- Format code: `dart format .`
+- Run all tests: `flutter test -r expanded`
+- Coverage (optional): `flutter test --coverage`
+- Code generation (if needed): `dart run build_runner build --delete-conflicting-outputs`
+- Run example app: `cd example && flutter run` (e.g., `-d chrome` for web)
+
+## Coding Style & Naming Conventions
+- Dart style, 2-space indent, max line length 80.
+- Files: `snake_case.dart`; Classes: `PascalCase`; methods/fields/variables: `lowerCamelCase`; enum values: `lowerCamelCase`.
+- Keep public exports organized in `lib/moon_core.dart`; new components live under `lib/src/` and are exported through the barrel.
+- Prefer trailing commas for multi-line args to keep diffs clean.
+
+## Testing Guidelines
+- Framework: `flutter_test` with `testWidgets` for UI and `group` for suites.
+- File names: `*_test.dart`; keep test names imperative and focused (e.g., "toggles on tap").
+- Aim to cover states, interactions, and accessibility. Use keys and finders for stable selectors.
+- Run `flutter test` locally; ensure no analyzer errors (`dart analyze`).
+
+## Commit & Pull Request Guidelines
+- Commits: imperative mood, concise scope (e.g., "Add animated opacity modifier"). Optional ticket tag: `[MDS-1234]` and/or PR refs `(#NN)` when relevant.
+- PRs: clear description, linked issue/ticket, before/after screenshots for UI, test updates, and `CHANGELOG.md` entry for user-visible changes.
+- CI expectations: build passes, tests green, no new analyzer warnings.
+
+## Security & Configuration Tips
+- Do not commit secrets or generated files. Common generated patterns (`**/*.g.dart`, `**/*.freezed.dart`, etc.) are excluded by analyzer.
+- Respect SDK constraints in `pubspec.yaml` (Dart `>=3.9.0`, Flutter `>=3.35.0`).
+
+## Agent-Specific Notes
+- Scope: these guidelines apply repo-wide. Prefer minimal, focused changes; avoid breaking the public API without discussion. When adding APIs, update exports and tests in the same PR.
+
+# IMPORTANT
+- This projects foundation is a package called mix which we are using as a dependency. All documentation related to usage of mix, it's patterns, migration paths etc are included in the `.llms` directory. Do note that the file `.llms/mix-context7.md` contains full AI optimised codebase and documentation but is very large (8809 lines) thus use it pragmatically.
