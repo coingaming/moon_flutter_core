@@ -16,8 +16,6 @@ analyzer:
     - "/pubspec.lock"
   errors:
     deprecated_member_use: info
-  plugins:
-    - custom_lint
 
 linter:
   rules:

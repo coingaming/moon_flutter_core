@@ -23,8 +23,6 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^6.0.0
   mix_generator: ^1.7.0
-  mix_lint: ^1.7.0
-  custom_lint: ^0.7.6
 
 flutter:
   uses-material-design: true
