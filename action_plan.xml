@@ -5,22 +5,6 @@
     <note>Analyzer failures are dominated by legacy Mix v1 APIs across example widgets (704 issues) and core library code (251 issues), plus missing lint includes.</note>
   </context>
 
-  <task id="lint-config" priority="high" status="todo">
-    <title>Point analysis options to Mix lint configuration</title>
-    <description>Fix missing include errors by adopting the Mix-provided lint package and ensuring both root and example analysis options extend the new file.</description>
-    <targets>
-      <diagnostic file="analysis_options.yaml:2" code="include_file_not_found"/>
-      <diagnostic file="example/analysis_options.yaml:2" code="include_file_not_found"/>
-    </targets>
-    <docs>
-      <doc path=".llms/mix-context7.md:3070" summary="Instructions for adding mix_lint and related tooling."/>
-    </docs>
-    <steps>
-      <step>Replace legacy lint include with `package:mix_lint/analysis_options.yaml` and keep local overrides that remain relevant.</step>
-      <step>Ensure `mix_lint` and `custom_lint` dev dependencies are present and run analyzer to verify include resolves.</step>
-    </steps>
-  </task>
-
   <task id="core-architecture" priority="critical" status="todo">
     <title>Realign Moon Core Mix abstractions with Mix v2 Spec→Mix→Styling pattern</title>
     <description>Refactor core mix attributes, modifiers, and DTOs to match Mix v2 generics and lifecycle so that legacy DTO types and superclasses compile again.</description>
@@ -35,8 +19,10 @@
     </docs>
     <steps>
       <step>Audit each custom DTO/modifier to replace removed `MixableFieldDto` usage with the new `MixableFieldType`/Prop APIs described in Mix v2.</step>
-      <step>Implement dedicated `*Mix` classes (e.g., `IconMix`, `TextMix`, `BoxMix`) and update corresponding styling factories per consolidation plan phases.</step>
+      <step>Judge if usage of current custom DTOs/modifiers can be simplified or eliminated by leveraging new Mix v2 features.</step>
+      <step>If previous step is not successful proceed with implementing dedicated `*Mix` classes (e.g., `IconMix`, `TextMix`, `BoxMix`) and update corresponding styling factories per consolidation plan phases.</step>
       <step>Reconcile modifier constructors with updated annotations/utilities so that generated code and runtime behavior align with Mix v2 expectations.</step>
+      <step>Determine if there are any custom DTOs/modifiers that got superceded by v2 features and if they are unused remove them.</step>
     </steps>
   </task>
 
