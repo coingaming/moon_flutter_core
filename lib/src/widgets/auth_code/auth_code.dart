@@ -8,15 +8,10 @@ import 'package:mix/mix.dart';
 
 import 'package:moon_core/src/mix/context_variants/active_state_variant.dart';
 
-enum ErrorAnimationType {
-  noAnimation,
-  shake,
-}
+enum ErrorAnimationType { noAnimation, shake }
 
-typedef MoonAuthCodeErrorBuilder = Widget Function(
-  BuildContext context,
-  String? errorText,
-);
+typedef MoonAuthCodeErrorBuilder =
+    Widget Function(BuildContext context, String? errorText);
 
 class MoonRawAuthCode extends StatefulWidget {
   /// Whether to automatically dismiss the keyboard when the last input is
@@ -196,9 +191,10 @@ class _MoonRawAuthCodeState extends State<MoonRawAuthCode>
   int _selectedIndex = 0;
   Timer? _peekDebounce;
   TextStyle? _effectiveTextStyle;
-  List<MixWidgetStateController> _stateControllers = [];
+  List<WidgetStatesController> _stateControllers = [];
 
-  bool get _isInErrorMode => _stateControllers.any((state) => state.error);
+  bool get _isInErrorMode =>
+      _stateControllers.any((state) => state.has(WidgetState.error));
 
   int get _inputFieldCount => widget.authInputFieldCount;
 
@@ -276,14 +272,13 @@ class _MoonRawAuthCodeState extends State<MoonRawAuthCode>
   }
 
   void _initializeAuthFieldCursor() {
-    _cursorController =
-        AnimationController(duration: const Duration(seconds: 1), vsync: this);
+    _cursorController = AnimationController(
+      duration: const Duration(seconds: 1),
+      vsync: this,
+    );
 
     _cursorAnimation = Tween<double>(begin: 1, end: 0).animate(
-      CurvedAnimation(
-        parent: _cursorController,
-        curve: Curves.easeInOut,
-      ),
+      CurvedAnimation(parent: _cursorController, curve: Curves.easeInOut),
     );
 
     if (widget.showCursor) _cursorController.repeat();
@@ -292,7 +287,8 @@ class _MoonRawAuthCodeState extends State<MoonRawAuthCode>
   void _debounceBlink() {
     _hasPeeked = true;
 
-    final bool hasText = _textEditingController.text.length >
+    final bool hasText =
+        _textEditingController.text.length >
         _inputList.where((x) => x.isNotEmpty).length;
 
     if (widget.peekWhenObscuring && hasText) {
@@ -364,7 +360,9 @@ class _MoonRawAuthCodeState extends State<MoonRawAuthCode>
 
     _stateControllers = List.generate(
       _inputFieldCount,
-      (_) => MixWidgetStateController()..error = widget.errorText != null,
+      (_) =>
+          WidgetStatesController()
+            ..update(WidgetState.error, widget.errorText != null),
     );
 
     _errorAnimationController = AnimationController(
@@ -372,15 +370,13 @@ class _MoonRawAuthCodeState extends State<MoonRawAuthCode>
       vsync: this,
     );
 
-    _errorOffsetAnimation = Tween<Offset>(
-      begin: Offset.zero,
-      end: const Offset(.01, 0.0),
-    ).animate(
-      CurvedAnimation(
-        parent: _errorAnimationController,
-        curve: widget.errorAnimationCurve,
-      ),
-    );
+    _errorOffsetAnimation =
+        Tween<Offset>(begin: Offset.zero, end: const Offset(.01, 0.0)).animate(
+          CurvedAnimation(
+            parent: _errorAnimationController,
+            curve: widget.errorAnimationCurve,
+          ),
+        );
   }
 
   @override
@@ -423,8 +419,9 @@ class _MoonRawAuthCodeState extends State<MoonRawAuthCode>
 
     if (shouldShowCursor && _focusNode.hasFocus && widget.showCursor) {
       final double fontSize = _effectiveTextStyle?.fontSize ?? 24;
-      final Color resolvedCursorColor =
-          _isInErrorMode ? effectiveErrorCursorColor : effectiveCursorColor;
+      final Color resolvedCursorColor = _isInErrorMode
+          ? effectiveErrorCursorColor
+          : effectiveCursorColor;
 
       final Widget cursorChild = Center(
         child: Padding(
@@ -459,7 +456,8 @@ class _MoonRawAuthCodeState extends State<MoonRawAuthCode>
     assert(index != null);
 
     final bool isFieldFilled = _inputList[index!].isNotEmpty;
-    final bool showObscured = !widget.peekWhenObscuring ||
+    final bool showObscured =
+        !widget.peekWhenObscuring ||
         (widget.peekWhenObscuring && _hasPeeked) ||
         index != _inputList.where((x) => x.isNotEmpty).length - 1;
     final obscureText = isFieldFilled && showObscured && widget.obscureText;
@@ -469,10 +467,7 @@ class _MoonRawAuthCodeState extends State<MoonRawAuthCode>
     }
 
     if (!isFieldFilled && widget.hint != null) {
-      return SizedBox(
-        key: ValueKey(_inputList[index]),
-        child: widget.hint,
-      );
+      return SizedBox(key: ValueKey(_inputList[index]), child: widget.hint);
     }
 
     final String text = (showObscured && widget.obscureText && isFieldFilled)
@@ -539,10 +534,7 @@ class _MoonRawAuthCodeState extends State<MoonRawAuthCode>
 
   @override
   Widget build(BuildContext context) {
-    final FlexSpecAttribute? flexAttributes =
-        widget.inputFieldStyle?.of(context).attributeOf<FlexSpecAttribute>();
-
-    final Style authCodeRowStyle = Style(flexAttributes);
+    final Style authCodeRowStyle = widget.inputFieldStyle ?? FlexBoxStyler();
 
     return Semantics(
       label: widget.semanticLabel,
@@ -554,16 +546,14 @@ class _MoonRawAuthCodeState extends State<MoonRawAuthCode>
               child: Stack(
                 children: <Widget>[
                   AbsorbPointer(
-                    child: AutofillGroup(
-                      child: _getTextFormField(),
-                    ),
+                    child: AutofillGroup(child: _getTextFormField()),
                   ),
                   Positioned(
                     top: 0,
                     left: 0,
                     right: 0,
-                    child: StyledRow(
-                      style: authCodeRowStyle,
+                    child: RowBox(
+                      style: authCodeRowStyle as Style<FlexBoxSpec>,
                       children: List.generate(
                         _inputFieldCount,
                         (int index) => Focus(
@@ -593,30 +583,18 @@ class _MoonRawAuthCodeState extends State<MoonRawAuthCode>
                                 isActive: _selectedIndex > index,
                                 child: Builder(
                                   builder: (BuildContext context) {
-                                    final MixData? mixData =
-                                        widget.inputFieldStyle?.of(context);
-
-                                    _effectiveTextStyle = mixData
-                                            ?.resolvableOf<TextSpec,
-                                                TextSpecAttribute>()
-                                            ?.style ??
-                                        const TextStyle(fontSize: 24);
-
-                                    _effectiveHeight = mixData
-                                            ?.resolvableOf<BoxSpec,
-                                                BoxSpecAttribute>()
-                                            ?.height ??
-                                        56;
+                                    // TODO: Extract text style and height from inputFieldStyle in Mix v2
+                                    _effectiveTextStyle = const TextStyle(
+                                      fontSize: 24,
+                                    );
+                                    _effectiveHeight = 56;
 
                                     return Box(
-                                      style: Style(
-                                        $box.chain
-                                          ..height(_effectiveHeight)
-                                          ..width(48),
-                                      ).merge(widget.inputFieldStyle),
-                                      child: Center(
-                                        child: _buildChild(index),
-                                      ),
+                                      style: BoxStyler()
+                                          .height(_effectiveHeight)
+                                          .width(48)
+                                          .merge(widget.inputFieldStyle),
+                                      child: Center(child: _buildChild(index)),
                                     );
                                   },
                                 ),

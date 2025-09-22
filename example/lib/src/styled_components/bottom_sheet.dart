@@ -10,18 +10,16 @@ class StyledBottomSheet extends StatelessWidget {
   const StyledBottomSheet({super.key});
 
   Style get _bottomSheetStyle => Style(
-        $box.chain
-          ..borderRadius.top(24)
-          ..color(Colors.purple.shade50),
-      );
+    $box.chain
+      ..borderRadius.top(24)
+      ..color(Colors.purple.shade50),
+  );
 
   Style get _menuItemStyle => Style(
-        $box.padding(16.0),
-        $flex.mainAxisAlignment.spaceBetween(),
-        ($on.focus | $on.hover)(
-          $box.color(Colors.purple.shade100),
-        ),
-      );
+    $box.padding(16.0),
+    $flex.mainAxisAlignment.spaceBetween(),
+    ($on.focus | $on.hover)($box.color(Colors.purple.shade100)),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -44,11 +42,7 @@ class StyledBottomSheet extends StatelessWidget {
             Row(
               children: [
                 const SizedBox(width: 48),
-                const Expanded(
-                  child: Center(
-                    child: Text("Pick your choice!"),
-                  ),
-                ),
+                const Expanded(child: Center(child: Text("Pick your choice!"))),
                 MoonBaseInteractiveWidget(
                   style: getIconButtonStyle(),
                   child: const StyledIcon(Icons.close),
@@ -56,10 +50,7 @@ class StyledBottomSheet extends StatelessWidget {
                 ),
               ],
             ),
-            const Divider(
-              height: 0,
-              color: Colors.purple,
-            ),
+            const Divider(height: 0, color: Colors.purple),
             Flexible(
               child: ListView.builder(
                 primary: true,
@@ -71,10 +62,7 @@ class StyledBottomSheet extends StatelessWidget {
                     onTap: () {},
                     child: StyledRow(
                       inherit: true,
-                      children: [
-                        const Text("Item nr:"),
-                        Text("$index"),
-                      ],
+                      children: [const Text("Item nr:"), Text("$index")],
                     ),
                   );
                 },

@@ -1,4 +1,3 @@
-import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +10,8 @@ const Curve _kDefaultTextStyleCurve = Curves.easeInOutCubic;
 
 /// Modifier that wraps a widget with [DefaultTextStyle] support.
 final class DefaultTextStyleModifier
-    extends WidgetModifier<DefaultTextStyleModifier> with Diagnosticable {
+    extends WidgetModifier<DefaultTextStyleModifier>
+    with Diagnosticable {
   final TextStyle style;
   final bool? softWrap;
   final int? maxLines;
@@ -32,8 +32,8 @@ final class DefaultTextStyleModifier
     this.textHeightBehavior,
     this.duration,
     Curve? curve,
-  })  : style = style ?? const TextStyle(),
-        curve = curve ?? _kDefaultTextStyleCurve;
+  }) : style = style ?? const TextStyle(),
+       curve = curve ?? _kDefaultTextStyleCurve;
 
   bool get _shouldAnimateColor => duration != null && style.color != null;
 
@@ -105,16 +105,16 @@ final class DefaultTextStyleModifier
 
   @override
   List<Object?> get props => [
-        style,
-        softWrap,
-        maxLines,
-        textAlign,
-        overflow,
-        textWidthBasis,
-        textHeightBehavior,
-        duration,
-        curve,
-      ];
+    style,
+    softWrap,
+    maxLines,
+    textAlign,
+    overflow,
+    textWidthBasis,
+    textHeightBehavior,
+    duration,
+    curve,
+  ];
 
   @override
   Widget build(Widget child) {
@@ -131,10 +131,7 @@ final class DefaultTextStyleModifier
       );
     }
 
-    return _AnimatedDefaultTextStyle(
-      modifier: this,
-      child: child,
-    );
+    return _AnimatedDefaultTextStyle(modifier: this, child: child);
   }
 }
 
@@ -221,16 +218,16 @@ class DefaultTextStyleModifierMix
 
   @override
   List<Object?> get props => [
-        style,
-        softWrap,
-        maxLines,
-        textAlign,
-        overflow,
-        textWidthBasis,
-        textHeightBehavior,
-        duration,
-        curve,
-      ];
+    style,
+    softWrap,
+    maxLines,
+    textAlign,
+    overflow,
+    textWidthBasis,
+    textHeightBehavior,
+    duration,
+    curve,
+  ];
 }
 
 final class DefaultTextStyleModifierUtility<T extends Style<Object?>>

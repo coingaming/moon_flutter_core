@@ -8,27 +8,25 @@ class StyledButton extends StatelessWidget {
   const StyledButton({super.key});
 
   Style get _buttonStyle => Style(
-        $box.chain
-          ..color(Colors.white)
-          ..borderRadius(8)
-          ..border(color: Colors.black38)
-          ..padding(8.0),
-        $flex.chain
-          ..gap(8.0)
-          ..mainAxisSize.min(),
-        $with.scale(1),
-        $with.opacity(1),
-        $with.defaultTextStyle(style: TextStyleMix(color: Colors.black)),
-        $with.iconTheme(color: Colors.black, size: 16),
-        ($on.hover | $on.focus)(
-          $box.color(Colors.grey.shade300),
-          $with.iconTheme(color: Colors.blue, size: 16),
-          $with.defaultTextStyle(style: TextStyleMix(color: Colors.blue)),
-        ),
-        ($on.press | $on.longPress)(
-          $with.scale(0.95),
-        ),
-      ).animate(duration: const Duration(milliseconds: 200));
+    $box.chain
+      ..color(Colors.white)
+      ..borderRadius(8)
+      ..border(color: Colors.black38)
+      ..padding(8.0),
+    $flex.chain
+      ..gap(8.0)
+      ..mainAxisSize.min(),
+    $with.scale(1),
+    $with.opacity(1),
+    $with.defaultTextStyle(style: TextStyleMix(color: Colors.black)),
+    $with.iconTheme(color: Colors.black, size: 16),
+    ($on.hover | $on.focus)(
+      $box.color(Colors.grey.shade300),
+      $with.iconTheme(color: Colors.blue, size: 16),
+      $with.defaultTextStyle(style: TextStyleMix(color: Colors.blue)),
+    ),
+    ($on.press | $on.longPress)($with.scale(0.95)),
+  ).animate(duration: const Duration(milliseconds: 200));
 
   @override
   Widget build(BuildContext context) {
@@ -58,10 +56,7 @@ class StyledButton extends StatelessWidget {
                 alignment: Alignment.topCenter,
                 children: [
                   Icon(Icons.person, size: 24),
-                  Positioned(
-                    bottom: 0,
-                    child: Text("JD"),
-                  ),
+                  Positioned(bottom: 0, child: Text("JD")),
                 ],
               ),
             ),

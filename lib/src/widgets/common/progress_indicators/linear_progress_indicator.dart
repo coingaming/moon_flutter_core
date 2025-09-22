@@ -79,10 +79,12 @@ class _MoonLinearProgressIndicatorState
     double animationValue,
     TextDirection textDirection,
   ) {
-    final BorderRadius resolvedContainerRadius =
-        widget.containerRadius.resolve(Directionality.of(context));
-    final BorderRadius resolvedProgressRadius =
-        widget.progressRadius.resolve(Directionality.of(context));
+    final BorderRadius resolvedContainerRadius = widget.containerRadius.resolve(
+      Directionality.of(context),
+    );
+    final BorderRadius resolvedProgressRadius = widget.progressRadius.resolve(
+      Directionality.of(context),
+    );
 
     return widget.buildSemanticsWrapper(
       context: context,

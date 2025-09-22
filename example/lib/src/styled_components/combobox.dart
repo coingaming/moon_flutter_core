@@ -43,60 +43,53 @@ class _StyledComboboxState extends State<StyledCombobox> {
   };
 
   Style get _targetStyle => Style(
-        $box.chain
-          ..width(280)
-          ..padding(8, 8)
-          ..borderRadius(8)
-          ..color(Colors.white)
-          ..border(color: Colors.purple),
-        $flex.mainAxisAlignment.spaceBetween(),
-        $on.disabled(
-          $with.opacity(0.2),
-        ),
-      );
+    $box.chain
+      ..width(280)
+      ..padding(8, 8)
+      ..borderRadius(8)
+      ..color(Colors.white)
+      ..border(color: Colors.purple),
+    $flex.mainAxisAlignment.spaceBetween(),
+    $on.disabled($with.opacity(0.2)),
+  );
 
   Style get _overlayStyle => Style(
-        $box.chain
-          ..width(280)
-          ..color(Colors.white)
-          ..borderRadius(8)
-          ..border(color: Colors.purple)
-          ..padding(8),
-      );
+    $box.chain
+      ..width(280)
+      ..color(Colors.white)
+      ..borderRadius(8)
+      ..border(color: Colors.purple)
+      ..padding(8),
+  );
 
-  Style get _leadingStyle => Style(
-        $box.padding(4, 8),
-        $box.margin(4),
-        $icon.size(14),
-      );
+  Style get _leadingStyle =>
+      Style($box.padding(4, 8), $box.margin(4), $icon.size(14));
 
   Style get _menuItemStyle => Style(
-        $box.chain
-          ..padding(8)
-          ..borderRadius(8),
-        $flex.mainAxisAlignment.spaceBetween(),
-      ).merge(getEffects());
+    $box.chain
+      ..padding(8)
+      ..borderRadius(8),
+    $flex.mainAxisAlignment.spaceBetween(),
+  ).merge(getEffects());
 
   Style get _checkboxStyle => Style(
-        $box.chain
-          ..borderRadius(4)
-          ..color(Colors.purple)
-          ..border.color(Colors.purple),
-        SelectedState.unselected(
-          $box.chain
-            ..color.transparent()
-            ..border.color.black54(),
-        ),
-      ).animate();
+    $box.chain
+      ..borderRadius(4)
+      ..color(Colors.purple)
+      ..border.color(Colors.purple),
+    SelectedState.unselected(
+      $box.chain
+        ..color.transparent()
+        ..border.color.black54(),
+    ),
+  ).animate();
 
   Style get _arrowStyle => Style(
-        $icon.chain
-          ..size(16)
-          ..color.white(),
-        SelectedState.unselected($with.opacity(0)),
-      ).animate(
-        duration: const Duration(milliseconds: 300),
-      );
+    $icon.chain
+      ..size(16)
+      ..color.white(),
+    SelectedState.unselected($with.opacity(0)),
+  ).animate(duration: const Duration(milliseconds: 300));
 
   Variant _getEffectiveVariant(bool value) =>
       value ? SelectedState.selected : SelectedState.unselected;
@@ -150,41 +143,35 @@ class _StyledComboboxState extends State<StyledCombobox> {
       child: SingleChildScrollView(
         child: VBox(
           style: _overlayStyle,
-          children: List.generate(
-            5,
-            (int index) {
-              final _Options choice = _Options.values[index];
-              final bool isSelected = _options[choice]!;
-              final Variant variant = _getEffectiveVariant(isSelected);
+          children: List.generate(5, (int index) {
+            final _Options choice = _Options.values[index];
+            final bool isSelected = _options[choice]!;
+            final Variant variant = _getEffectiveVariant(isSelected);
 
-              return MoonBaseInteractiveWidget(
-                style: _menuItemStyle,
-                onTap: () =>
-                    setState(() => _options[choice] = !_options[choice]!),
-                child: StyledRow(
-                  inherit: true,
-                  children: [
-                    Text(choice.name),
-                    ExcludeFocusTraversal(
-                      child: MoonBaseMultiSelectWidget(
-                        style: _checkboxStyle.applyVariant(variant),
-                        value: isSelected,
-                        onChanged: (bool? value) => setState(
-                          () => _options[choice] = !_options[choice]!,
-                        ),
-                        child: StyledIcon(
-                          variant == SelectedState.selected
-                              ? Icons.check
-                              : null,
-                          style: _arrowStyle.applyVariant(variant),
-                        ),
+            return MoonBaseInteractiveWidget(
+              style: _menuItemStyle,
+              onTap: () =>
+                  setState(() => _options[choice] = !_options[choice]!),
+              child: StyledRow(
+                inherit: true,
+                children: [
+                  Text(choice.name),
+                  ExcludeFocusTraversal(
+                    child: MoonBaseMultiSelectWidget(
+                      style: _checkboxStyle.applyVariant(variant),
+                      value: isSelected,
+                      onChanged: (bool? value) =>
+                          setState(() => _options[choice] = !_options[choice]!),
+                      child: StyledIcon(
+                        variant == SelectedState.selected ? Icons.check : null,
+                        style: _arrowStyle.applyVariant(variant),
                       ),
                     ),
-                  ],
-                ),
-              );
-            },
-          ),
+                  ),
+                ],
+              ),
+            );
+          }),
         ),
       ),
     );

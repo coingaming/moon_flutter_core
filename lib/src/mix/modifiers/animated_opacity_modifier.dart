@@ -21,9 +21,9 @@ final class AnimatedOpacityModifier
     double? opacity,
     Duration? duration,
     Curve? curve,
-  })  : opacity = opacity ?? _kDefaultOpacity,
-        duration = duration ?? _kAnimatedOpacityDuration,
-        curve = curve ?? _kAnimatedOpacityCurve;
+  }) : opacity = opacity ?? _kDefaultOpacity,
+       duration = duration ?? _kAnimatedOpacityDuration,
+       curve = curve ?? _kAnimatedOpacityCurve;
 
   @override
   AnimatedOpacityModifier copyWith({
@@ -72,8 +72,7 @@ final class AnimatedOpacityModifier
   }
 }
 
-class AnimatedOpacityModifierMix
-    extends ModifierMix<AnimatedOpacityModifier> {
+class AnimatedOpacityModifierMix extends ModifierMix<AnimatedOpacityModifier> {
   final Prop<double>? opacity;
   final Prop<Duration>? duration;
   final Prop<Curve>? curve;
@@ -98,8 +97,7 @@ class AnimatedOpacityModifierMix
   AnimatedOpacityModifier resolve(BuildContext context) {
     return AnimatedOpacityModifier(
       opacity: MixOps.resolve(context, opacity) ?? _kDefaultOpacity,
-      duration:
-          MixOps.resolve(context, duration) ?? _kAnimatedOpacityDuration,
+      duration: MixOps.resolve(context, duration) ?? _kAnimatedOpacityDuration,
       curve: MixOps.resolve(context, curve) ?? _kAnimatedOpacityCurve,
     );
   }
@@ -123,11 +121,7 @@ final class AnimatedOpacityModifierUtility<T extends Style<Object?>>
     extends MixUtility<T, AnimatedOpacityModifierMix> {
   const AnimatedOpacityModifierUtility(super.utilityBuilder);
 
-  T call({
-    double? opacity,
-    Duration? duration,
-    Curve? curve,
-  }) {
+  T call({double? opacity, Duration? duration, Curve? curve}) {
     return utilityBuilder(
       AnimatedOpacityModifierMix(
         opacity: opacity,

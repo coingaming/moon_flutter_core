@@ -8,19 +8,16 @@ class StyledTag extends StatelessWidget {
   const StyledTag({super.key});
 
   Style get _tagStyle => Style(
-        $box.chain
-          ..color(Colors.white)
-          ..borderRadius(4.0)
-          ..padding(4.0, 8.0),
-        $flex.chain
-          ..gap(2.0)
-          ..mainAxisSize.min(),
-        $icon.size(12),
-        $text.style(
-          fontSize: 12,
-          height: 1.0,
-        ),
-      );
+    $box.chain
+      ..color(Colors.white)
+      ..borderRadius(4.0)
+      ..padding(4.0, 8.0),
+    $flex.chain
+      ..gap(2.0)
+      ..mainAxisSize.min(),
+    $icon.size(12),
+    $text.style(fontSize: 12, height: 1.0),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -30,10 +27,7 @@ class StyledTag extends StatelessWidget {
       style: _tagStyle,
       child: const StyledRow(
         inherit: true,
-        children: [
-          StyledText("MoonTag"),
-          StyledIcon(Icons.close),
-        ],
+        children: [StyledText("MoonTag"), StyledIcon(Icons.close)],
       ),
     );
   }

@@ -85,9 +85,9 @@ class MoonRawLinearProgress extends StatelessWidget {
           bottomStart: effectiveBorderRadius.bottomStart,
         ),
       BorderRadius() when showPin == true => BorderRadiusDirectional.only(
-          topStart: effectiveBorderRadius.topLeft,
-          bottomStart: effectiveBorderRadius.bottomLeft,
-        ),
+        topStart: effectiveBorderRadius.topLeft,
+        bottomStart: effectiveBorderRadius.bottomLeft,
+      ),
       _ => borderRadius,
     };
 
@@ -103,7 +103,8 @@ class MoonRawLinearProgress extends StatelessWidget {
         ? effectiveThumbSizeValue / 2 - height / 2
         : 0;
 
-    final double heightWithPin = effectivePinWidth +
+    final double heightWithPin =
+        effectivePinWidth +
         effectivePinArrowHeight +
         effectivePinDistance +
         effectiveThumbSizeValue;

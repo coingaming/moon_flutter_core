@@ -26,11 +26,10 @@ void main() {
         widget.value == widget.groupValue,
   );
 
-  testWidgets("Single select widgets initialize with correct values",
-      (WidgetTester tester) async {
-    await tester.pumpWidget(
-      const _BaseSingleSelectTestWidget(),
-    );
+  testWidgets("Single select widgets initialize with correct values", (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(const _BaseSingleSelectTestWidget());
 
     expect(firstWidget, findsOneWidget);
     expect(secondWidget, findsOneWidget);
@@ -38,11 +37,10 @@ void main() {
     expect(secondWidgetSelected, findsNothing);
   });
 
-  testWidgets("The selection of single select widgets can be changed",
-      (tester) async {
-    await tester.pumpWidget(
-      const _BaseSingleSelectTestWidget(),
-    );
+  testWidgets("The selection of single select widgets can be changed", (
+    tester,
+  ) async {
+    await tester.pumpWidget(const _BaseSingleSelectTestWidget());
 
     await tester.tap(firstWidget);
     await tester.pumpAndSettle();
@@ -62,12 +60,11 @@ void main() {
     expect(secondWidgetSelected, findsNothing);
   });
 
-  testWidgets("Single select widget is 'toggleable'",
-      (WidgetTester tester) async {
+  testWidgets("Single select widget is 'toggleable'", (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
-      const _BaseSingleSelectTestWidget(
-        toggleable: true,
-      ),
+      const _BaseSingleSelectTestWidget(toggleable: true),
     );
 
     await tester.tap(firstWidget);
@@ -82,77 +79,78 @@ void main() {
   });
 
   testWidgets(
-      "Widget remains selected if its 'groupValue' always matches its value",
-      (WidgetTester tester) async {
-    await tester.pumpWidget(
-      const _BaseSingleSelectTestWidget(
-        firstWidgetGroupValue: _Choice.first,
-      ),
-    );
+    "Widget remains selected if its 'groupValue' always matches its value",
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        const _BaseSingleSelectTestWidget(firstWidgetGroupValue: _Choice.first),
+      );
 
-    expect(firstWidgetSelected, findsOneWidget);
-    expect(secondWidgetSelected, findsNothing);
+      expect(firstWidgetSelected, findsOneWidget);
+      expect(secondWidgetSelected, findsNothing);
 
-    await tester.tap(secondWidget);
-    await tester.pumpAndSettle();
+      await tester.tap(secondWidget);
+      await tester.pumpAndSettle();
 
-    expect(firstWidgetSelected, findsOneWidget);
-    expect(secondWidgetSelected, findsOneWidget);
-  });
+      expect(firstWidgetSelected, findsOneWidget);
+      expect(secondWidgetSelected, findsOneWidget);
+    },
+  );
 
   testWidgets(
-      "Widget is not selectable if its 'groupValue' never matches its 'value'",
-      (WidgetTester tester) async {
-    await tester.pumpWidget(
-      const _BaseSingleSelectTestWidget(
-        firstWidgetGroupValue: _Choice.second,
-      ),
-    );
+    "Widget is not selectable if its 'groupValue' never matches its 'value'",
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        const _BaseSingleSelectTestWidget(
+          firstWidgetGroupValue: _Choice.second,
+        ),
+      );
 
-    expect(firstWidgetSelected, findsNothing);
-    expect(secondWidgetSelected, findsNothing);
+      expect(firstWidgetSelected, findsNothing);
+      expect(secondWidgetSelected, findsNothing);
+
+      await tester.tap(firstWidget);
+      await tester.pumpAndSettle();
+
+      expect(firstWidgetSelected, findsNothing);
+      expect(secondWidgetSelected, findsNothing);
+    },
+  );
+
+  testWidgets("Single select widget is disabled when 'onChanged' is null", (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(
+      const _BaseSingleSelectTestWidget(customOnChanged: true),
+    );
 
     await tester.tap(firstWidget);
     await tester.pumpAndSettle();
 
     expect(firstWidgetSelected, findsNothing);
-    expect(secondWidgetSelected, findsNothing);
-  });
-
-  testWidgets("Single select widget is disabled when 'onChanged' is null",
-      (WidgetTester tester) async {
-    await tester.pumpWidget(
-      const _BaseSingleSelectTestWidget(
-        customOnChanged: true,
-      ),
-    );
-
-    await tester.tap(firstWidget);
-    await tester.pumpAndSettle();
-
-    expect(firstWidgetSelected, findsNothing);
   });
 
   testWidgets(
-      "Single select widget calls 'onChanged' callback with correct value",
-      (WidgetTester tester) async {
-    _Choice? selectedValue;
+    "Single select widget calls 'onChanged' callback with correct value",
+    (WidgetTester tester) async {
+      _Choice? selectedValue;
 
-    await tester.pumpWidget(
-      _BaseSingleSelectTestWidget(
-        customOnChanged: true,
-        onChanged: (_Choice? choice) => selectedValue = choice,
-      ),
-    );
+      await tester.pumpWidget(
+        _BaseSingleSelectTestWidget(
+          customOnChanged: true,
+          onChanged: (_Choice? choice) => selectedValue = choice,
+        ),
+      );
 
-    await tester.tap(secondWidget);
-    await tester.pumpAndSettle();
+      await tester.tap(secondWidget);
+      await tester.pumpAndSettle();
 
-    expect(selectedValue, _Choice.second);
-  });
+      expect(selectedValue, _Choice.second);
+    },
+  );
 
-  testWidgets("Single select widget has correct semantic label",
-      (WidgetTester tester) async {
+  testWidgets("Single select widget has correct semantic label", (
+    WidgetTester tester,
+  ) async {
     const String firstSemanticLabel = "First widget";
     const String secondSemanticLabel = "Second widget";
 
@@ -163,10 +161,12 @@ void main() {
       ),
     );
 
-    final Finder firstWidgetWithSemanticLabel =
-        find.bySemanticsLabel(RegExp(firstSemanticLabel));
-    final Finder secondWidgetWithSemanticLabel =
-        find.bySemanticsLabel(RegExp(secondSemanticLabel));
+    final Finder firstWidgetWithSemanticLabel = find.bySemanticsLabel(
+      RegExp(firstSemanticLabel),
+    );
+    final Finder secondWidgetWithSemanticLabel = find.bySemanticsLabel(
+      RegExp(secondSemanticLabel),
+    );
 
     expect(firstWidgetWithSemanticLabel, findsOneWidget);
     expect(secondWidgetWithSemanticLabel, findsOneWidget);

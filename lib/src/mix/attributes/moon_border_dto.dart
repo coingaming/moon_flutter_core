@@ -24,9 +24,9 @@ final class MoonBorderMix extends OutlinedBorderMix<MoonBorder>
     Prop<BorderRadiusGeometry>? borderRadius,
     Prop<BorderSide>? side,
     Prop<BorderAlign>? borderAlign,
-  })  : $borderRadius = borderRadius,
-        $borderAlign = borderAlign,
-        super(side: side);
+  }) : $borderRadius = borderRadius,
+       $borderAlign = borderAlign,
+       super(side: side);
 
   factory MoonBorderMix.value(MoonBorder border) {
     return MoonBorderMix(

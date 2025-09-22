@@ -14,9 +14,7 @@ class StyledLinearProgress extends StatelessWidget {
       showPin: true,
       backgroundColor: Colors.purple.shade200,
       color: Colors.purple,
-      pinStyle: const PinStyle(
-        pinColor: Colors.purple,
-      ),
+      pinStyle: const PinStyle(pinColor: Colors.purple),
     );
   }
 }

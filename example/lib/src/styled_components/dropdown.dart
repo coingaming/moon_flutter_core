@@ -37,39 +37,33 @@ class _StyledDropdownState extends State<StyledDropdown> {
   };
 
   Style get _targetStyle => Style(
-        $box.chain
-          ..width(170)
-          ..padding(8)
-          ..borderRadius(8)
-          ..color(Colors.white)
-          ..border(color: Colors.purple),
-        $flex.mainAxisAlignment.spaceBetween(),
-        $on.disabled(
-          $with.opacity(0.2),
-        ),
-      );
+    $box.chain
+      ..width(170)
+      ..padding(8)
+      ..borderRadius(8)
+      ..color(Colors.white)
+      ..border(color: Colors.purple),
+    $flex.mainAxisAlignment.spaceBetween(),
+    $on.disabled($with.opacity(0.2)),
+  );
 
   Style get _dropdownStyle => Style(
-        $box.chain
-          ..width(170)
-          ..color(Colors.white)
-          ..borderRadius(8)
-          ..border(color: Colors.purple)
-          ..padding(8),
-        $flex.crossAxisAlignment.start(),
-      );
+    $box.chain
+      ..width(170)
+      ..color(Colors.white)
+      ..borderRadius(8)
+      ..border(color: Colors.purple)
+      ..padding(8),
+    $flex.crossAxisAlignment.start(),
+  );
 
   Style get _menuItemStyle => Style(
-        $box.chain
-          ..padding(8)
-          ..borderRadius(8),
-        $on.hover(
-          $box.color(Colors.grey.withOpacity(0.2)),
-        ),
-        $on.focus(
-          $box.color(Colors.purple.shade100),
-        ),
-      );
+    $box.chain
+      ..padding(8)
+      ..borderRadius(8),
+    $on.hover($box.color(Colors.grey.withOpacity(0.2))),
+    $on.focus($box.color(Colors.purple.shade100)),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -105,26 +99,19 @@ class _StyledDropdownState extends State<StyledDropdown> {
       child: SingleChildScrollView(
         child: VBox(
           style: _dropdownStyle,
-          children: List.generate(
-            3,
-            (int index) {
-              final _Options choice = _Options.values[index];
+          children: List.generate(3, (int index) {
+            final _Options choice = _Options.values[index];
 
-              return MoonBaseInteractiveWidget(
-                style: _menuItemStyle,
-                onTap: () => setState(() {
-                  _options.updateAll((key, value) => false);
-                  _options[choice] = true;
-                  _showOptions = !_showOptions;
-                }),
-                child: Row(
-                  children: [
-                    Expanded(child: Text(choice.name)),
-                  ],
-                ),
-              );
-            },
-          ),
+            return MoonBaseInteractiveWidget(
+              style: _menuItemStyle,
+              onTap: () => setState(() {
+                _options.updateAll((key, value) => false);
+                _options[choice] = true;
+                _showOptions = !_showOptions;
+              }),
+              child: Row(children: [Expanded(child: Text(choice.name))]),
+            );
+          }),
         ),
       ),
     );

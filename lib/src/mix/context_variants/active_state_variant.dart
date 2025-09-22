@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:mix/mix.dart';
-
 class ActiveStateVariant extends InheritedWidget {
   final bool isActive;
 
@@ -12,8 +10,8 @@ class ActiveStateVariant extends InheritedWidget {
   });
 
   static bool isActiveState(BuildContext context) {
-    final ActiveStateVariant? activeState =
-        context.dependOnInheritedWidgetOfExactType<ActiveStateVariant>();
+    final ActiveStateVariant? activeState = context
+        .dependOnInheritedWidgetOfExactType<ActiveStateVariant>();
 
     return activeState?.isActive ?? false;
   }
@@ -22,15 +20,4 @@ class ActiveStateVariant extends InheritedWidget {
   bool updateShouldNotify(ActiveStateVariant oldWidget) {
     return isActive != oldWidget.isActive;
   }
-}
-
-class ActiveVariant extends ContextVariant {
-  const ActiveVariant();
-
-  @override
-  bool when(BuildContext context) => ActiveStateVariant.isActiveState(context);
-}
-
-extension OnContextVariantUtilityX on OnContextVariantUtility {
-  ActiveVariant get active => const ActiveVariant();
 }

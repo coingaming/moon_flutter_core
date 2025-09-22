@@ -46,10 +46,9 @@ class AvatarCircleClipper extends CustomClipper<Path> {
         center = Offset(width - badgeRadius, width - badgeRadius);
     }
 
-    return Path()
-      ..addOval(
-        Rect.fromCircle(center: center, radius: badgeRadius + badgeMarginValue),
-      );
+    return Path()..addOval(
+      Rect.fromCircle(center: center, radius: badgeRadius + badgeMarginValue),
+    );
   }
 
   Path _getAvatarPath() =>

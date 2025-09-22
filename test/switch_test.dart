@@ -13,9 +13,7 @@ void main() {
   final Finder switchX = find.byKey(_switchKey);
 
   testWidgets("Initial state of the switch is correct", (tester) async {
-    await tester.pumpWidget(
-      const _SwitchTestWidget(),
-    );
+    await tester.pumpWidget(const _SwitchTestWidget());
 
     final Finder switchValue = find.byWidgetPredicate(
       (Widget widget) => widget is MoonRawSwitch && widget.value == true,
@@ -29,9 +27,7 @@ void main() {
       (Widget widget) => widget is MoonRawSwitch && widget.value == true,
     );
 
-    await tester.pumpWidget(
-      const _SwitchTestWidget(),
-    );
+    await tester.pumpWidget(const _SwitchTestWidget());
 
     expect(switchValue, findsOneWidget);
 
@@ -46,8 +42,9 @@ void main() {
     expect(switchValue, findsOneWidget);
   });
 
-  testWidgets("Active and inactive widgets are displayed correctly",
-      (tester) async {
+  testWidgets("Active and inactive widgets are displayed correctly", (
+    tester,
+  ) async {
     Finder textIsVisible(String textWidget) {
       return find.byWidgetPredicate(
         (Widget widget) =>
@@ -67,9 +64,7 @@ void main() {
       );
     }
 
-    await tester.pumpWidget(
-      const _SwitchTestWidget(),
-    );
+    await tester.pumpWidget(const _SwitchTestWidget());
 
     expect(textIsVisible(activeWidgetText), findsOneWidget);
     expect(iconIsVisible(activeWidgetIcon), findsOneWidget);

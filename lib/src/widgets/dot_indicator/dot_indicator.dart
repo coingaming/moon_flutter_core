@@ -61,18 +61,14 @@ class _MoonRawDotIndicatorState extends State<MoonRawDotIndicator>
 
     _animationControllers = List.generate(
       widget.dotCount,
-      (int index) => AnimationController(
-        duration: widget.transitionDuration,
-        vsync: this,
-      ),
+      (int index) =>
+          AnimationController(duration: widget.transitionDuration, vsync: this),
     );
 
     _animations = List.generate(
       widget.dotCount,
       (int index) => _animationControllers[index].drive(
-        _dotColorTween.chain(
-          CurveTween(curve: widget.transitionCurve),
-        ),
+        _dotColorTween.chain(CurveTween(curve: widget.transitionCurve)),
       ),
     );
 
@@ -107,7 +103,7 @@ class _MoonRawDotIndicatorState extends State<MoonRawDotIndicator>
       ..end = widget.selectedColor;
 
     return RepaintBoundary(
-      child: StyledRow(
+      child: RowBox(
         style: widget.dotIndicatorStyle,
         children: List<Widget>.generate(
           widget.dotCount,

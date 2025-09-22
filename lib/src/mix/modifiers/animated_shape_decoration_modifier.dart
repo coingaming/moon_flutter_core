@@ -1,4 +1,3 @@
-import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -24,8 +23,8 @@ final class AnimatedShapeDecorationModifier
     this.border,
     Duration? duration,
     Curve? curve,
-  })  : duration = duration ?? _kDefaultDuration,
-        curve = curve ?? _kDefaultCurve;
+  }) : duration = duration ?? _kDefaultDuration,
+       curve = curve ?? _kDefaultCurve;
 
   @override
   AnimatedShapeDecorationModifier copyWith({
@@ -124,8 +123,7 @@ class AnimatedShapeDecorationModifierMix
       bgColor: MixOps.resolve(context, bgColor),
       hoverColor: MixOps.resolve(context, hoverColor),
       border: MixOps.resolve(context, border),
-      duration:
-          MixOps.resolve(context, duration) ?? _kDefaultDuration,
+      duration: MixOps.resolve(context, duration) ?? _kDefaultDuration,
       curve: MixOps.resolve(context, curve) ?? _kDefaultCurve,
     );
   }
@@ -232,8 +230,9 @@ class _AnimatedShapeDecorationState extends State<_AnimatedShapeDecoration>
         duration: widget.duration,
         vsync: this,
       );
-      _backgroundColorTween ??=
-          ColorTweenWithPremultipliedAlpha(begin: widget.bgColor);
+      _backgroundColorTween ??= ColorTweenWithPremultipliedAlpha(
+        begin: widget.bgColor,
+      );
 
       _backgroundColor ??= _bgController!.drive(
         _backgroundColorTween!.chain(CurveTween(curve: widget.curve)),
@@ -310,12 +309,10 @@ class _AnimatedShapeDecorationState extends State<_AnimatedShapeDecoration>
 
     final Listenable animation;
     if (_borderController != null && _bgController != null) {
-      animation = Listenable.merge([
-        _borderController!,
-        _bgController!,
-      ]);
+      animation = Listenable.merge([_borderController!, _bgController!]);
     } else {
-      animation = _borderController ??
+      animation =
+          _borderController ??
           _bgController ??
           const AlwaysStoppedAnimation<double>(0);
     }
@@ -327,9 +324,7 @@ class _AnimatedShapeDecorationState extends State<_AnimatedShapeDecoration>
           decoration: ShapeDecoration(
             color: _backgroundColor?.value ?? widget.bgColor,
             shape: _borderAnimation != null && _borderTween != null
-                ? _borderTween!.transform(
-                    _borderAnimation!.value,
-                  )
+                ? _borderTween!.transform(_borderAnimation!.value)
                 : widget.border ?? const MoonBorder(),
           ),
           child: child,

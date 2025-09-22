@@ -82,9 +82,9 @@ class MoonBaseMultiSelectWidget extends StatelessWidget {
     required this.onChanged,
     required this.child,
   }) : assert(
-          tristate || value != null,
-          "A non-tristate widget must have a non-null value.",
-        );
+         tristate || value != null,
+         "A non-tristate widget must have a non-null value.",
+       );
 
   void _handleTap() {
     switch (value) {

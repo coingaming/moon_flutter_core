@@ -10,10 +10,10 @@ enum _Choices {
   third;
 
   String get name => switch (this) {
-        _Choices.first => "Chip 1",
-        _Choices.second => "Chip 2",
-        _Choices.third => "Chip 3",
-      };
+    _Choices.first => "Chip 1",
+    _Choices.second => "Chip 2",
+    _Choices.third => "Chip 3",
+  };
 }
 
 class StyledChip extends StatefulWidget {
@@ -27,28 +27,28 @@ class _StyledChipState extends State<StyledChip> {
   _Choices? _valueCustom = _Choices.first;
 
   Style get _chipStyle => Style(
-        $box.chain
-          ..color(Colors.white)
-          ..borderRadius(8)
-          ..margin.horizontal(4)
-          ..padding(8.0, 12.0),
-        $flex.chain
-          ..gap(8.0)
-          ..mainAxisSize.min(),
-        $with.iconTheme(size: 16),
-        ($on.hover | $on.focus | $on.press | $on.longPress)(
-          $box.color(Colors.grey.shade300),
-        ),
-        SelectedState.unselected(
-          $with.iconTheme(size: 0),
-          $box.padding(8.0, 16.0, 8.0, 8.0),
-        ),
-        SelectedState.selected(
-          $box.chain
-            ..padding(8.0, 16.0, 8.0, 12.0)
-            ..color(Colors.deepPurple.shade100),
-        ),
-      ).animate(duration: const Duration(milliseconds: 200));
+    $box.chain
+      ..color(Colors.white)
+      ..borderRadius(8)
+      ..margin.horizontal(4)
+      ..padding(8.0, 12.0),
+    $flex.chain
+      ..gap(8.0)
+      ..mainAxisSize.min(),
+    $with.iconTheme(size: 16),
+    ($on.hover | $on.focus | $on.press | $on.longPress)(
+      $box.color(Colors.grey.shade300),
+    ),
+    SelectedState.unselected(
+      $with.iconTheme(size: 0),
+      $box.padding(8.0, 16.0, 8.0, 8.0),
+    ),
+    SelectedState.selected(
+      $box.chain
+        ..padding(8.0, 16.0, 8.0, 12.0)
+        ..color(Colors.deepPurple.shade100),
+    ),
+  ).animate(duration: const Duration(milliseconds: 200));
 
   SelectedState _getVariant(_Choices? value) =>
       value == _valueCustom ? SelectedState.selected : SelectedState.unselected;
@@ -62,36 +62,27 @@ class _StyledChipState extends State<StyledChip> {
           style: _chipStyle,
           child: const StyledRow(
             inherit: true,
-            children: [
-              StyledIcon(Icons.widgets_outlined),
-              Text("MoonChip"),
-            ],
+            children: [StyledIcon(Icons.widgets_outlined), Text("MoonChip")],
           ),
         ),
         const SizedBox(height: 24),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(
-            _Choices.values.length,
-            (int index) {
-              final _Choices value = _Choices.values[index];
+          children: List.generate(_Choices.values.length, (int index) {
+            final _Choices value = _Choices.values[index];
 
-              return MoonBaseSingleSelectWidget(
-                value: _Choices.values[index],
-                groupValue: _valueCustom,
-                style: _chipStyle.applyVariant(_getVariant(value)),
-                onChanged: (_Choices? value) =>
-                    setState(() => _valueCustom = value),
-                child: StyledRow(
-                  inherit: true,
-                  children: [
-                    const Icon(Icons.check),
-                    Text(value.name),
-                  ],
-                ),
-              );
-            },
-          ),
+            return MoonBaseSingleSelectWidget(
+              value: _Choices.values[index],
+              groupValue: _valueCustom,
+              style: _chipStyle.applyVariant(_getVariant(value)),
+              onChanged: (_Choices? value) =>
+                  setState(() => _valueCustom = value),
+              child: StyledRow(
+                inherit: true,
+                children: [const Icon(Icons.check), Text(value.name)],
+              ),
+            );
+          }),
         ),
       ],
     );

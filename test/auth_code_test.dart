@@ -13,24 +13,17 @@ void main() {
   final Finder inputBox = find.byType(Box);
   final Finder validatorErrorMessage = find.text(_validatorErrorMessage);
 
-  testWidgets("MoonRawAuthCode initializes with correct input length",
-      (tester) async {
-    await tester.pumpWidget(
-      const _AuthCodeTestWidget(
-        inputFieldCount: 3,
-      ),
-    );
+  testWidgets("MoonRawAuthCode initializes with correct input length", (
+    tester,
+  ) async {
+    await tester.pumpWidget(const _AuthCodeTestWidget(inputFieldCount: 3));
 
     expect(textInput, findsOneWidget);
     expect(inputBox, findsNWidgets(3));
   });
 
   testWidgets("Input is updated and rendered correctly", (tester) async {
-    await tester.pumpWidget(
-      const _AuthCodeTestWidget(
-        inputFieldCount: 4,
-      ),
-    );
+    await tester.pumpWidget(const _AuthCodeTestWidget(inputFieldCount: 4));
 
     await tester.enterText(textInput, "1234");
     await tester.pump();
@@ -42,11 +35,10 @@ void main() {
     expect(inputBox, findsNWidgets(4));
   });
 
-  testWidgets("When valid code is entered, error message is not shown",
-      (tester) async {
-    await tester.pumpWidget(
-      const _AuthCodeTestWidget(),
-    );
+  testWidgets("When valid code is entered, error message is not shown", (
+    tester,
+  ) async {
+    await tester.pumpWidget(const _AuthCodeTestWidget());
 
     await tester.enterText(textInput, "1234");
     await tester.pump();
@@ -54,8 +46,9 @@ void main() {
     expect(validatorErrorMessage, findsNothing);
   });
 
-  testWidgets("When invalid code is entered, error message is shown",
-      (tester) async {
+  testWidgets("When invalid code is entered, error message is shown", (
+    tester,
+  ) async {
     await tester.pumpWidget(const _AuthCodeTestWidget());
 
     await tester.enterText(textInput, "1111");
@@ -64,14 +57,13 @@ void main() {
     expect(validatorErrorMessage, findsOneWidget);
   });
 
-  testWidgets("Validator errors take precedence over the provided errorText",
-      (tester) async {
+  testWidgets("Validator errors take precedence over the provided errorText", (
+    tester,
+  ) async {
     final Finder providedErrorMessage = find.text(_providedErrorMessage);
 
     await tester.pumpWidget(
-      const _AuthCodeTestWidget(
-        providedErrorMessage: _providedErrorMessage,
-      ),
+      const _AuthCodeTestWidget(providedErrorMessage: _providedErrorMessage),
     );
 
     expect(providedErrorMessage, findsOneWidget);
@@ -83,14 +75,13 @@ void main() {
     expect(validatorErrorMessage, findsOneWidget);
   });
 
-  testWidgets("'onCompleted' callback is called with correct value",
-      (tester) async {
+  testWidgets("'onCompleted' callback is called with correct value", (
+    tester,
+  ) async {
     String? completedCode;
 
     await tester.pumpWidget(
-      _AuthCodeTestWidget(
-        onCompleted: (String value) => completedCode = value,
-      ),
+      _AuthCodeTestWidget(onCompleted: (String value) => completedCode = value),
     );
 
     await tester.enterText(textInput, "1111");
@@ -99,14 +90,13 @@ void main() {
     expect(completedCode, equals("1111"));
   });
 
-  testWidgets("'onCompleted' callback is not called for empty input",
-      (tester) async {
+  testWidgets("'onCompleted' callback is not called for empty input", (
+    tester,
+  ) async {
     String? completedCode;
 
     await tester.pumpWidget(
-      _AuthCodeTestWidget(
-        onCompleted: (String value) => completedCode = value,
-      ),
+      _AuthCodeTestWidget(onCompleted: (String value) => completedCode = value),
     );
 
     await tester.enterText(textInput, "");
@@ -115,14 +105,13 @@ void main() {
     expect(completedCode, isNull);
   });
 
-  testWidgets("'onChanged' callback is called when input changes",
-      (tester) async {
+  testWidgets("'onChanged' callback is called when input changes", (
+    tester,
+  ) async {
     String? enteredText;
 
     await tester.pumpWidget(
-      _AuthCodeTestWidget(
-        onChanged: (String value) => enteredText = value,
-      ),
+      _AuthCodeTestWidget(onChanged: (String value) => enteredText = value),
     );
 
     await tester.enterText(textInput, "1");
@@ -137,35 +126,33 @@ void main() {
   });
 
   testWidgets(
-      "Peeking is applied when 'obscureText' and 'peekWhenObscuring' are true",
-      (tester) async {
-    const Duration customPeekDuration = Duration(milliseconds: 500);
+    "Peeking is applied when 'obscureText' and 'peekWhenObscuring' are true",
+    (tester) async {
+      const Duration customPeekDuration = Duration(milliseconds: 500);
 
-    await tester.pumpWidget(
-      const _AuthCodeTestWidget(
-        obscureText: true,
-        peekWhenObscuring: true,
-        peekDuration: customPeekDuration,
-      ),
-    );
+      await tester.pumpWidget(
+        const _AuthCodeTestWidget(
+          obscureText: true,
+          peekWhenObscuring: true,
+          peekDuration: customPeekDuration,
+        ),
+      );
 
-    await tester.enterText(textInput, "9");
+      await tester.enterText(textInput, "9");
 
-    expect(find.text("9"), findsOneWidget);
-    expect(find.text("•"), findsNothing);
+      expect(find.text("9"), findsOneWidget);
+      expect(find.text("•"), findsNothing);
 
-    await tester.pump(customPeekDuration);
+      await tester.pump(customPeekDuration);
 
-    expect(find.text("•"), findsOneWidget);
-  });
+      expect(find.text("•"), findsOneWidget);
+    },
+  );
 
-  testWidgets("Peeking does not occur when 'peekWhenObscuring' is false",
-      (tester) async {
-    await tester.pumpWidget(
-      const _AuthCodeTestWidget(
-        obscureText: true,
-      ),
-    );
+  testWidgets("Peeking does not occur when 'peekWhenObscuring' is false", (
+    tester,
+  ) async {
+    await tester.pumpWidget(const _AuthCodeTestWidget(obscureText: true));
     await tester.enterText(textInput, "9");
 
     await tester.pump();
@@ -174,11 +161,7 @@ void main() {
   });
 
   testWidgets("Input length limit is enforced", (tester) async {
-    await tester.pumpWidget(
-      const _AuthCodeTestWidget(
-        inputFieldCount: 4,
-      ),
-    );
+    await tester.pumpWidget(const _AuthCodeTestWidget(inputFieldCount: 4));
 
     await tester.enterText(find.byType(TextFormField), "123456");
     await tester.pump();

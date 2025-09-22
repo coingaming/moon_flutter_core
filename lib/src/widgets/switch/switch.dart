@@ -153,38 +153,39 @@ class _MoonRawSwitchState extends State<MoonRawSwitch>
       ),
     ]).animate(_curvedAnimation);
 
-    _activeTrackWidgetFadeAnimation =
-        Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: const Interval(0.7, 1.0),
-      ),
-    );
+    _activeTrackWidgetFadeAnimation = Tween<double>(begin: 0.0, end: 1.0)
+        .animate(
+          CurvedAnimation(
+            parent: _animationController,
+            curve: const Interval(0.7, 1.0),
+          ),
+        );
 
-    _inactiveTrackWidgetFadeAnimation =
-        Tween<double>(begin: 1.0, end: 0.0).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: const Interval(0.0, 0.3),
-      ),
-    );
+    _inactiveTrackWidgetFadeAnimation = Tween<double>(begin: 1.0, end: 0.0)
+        .animate(
+          CurvedAnimation(
+            parent: _animationController,
+            curve: const Interval(0.0, 0.3),
+          ),
+        );
 
-    _trackDecorationAnimation = (widget.trackDecorationTween ??
-            DecorationTween(
-              begin: ShapeDecorationWithPremultipliedAlpha(
-                color: Colors.grey.shade400,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              end: ShapeDecorationWithPremultipliedAlpha(
-                color: Colors.deepPurple.shade500,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-            ))
-        .animate(_curvedAnimation);
+    _trackDecorationAnimation =
+        (widget.trackDecorationTween ??
+                DecorationTween(
+                  begin: ShapeDecorationWithPremultipliedAlpha(
+                    color: Colors.grey.shade400,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  end: ShapeDecorationWithPremultipliedAlpha(
+                    color: Colors.deepPurple.shade500,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ))
+            .animate(_curvedAnimation);
   }
 
   @override
@@ -206,8 +207,9 @@ class _MoonRawSwitchState extends State<MoonRawSwitch>
 
     if (widget.trackDecorationTween != null &&
         widget.trackDecorationTween != oldWidget.trackDecorationTween) {
-      _trackDecorationAnimation =
-          widget.trackDecorationTween!.animate(_curvedAnimation);
+      _trackDecorationAnimation = widget.trackDecorationTween!.animate(
+        _curvedAnimation,
+      );
     }
   }
 
@@ -223,8 +225,9 @@ class _MoonRawSwitchState extends State<MoonRawSwitch>
     final EdgeInsetsGeometry effectivePadding =
         widget.padding ?? const EdgeInsets.all(4);
 
-    final EdgeInsets resolvedDirectionalPadding =
-        effectivePadding.resolve(Directionality.of(context));
+    final EdgeInsets resolvedDirectionalPadding = effectivePadding.resolve(
+      Directionality.of(context),
+    );
 
     final isLtr = Directionality.of(context) == TextDirection.ltr;
 
@@ -240,11 +243,7 @@ class _MoonRawSwitchState extends State<MoonRawSwitch>
         enabled: _isInteractive,
         autofocus: widget.autofocus,
         focusNode: widget.focusNode,
-        style: Style(
-          $box.chain
-            ..height(24)
-            ..width(44),
-        ).merge(widget.switchStyle),
+        style: BoxStyler().height(24).width(44).merge(widget.switchStyle),
         onTap: _handleTap,
         child: RepaintBoundary(
           child: AnimatedBuilder(
@@ -268,9 +267,7 @@ class _MoonRawSwitchState extends State<MoonRawSwitch>
                                   )
                                 : const SizedBox.shrink(),
                           ),
-                          SizedBox(
-                            width: resolvedDirectionalPadding.left,
-                          ),
+                          SizedBox(width: resolvedDirectionalPadding.left),
                           Expanded(
                             child: widget.inactiveTrackWidget != null
                                 ? FadeTransition(

@@ -10,13 +10,13 @@ class StyledModal extends StatelessWidget {
   const StyledModal({super.key});
 
   Style get _modalStyle => Style(
-        $box.chain
-          ..height(200)
-          ..width(300)
-          ..borderRadius(16)
-          ..color(Colors.deepPurple.shade200),
-        $with.align(),
-      );
+    $box.chain
+      ..height(200)
+      ..width(300)
+      ..borderRadius(16)
+      ..color(Colors.deepPurple.shade200),
+    $with.align(),
+  );
 
   @override
   Widget build(BuildContext context) {

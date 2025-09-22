@@ -50,9 +50,7 @@ class _StyledTextInputState extends State<StyledTextInput> {
           border: _getBorder(Colors.purple),
         ),
       ),
-      $on.error(
-        $with.animatedShapeDecoration(border: _getBorder(Colors.red)),
-      ),
+      $on.error($with.animatedShapeDecoration(border: _getBorder(Colors.red))),
       $on.disabled(
         $with.animatedOpacity(
           opacity: 0.5,
@@ -63,24 +61,23 @@ class _StyledTextInputState extends State<StyledTextInput> {
   }
 
   Style get _helperErrorStyle => Style(
-        $box.chain
-          ..padding.vertical(8)
-          ..width(300),
-        $text.chain
-          ..textAlign.center()
-          ..style.fontSize(10),
-        $on.disabled($with.opacity(0.5)),
-      ).animate(duration: const Duration(milliseconds: 300));
+    $box.chain
+      ..padding.vertical(8)
+      ..width(300),
+    $text.chain
+      ..textAlign.center()
+      ..style.fontSize(10),
+    $on.disabled($with.opacity(0.5)),
+  ).animate(duration: const Duration(milliseconds: 300));
 
   MoonBorder _getBorder(
     Color borderColor, {
     BorderRadius? radius,
     double? width,
-  }) =>
-      MoonBorder(
-        borderRadius: radius ?? BorderRadius.circular(8),
-        side: BorderSide(color: borderColor, width: width ?? 2),
-      );
+  }) => MoonBorder(
+    borderRadius: radius ?? BorderRadius.circular(8),
+    side: BorderSide(color: borderColor, width: width ?? 2),
+  );
 
   @override
   void initState() {

@@ -14,69 +14,64 @@ void main() {
   final Finder showBottomSheetButton = find.byKey(_showBottomSheetButtonKey);
 
   testWidgets(
-      "Bottom sheet is displayed when the 'show' showBottomSheetButton is tapped",
-      (tester) async {
-    await tester.pumpWidget(
-      const _BottomSheetTestWidget(),
-    );
+    "Bottom sheet is displayed when the 'show' showBottomSheetButton is tapped",
+    (tester) async {
+      await tester.pumpWidget(const _BottomSheetTestWidget());
 
-    expect(showBottomSheetButton, findsOneWidget);
+      expect(showBottomSheetButton, findsOneWidget);
 
-    await tester.tap(showBottomSheetButton);
-    await tester.pumpAndSettle();
+      await tester.tap(showBottomSheetButton);
+      await tester.pumpAndSettle();
 
-    expect(bottomSheet, findsOneWidget);
-  });
-
-  testWidgets(
-      "If 'dismissible', bottom sheet closes when a tap occurs outside its content",
-      (tester) async {
-    await tester.pumpWidget(
-      const _BottomSheetTestWidget(),
-    );
-
-    expect(showBottomSheetButton, findsOneWidget);
-
-    await tester.tap(showBottomSheetButton);
-    await tester.pumpAndSettle();
-
-    expect(bottomSheet, findsOneWidget);
-
-    await tester.tapAt(const Offset(10, 10));
-    await tester.pumpAndSettle();
-
-    expect(bottomSheet, findsNothing);
-  });
+      expect(bottomSheet, findsOneWidget);
+    },
+  );
 
   testWidgets(
-      "If not 'dismissible', bottom sheet stays visible when a tap occurs outside its content",
-      (tester) async {
-    await tester.pumpWidget(
-      const _BottomSheetTestWidget(
-        isDismissible: false,
-      ),
-    );
+    "If 'dismissible', bottom sheet closes when a tap occurs outside its content",
+    (tester) async {
+      await tester.pumpWidget(const _BottomSheetTestWidget());
 
-    expect(showBottomSheetButton, findsOneWidget);
+      expect(showBottomSheetButton, findsOneWidget);
 
-    await tester.tap(showBottomSheetButton);
-    await tester.pumpAndSettle();
+      await tester.tap(showBottomSheetButton);
+      await tester.pumpAndSettle();
 
-    expect(bottomSheet, findsOneWidget);
+      expect(bottomSheet, findsOneWidget);
 
-    await tester.tapAt(const Offset(10, 10));
-    await tester.pumpAndSettle();
+      await tester.tapAt(const Offset(10, 10));
+      await tester.pumpAndSettle();
 
-    expect(bottomSheet, findsOneWidget);
-  });
+      expect(bottomSheet, findsNothing);
+    },
+  );
+
+  testWidgets(
+    "If not 'dismissible', bottom sheet stays visible when a tap occurs outside its content",
+    (tester) async {
+      await tester.pumpWidget(
+        const _BottomSheetTestWidget(isDismissible: false),
+      );
+
+      expect(showBottomSheetButton, findsOneWidget);
+
+      await tester.tap(showBottomSheetButton);
+      await tester.pumpAndSettle();
+
+      expect(bottomSheet, findsOneWidget);
+
+      await tester.tapAt(const Offset(10, 10));
+      await tester.pumpAndSettle();
+
+      expect(bottomSheet, findsOneWidget);
+    },
+  );
 
   testWidgets("Barrier color matches the specified color", (tester) async {
     const Color customBarrierColor = Colors.red;
 
     await tester.pumpWidget(
-      const _BottomSheetTestWidget(
-        barrierColor: customBarrierColor,
-      ),
+      const _BottomSheetTestWidget(barrierColor: customBarrierColor),
     );
 
     expect(showBottomSheetButton, findsOneWidget);
@@ -91,13 +86,12 @@ void main() {
     expect(barrierFinder, findsOneWidget);
   });
 
-  testWidgets("Scrollable content inside bottom sheet scrolls correctly",
-      (tester) async {
+  testWidgets("Scrollable content inside bottom sheet scrolls correctly", (
+    tester,
+  ) async {
     final Finder listViewContent = find.byType(ListView);
 
-    await tester.pumpWidget(
-      const _BottomSheetTestWidget(),
-    );
+    await tester.pumpWidget(const _BottomSheetTestWidget());
 
     expect(showBottomSheetButton, findsOneWidget);
 
@@ -120,9 +114,7 @@ void main() {
     );
 
     await tester.pumpWidget(
-      _BottomSheetTestWidget(
-        animationController: customController,
-      ),
+      _BottomSheetTestWidget(animationController: customController),
     );
 
     expect(showBottomSheetButton, findsOneWidget);
@@ -141,8 +133,9 @@ void main() {
     expect(customController.status, AnimationStatus.completed);
   });
 
-  testWidgets("Custom route 'settings' for bottom sheet apply correctly",
-      (tester) async {
+  testWidgets("Custom route 'settings' for bottom sheet apply correctly", (
+    tester,
+  ) async {
     const String customRouteName = 'bottomSheet';
     const String customRouteArguments = 'arguments';
 
@@ -152,9 +145,7 @@ void main() {
     );
 
     await tester.pumpWidget(
-      const _BottomSheetTestWidget(
-        routeSettings: testSettings,
-      ),
+      const _BottomSheetTestWidget(routeSettings: testSettings),
     );
 
     expect(showBottomSheetButton, findsOneWidget);

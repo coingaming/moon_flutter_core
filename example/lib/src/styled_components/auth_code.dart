@@ -13,38 +13,35 @@ class StyledAuthCode extends StatefulWidget {
 
 class _StyledAuthCodeState extends State<StyledAuthCode> {
   Style get _inputFieldStyle => Style(
-        $box.shapeDecoration.as(_getBorder(Colors.grey)),
-        $flex.chain
-          ..gap(12)
-          ..mainAxisAlignment(MainAxisAlignment.center),
-        $on.active(
-          $box.shapeDecoration.as(_getBorder(Colors.orange)),
-          $text.style.color(Colors.orange),
-        ),
-        $on.selected(
-          $box.shapeDecoration.as(_getBorder(Colors.purple, width: 2)),
-        ),
-        $on.error(
-          $box.shapeDecoration.as(_getBorder(Colors.red)),
-          $text.style.color(Colors.red),
-        ),
-        ($on.selected & $on.error)(
-          $box.shapeDecoration.as(_getBorder(Colors.red, width: 2)),
-        ),
-        $with.defaultTextStyle(style: TextStyleMix(fontSize: 24)),
-      ).animate(duration: const Duration(milliseconds: 200));
+    $box.shapeDecoration.as(_getBorder(Colors.grey)),
+    $flex.chain
+      ..gap(12)
+      ..mainAxisAlignment(MainAxisAlignment.center),
+    $on.active(
+      $box.shapeDecoration.as(_getBorder(Colors.orange)),
+      $text.style.color(Colors.orange),
+    ),
+    $on.selected($box.shapeDecoration.as(_getBorder(Colors.purple, width: 2))),
+    $on.error(
+      $box.shapeDecoration.as(_getBorder(Colors.red)),
+      $text.style.color(Colors.red),
+    ),
+    ($on.selected & $on.error)(
+      $box.shapeDecoration.as(_getBorder(Colors.red, width: 2)),
+    ),
+    $with.defaultTextStyle(style: TextStyleMix(fontSize: 24)),
+  ).animate(duration: const Duration(milliseconds: 200));
 
   ShapeDecorationWithPremultipliedAlpha _getBorder(
     Color color, {
     double width = 1,
-  }) =>
-      ShapeDecorationWithPremultipliedAlpha(
-        color: Colors.white,
-        shape: MoonBorder(
-          borderRadius: BorderRadius.circular(8),
-          side: BorderSide(color: color, width: width),
-        ),
-      );
+  }) => ShapeDecorationWithPremultipliedAlpha(
+    color: Colors.white,
+    shape: MoonBorder(
+      borderRadius: BorderRadius.circular(8),
+      side: BorderSide(color: color, width: width),
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -57,8 +54,8 @@ class _StyledAuthCodeState extends State<StyledAuthCode> {
         inputFieldStyle: _inputFieldStyle,
         validator: (String? pin) =>
             (pin != null && pin != "0000" && pin.length == 4)
-                ? "The input must be exactly '0000'."
-                : null,
+            ? "The input must be exactly '0000'."
+            : null,
         errorBuilder: (BuildContext context, String? errorText) => Padding(
           padding: const EdgeInsets.only(top: 8),
           child: Text(
@@ -68,10 +65,7 @@ class _StyledAuthCodeState extends State<StyledAuthCode> {
         ),
         helperText: const Padding(
           padding: EdgeInsets.only(top: 8),
-          child: Text(
-            "This is hint",
-            style: TextStyle(color: Colors.grey),
-          ),
+          child: Text("This is hint", style: TextStyle(color: Colors.grey)),
         ),
       ),
     );

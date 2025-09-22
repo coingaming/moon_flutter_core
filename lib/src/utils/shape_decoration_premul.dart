@@ -144,12 +144,12 @@ class ShapeDecorationWithPremultipliedAlpha extends ShapeDecoration {
 
   @override
   int get hashCode => Object.hash(
-        color,
-        gradient,
-        image,
-        shape,
-        shadows == null ? null : Object.hashAll(shadows!),
-      );
+    color,
+    gradient,
+    image,
+    shape,
+    shadows == null ? null : Object.hashAll(shadows!),
+  );
 
   @override
   BoxPainter createBoxPainter([VoidCallback? onChanged]) {
@@ -162,7 +162,7 @@ class ShapeDecorationWithPremultipliedAlpha extends ShapeDecoration {
 /// An object that paints a [ShapeDecorationWithPremultipliedAlpha] into a canvas.
 class _ShapeDecorationPainter extends BoxPainter {
   _ShapeDecorationPainter(this._decoration, VoidCallback onChanged)
-      : super(onChanged);
+    : super(onChanged);
 
   final ShapeDecorationWithPremultipliedAlpha _decoration;
 
@@ -194,8 +194,10 @@ class _ShapeDecorationPainter extends BoxPainter {
     }
 
     if (_decoration.gradient != null) {
-      _interiorPaint!.shader = _decoration.gradient!
-          .createShader(rect, textDirection: textDirection);
+      _interiorPaint!.shader = _decoration.gradient!.createShader(
+        rect,
+        textDirection: textDirection,
+      );
     }
 
     if (_decoration.shadows != null) {
@@ -226,13 +228,17 @@ class _ShapeDecorationPainter extends BoxPainter {
 
     if (!_decoration.shape.preferPaintInterior &&
         (_interiorPaint != null || _shadowCount != null)) {
-      _outerPath =
-          _decoration.shape.getOuterPath(rect, textDirection: textDirection);
+      _outerPath = _decoration.shape.getOuterPath(
+        rect,
+        textDirection: textDirection,
+      );
     }
 
     if (_decoration.image != null) {
-      _innerPath =
-          _decoration.shape.getInnerPath(rect, textDirection: textDirection);
+      _innerPath = _decoration.shape.getInnerPath(
+        rect,
+        textDirection: textDirection,
+      );
     }
 
     _lastRect = rect;

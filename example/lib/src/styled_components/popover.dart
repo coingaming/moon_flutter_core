@@ -17,12 +17,12 @@ class _StyledPopoverState extends State<StyledPopover> {
   bool _show = false;
 
   Style get _popoverStyle => Style(
-        $box.chain
-          ..height(100)
-          ..width(150)
-          ..borderRadius(16)
-          ..color(Colors.deepPurple.shade200),
-      );
+    $box.chain
+      ..height(100)
+      ..width(150)
+      ..borderRadius(16)
+      ..color(Colors.deepPurple.shade200),
+  );
 
   @override
   Widget build(BuildContext context) {

@@ -54,8 +54,9 @@ class _MoonBreadcrumbState extends State<MoonRawBreadcrumb> {
   }
 
   List<MoonRawBreadcrumbItem> _getVisibleItems() {
-    final int itemCount =
-        showFullPath ? widget.items.length : widget.visibleItemCount;
+    final int itemCount = showFullPath
+        ? widget.items.length
+        : widget.visibleItemCount;
 
     if (itemCount == 0) return [];
 
@@ -88,9 +89,11 @@ class _MoonBreadcrumbState extends State<MoonRawBreadcrumb> {
     return Row(
       children: [
         _BreadcrumbItemBuilder(
-          onTap: widget.showMoreWidget?.onTap ??
+          onTap:
+              widget.showMoreWidget?.onTap ??
               () => setState(() => showFullPath = true),
-          item: widget.showMoreWidget ??
+          item:
+              widget.showMoreWidget ??
               const MoonRawBreadcrumbItem(
                 semanticLabel: "Show full path",
                 child: Padding(
@@ -112,10 +115,7 @@ class _MoonBreadcrumbState extends State<MoonRawBreadcrumb> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      child: HBox(
-        style: widget.style,
-        children: _buildItems(),
-      ),
+      child: RowBox(style: widget.style, children: _buildItems()),
     );
   }
 }

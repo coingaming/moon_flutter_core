@@ -17,39 +17,36 @@ class _StyledAlertState extends State<StyledAlert> {
   bool _show = true;
 
   Style get _alertStyle => Style(
-        $box.chain
-          ..padding(16.0)
-          ..width(400.0)
-          ..borderRadius(8.0),
-        $icon.size(16),
-      );
+    $box.chain
+      ..padding(16.0)
+      ..width(400.0)
+      ..borderRadius(8.0),
+    $icon.size(16),
+  );
 
   Style get _columnStyle => Style(
-        $flex.chain
-          ..crossAxisAlignment.start()
-          ..gap(8),
-        $with.defaultTextStyle(style: TextStyleMix(color: Colors.grey)),
-      );
+    $flex.chain
+      ..crossAxisAlignment.start()
+      ..gap(8),
+    $with.defaultTextStyle(style: TextStyleMix(color: Colors.grey)),
+  );
 
   Style get _rowStyle => Style(
-        $flex.gap(12),
-        $text.style(
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-        ),
-      );
+    $flex.gap(12),
+    $text.style(fontSize: 16, fontWeight: FontWeight.w600),
+  );
 
   Color _getThemeColor(int index) => index == 0
       ? Colors.black
       : index == 1
-          ? Colors.red
-          : Colors.green;
+      ? Colors.red
+      : Colors.green;
 
   Color _getBgColor(int index) => index == 0
       ? Colors.white
       : index == 1
-          ? Colors.red.shade50
-          : Colors.transparent;
+      ? Colors.red.shade50
+      : Colors.transparent;
 
   @override
   Widget build(BuildContext context) {
@@ -75,13 +72,8 @@ class _StyledAlertState extends State<StyledAlert> {
                   StyledRow(
                     style: _rowStyle.add($text.style.color(themeColor)),
                     children: [
-                      Icon(
-                        Icons.info_outline,
-                        color: themeColor,
-                      ),
-                      const Expanded(
-                        child: StyledText("MoonAlert"),
-                      ),
+                      Icon(Icons.info_outline, color: themeColor),
+                      const Expanded(child: StyledText("MoonAlert")),
                       MoonBaseInteractiveWidget(
                         style: getIconButtonStyle().add(
                           $icon.color(themeColor),
@@ -98,9 +90,7 @@ class _StyledAlertState extends State<StyledAlert> {
             ),
             if (index == 0)
               MoonBaseInteractiveWidget(
-                style: getButtonStyle().add(
-                  $box.margin.vertical(16),
-                ),
+                style: getButtonStyle().add($box.margin.vertical(16)),
                 onTap: () => setState(() => _show = !_show),
                 child: const StyledText('Toggle Alert'),
               ),

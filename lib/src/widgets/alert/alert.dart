@@ -75,10 +75,7 @@ class _MoonRawAlertState extends State<MoonRawAlert> {
         },
         child: Visibility(
           visible: widget.show || _isVisible,
-          child: Box(
-            style: widget.style,
-            child: widget.child,
-          ),
+          child: Box(style: widget.style, child: widget.child),
         ),
       ),
     );

@@ -7,10 +7,8 @@ import 'package:flutter/services.dart';
 
 import 'package:mix/mix.dart';
 
-typedef MoonTextInputErrorBuilder = Widget Function(
-  BuildContext context,
-  String? errorText,
-);
+typedef MoonTextInputErrorBuilder =
+    Widget Function(BuildContext context, String? errorText);
 
 class MoonTextInputConfiguration {
   /// If [maxLength] is set to this value, only the "current input length" part
@@ -558,43 +556,46 @@ class MoonTextInputConfiguration {
     SmartDashesType? smartDashesType,
     SmartQuotesType? smartQuotesType,
     TextInputType? keyboardType,
-  })  : enableInteractiveSelection =
-            enableInteractiveSelection ?? (!readOnly || !obscureText),
-        smartDashesType = smartDashesType ??
-            (obscureText ? SmartDashesType.disabled : SmartDashesType.enabled),
-        smartQuotesType = smartQuotesType ??
-            (obscureText ? SmartQuotesType.disabled : SmartQuotesType.enabled),
-        keyboardType = keyboardType ??
-            (maxLines == 1 ? TextInputType.text : TextInputType.multiline),
-        assert(maxLength == null || maxLength == noMaxLength || maxLength > 0),
-        assert(inputTextVerticalOffsetValue >= 0),
-        assert(obscuringCharacter.length == 1),
-        assert(maxLines == null || maxLines > 0),
-        assert(minLines == null || minLines > 0),
-        assert(
-          (maxLines == null) || (minLines == null) || (maxLines >= minLines),
-          "MinLines can't be greater than maxLines.",
-        ),
-        assert(
-          !expands || (maxLines == null && minLines == null),
-          "MinLines and maxLines must be null when expands is true.",
-        ),
-        assert(
-          !obscureText || maxLines == 1,
-          "Obscured fields cannot be multiline.",
-        ),
-        // Ensure no unexpected changes occur in the users set value.
-        assert(
-          !identical(textInputAction, TextInputAction.newline) ||
-              maxLines == 1 ||
-              !identical(keyboardType, TextInputType.text),
-          "Use keyboardType TextInputType.multiline when using "
-          "TextInputAction.newline on a multiline MoonTextInput.",
-        ),
-        assert(
-          !hasFloatingLabel || !expands,
-          "Expandable text input cannot have a floating label.",
-        );
+  }) : enableInteractiveSelection =
+           enableInteractiveSelection ?? (!readOnly || !obscureText),
+       smartDashesType =
+           smartDashesType ??
+           (obscureText ? SmartDashesType.disabled : SmartDashesType.enabled),
+       smartQuotesType =
+           smartQuotesType ??
+           (obscureText ? SmartQuotesType.disabled : SmartQuotesType.enabled),
+       keyboardType =
+           keyboardType ??
+           (maxLines == 1 ? TextInputType.text : TextInputType.multiline),
+       assert(maxLength == null || maxLength == noMaxLength || maxLength > 0),
+       assert(inputTextVerticalOffsetValue >= 0),
+       assert(obscuringCharacter.length == 1),
+       assert(maxLines == null || maxLines > 0),
+       assert(minLines == null || minLines > 0),
+       assert(
+         (maxLines == null) || (minLines == null) || (maxLines >= minLines),
+         "MinLines can't be greater than maxLines.",
+       ),
+       assert(
+         !expands || (maxLines == null && minLines == null),
+         "MinLines and maxLines must be null when expands is true.",
+       ),
+       assert(
+         !obscureText || maxLines == 1,
+         "Obscured fields cannot be multiline.",
+       ),
+       // Ensure no unexpected changes occur in the users set value.
+       assert(
+         !identical(textInputAction, TextInputAction.newline) ||
+             maxLines == 1 ||
+             !identical(keyboardType, TextInputType.text),
+         "Use keyboardType TextInputType.multiline when using "
+         "TextInputAction.newline on a multiline MoonTextInput.",
+       ),
+       assert(
+         !hasFloatingLabel || !expands,
+         "Expandable text input cannot have a floating label.",
+       );
 
   MoonTextInputConfiguration copyWith({
     // Moon Design System properties.
@@ -870,11 +871,7 @@ void textInputDebugFillProperties(
     ),
   );
   properties.add(
-    IntProperty(
-      "maxLines",
-      textInputConfiguration.maxLines,
-      defaultValue: 1,
-    ),
+    IntProperty("maxLines", textInputConfiguration.maxLines, defaultValue: 1),
   );
   properties.add(
     IntProperty(

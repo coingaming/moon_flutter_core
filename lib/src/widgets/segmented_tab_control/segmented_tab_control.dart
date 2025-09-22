@@ -106,30 +106,26 @@ class _MoonRawSegmentedTabControlState extends State<MoonRawSegmentedTabControl>
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> children = List.generate(
-      widget.tabs.length,
-      (int index) {
-        final child = MoonBaseInteractiveWidget(
-          enabled: widget.enabled && widget.tabs[index].enabled,
-          enableFeedback: widget.tabs[index].enableFeedback,
-          autofocus: widget.tabs[index].autoFocus,
-          focusNode: widget.tabs[index].focusNode,
-          semanticLabel: widget.tabs[index].semanticLabel,
-          style: widget.tabs[index].tabStyle,
-          onTap: () => _updateTabs(index),
-          child: widget.tabs[index].child,
-        );
+    final List<Widget> children = List.generate(widget.tabs.length, (
+      int index,
+    ) {
+      final child = MoonBaseInteractiveWidget(
+        enabled: widget.enabled && widget.tabs[index].enabled,
+        enableFeedback: widget.tabs[index].enableFeedback,
+        autofocus: widget.tabs[index].autoFocus,
+        focusNode: widget.tabs[index].focusNode,
+        semanticLabel: widget.tabs[index].semanticLabel,
+        style: widget.tabs[index].tabStyle,
+        onTap: () => _updateTabs(index),
+        child: widget.tabs[index].child,
+      );
 
-        return widget.isExpanded ? Expanded(child: child) : child;
-      },
-    );
+      return widget.isExpanded ? Expanded(child: child) : child;
+    });
 
     return widget.axisDirection == Axis.horizontal
-        ? HBox(
-            style: widget.style,
-            children: children,
-          )
-        : VBox(
+        ? RowBox(style: widget.style, children: children)
+        : ColumnBox(
             style: Style(
               $box.height(MediaQuery.of(context).size.height),
             ).merge(widget.style),

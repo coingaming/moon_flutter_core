@@ -50,10 +50,12 @@ class _MoonCircularProgressIndicatorState
     curve: const Interval(0.5, 1.0, curve: Curves.fastOutSlowIn),
   ).chain(CurveTween(curve: const SawTooth(_pathCount)));
 
-  static final Animatable<double> _offsetTween =
-      CurveTween(curve: const SawTooth(_pathCount));
-  static final Animatable<double> _rotationTween =
-      CurveTween(curve: const SawTooth(_rotationCount));
+  static final Animatable<double> _offsetTween = CurveTween(
+    curve: const SawTooth(_pathCount),
+  );
+  static final Animatable<double> _rotationTween = CurveTween(
+    curve: const SawTooth(_rotationCount),
+  );
 
   late AnimationController _controller;
 

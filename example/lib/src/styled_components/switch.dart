@@ -17,37 +17,37 @@ class _StyledSwitchState extends State<StyledSwitch> {
   bool _switchIconValue = false;
 
   Style get _switchStyle => Style(
-        $box.chain
-          ..width(64)
-          ..height(32),
-      );
+    $box.chain
+      ..width(64)
+      ..height(32),
+  );
 
   Style get _customThumbStyle => Style(
-        $box.chain
-          ..width(20)
-          ..height(20)
-          ..color(_switchValue ? Colors.deepPurple : Colors.purple)
-          ..borderRadius(_switchValue ? 6 : 14)
-          ..border(
-            color: Colors.transparent,
-            strokeAlign: BorderSide.strokeAlignOutside,
-          ),
-        $on.focus(
-          $box.border(
-            color: Colors.grey.shade400,
-            width: 4,
-            strokeAlign: BorderSide.strokeAlignOutside,
-          ),
-        ),
-      ).animate();
+    $box.chain
+      ..width(20)
+      ..height(20)
+      ..color(_switchValue ? Colors.deepPurple : Colors.purple)
+      ..borderRadius(_switchValue ? 6 : 14)
+      ..border(
+        color: Colors.transparent,
+        strokeAlign: BorderSide.strokeAlignOutside,
+      ),
+    $on.focus(
+      $box.border(
+        color: Colors.grey.shade400,
+        width: 4,
+        strokeAlign: BorderSide.strokeAlignOutside,
+      ),
+    ),
+  ).animate();
 
   Style get _thumbStyle => Style(
-        $box.chain
-          ..width(16)
-          ..height(16)
-          ..color(Colors.white)
-          ..borderRadius(32),
-      );
+    $box.chain
+      ..width(16)
+      ..height(16)
+      ..color(Colors.white)
+      ..borderRadius(32),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -104,10 +104,7 @@ class _StyledSwitchState extends State<StyledSwitch> {
             size: 12,
             color: Colors.white,
           ),
-          inactiveTrackWidget: const Icon(
-            Icons.wb_sunny_outlined,
-            size: 12,
-          ),
+          inactiveTrackWidget: const Icon(Icons.wb_sunny_outlined, size: 12),
         ),
       ],
     );

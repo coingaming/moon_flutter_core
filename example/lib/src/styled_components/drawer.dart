@@ -10,12 +10,12 @@ class StyledDrawer extends StatelessWidget {
   const StyledDrawer({super.key});
 
   Style get _drawerStyle => Style(
-        $box.chain
-          ..color(Colors.lime)
-          ..borderRadiusDirectional.topEnd(16.0)
-          ..borderRadiusDirectional.bottomEnd(16.0)
-          ..width(300),
-      );
+    $box.chain
+      ..color(Colors.lime)
+      ..borderRadiusDirectional.topEnd(16.0)
+      ..borderRadiusDirectional.bottomEnd(16.0)
+      ..width(300),
+  );
 
   @override
   Widget build(BuildContext context) {

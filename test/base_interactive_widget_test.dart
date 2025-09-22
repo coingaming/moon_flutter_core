@@ -15,9 +15,7 @@ void main() {
     bool tapped = false;
 
     await tester.pumpWidget(
-      _BaseInteractiveTestWidget(
-        onTap: () => tapped = true,
-      ),
+      _BaseInteractiveTestWidget(onTap: () => tapped = true),
     );
 
     await tester.tap(widget);
@@ -30,9 +28,7 @@ void main() {
     bool longPressed = false;
 
     await tester.pumpWidget(
-      _BaseInteractiveTestWidget(
-        onLongPress: () => longPressed = true,
-      ),
+      _BaseInteractiveTestWidget(onLongPress: () => longPressed = true),
     );
 
     await tester.longPress(widget);
@@ -41,8 +37,9 @@ void main() {
     expect(longPressed, true);
   });
 
-  testWidgets("Widget is not interactive when 'enabled' is false",
-      (tester) async {
+  testWidgets("Widget is not interactive when 'enabled' is false", (
+    tester,
+  ) async {
     bool tapped = false;
     bool longPressed = false;
 
@@ -62,13 +59,10 @@ void main() {
     expect(longPressed, false);
   });
 
-  testWidgets("Correct cursor is displayed for enabled and disabled states",
-      (tester) async {
-    await tester.pumpWidget(
-      _BaseInteractiveTestWidget(
-        onTap: () => {},
-      ),
-    );
+  testWidgets("Correct cursor is displayed for enabled and disabled states", (
+    tester,
+  ) async {
+    await tester.pumpWidget(_BaseInteractiveTestWidget(onTap: () => {}));
 
     final TestGesture gesture = await tester.createGesture(
       kind: PointerDeviceKind.mouse,
@@ -85,9 +79,7 @@ void main() {
       SystemMouseCursors.click,
     );
 
-    await tester.pumpWidget(
-      const _BaseInteractiveTestWidget(),
-    );
+    await tester.pumpWidget(const _BaseInteractiveTestWidget());
 
     await tester.pump();
 
@@ -99,13 +91,12 @@ void main() {
 
   testWidgets("Widget has correct semantic label", (tester) async {
     const String semanticLabelText = "Semantic Label";
-    final Finder semanticLabel =
-        find.bySemanticsLabel(RegExp(semanticLabelText));
+    final Finder semanticLabel = find.bySemanticsLabel(
+      RegExp(semanticLabelText),
+    );
 
     await tester.pumpWidget(
-      const _BaseInteractiveTestWidget(
-        semanticLabel: semanticLabelText,
-      ),
+      const _BaseInteractiveTestWidget(semanticLabel: semanticLabelText),
     );
 
     expect(semanticLabel, findsOneWidget);

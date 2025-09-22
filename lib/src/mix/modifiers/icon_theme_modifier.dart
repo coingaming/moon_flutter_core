@@ -1,4 +1,3 @@
-import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -18,12 +17,9 @@ final class IconThemeModifier extends WidgetModifier<IconThemeModifier>
   final Duration? duration;
   final Curve curve;
 
-  const IconThemeModifier({
-    IconThemeData? data,
-    this.duration,
-    Curve? curve,
-  })  : data = data ?? const IconThemeData(),
-        curve = curve ?? _kDefaultIconThemeCurve;
+  const IconThemeModifier({IconThemeData? data, this.duration, Curve? curve})
+    : data = data ?? const IconThemeData(),
+      curve = curve ?? _kDefaultIconThemeCurve;
 
   bool get _shouldAnimateColor => duration != null && data.color != null;
 
@@ -69,10 +65,7 @@ final class IconThemeModifier extends WidgetModifier<IconThemeModifier>
       return IconTheme(data: data, child: child);
     }
 
-    return _AnimatedIconTheme(
-      modifier: this,
-      child: child,
-    );
+    return _AnimatedIconTheme(modifier: this, child: child);
   }
 }
 
@@ -170,18 +163,18 @@ class IconThemeModifierMix extends ModifierMix<IconThemeModifier> {
 
   @override
   List<Object?> get props => [
-        color,
-        size,
-        fill,
-        weight,
-        grade,
-        opticalSize,
-        opacity,
-        shadows,
-        applyTextScaling,
-        duration,
-        curve,
-      ];
+    color,
+    size,
+    fill,
+    weight,
+    grade,
+    opticalSize,
+    opacity,
+    shadows,
+    applyTextScaling,
+    duration,
+    curve,
+  ];
 }
 
 final class IconThemeModifierUtility<T extends Style<Object?>>

@@ -10,16 +10,16 @@ class StyledToast extends StatelessWidget {
   const StyledToast({super.key});
 
   Style get _toastStyle => Style(
-        $box.chain
-          ..color(Colors.black87)
-          ..margin(16)
-          ..padding(8, 16)
-          ..borderRadius(8),
-        $flex.chain
-          ..gap(8)
-          ..mainAxisSize.min(),
-        $text.style.color(Colors.white70),
-      );
+    $box.chain
+      ..color(Colors.black87)
+      ..margin(16)
+      ..padding(8, 16)
+      ..borderRadius(8),
+    $flex.chain
+      ..gap(8)
+      ..mainAxisSize.min(),
+    $text.style.color(Colors.white70),
+  );
 
   @override
   Widget build(BuildContext context) {

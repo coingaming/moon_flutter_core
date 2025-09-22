@@ -17,6 +17,7 @@ class MoonRawToast {
   /// Displays a Moon Design raw toast.
   static void show(
     BuildContext context, {
+
     /// The style of the toast container.
     Style? style,
 
@@ -73,34 +74,34 @@ class MoonRawToast {
               bottom: useSafeArea,
               maintainBottomViewPadding: true,
               child: Box(
-                style: Style(
-                  $with.opacity(progress),
-                  $with.align(alignment: toastAlignment),
-                  $with.transform(
-                    Matrix4.translationValues(
-                      switch (toastAlignment) {
-                        Alignment.topLeft ||
-                        Alignment.centerLeft ||
-                        Alignment.bottomLeft =>
-                          -_toastTravelDistance +
-                              progress * _toastTravelDistance,
-                        Alignment.topRight ||
-                        Alignment.centerRight ||
-                        Alignment.bottomRight =>
-                          (1 - progress) * _toastTravelDistance,
-                        _ => 0
-                      },
-                      switch (toastAlignment) {
-                        Alignment.topCenter => -_toastTravelDistance +
-                            progress * _toastTravelDistance,
-                        Alignment.bottomCenter =>
-                          (1 - progress) * _toastTravelDistance,
-                        _ => 0
-                      },
-                      0,
+                style: BoxStyler()
+                    .wrapOpacity(progress)
+                    .alignment(toastAlignment)
+                    .transform(
+                      Matrix4.translationValues(
+                        switch (toastAlignment) {
+                          Alignment.topLeft ||
+                          Alignment.centerLeft ||
+                          Alignment.bottomLeft =>
+                            -_toastTravelDistance +
+                                progress * _toastTravelDistance,
+                          Alignment.topRight ||
+                          Alignment.centerRight ||
+                          Alignment.bottomRight =>
+                            (1 - progress) * _toastTravelDistance,
+                          _ => 0,
+                        },
+                        switch (toastAlignment) {
+                          Alignment.topCenter =>
+                            -_toastTravelDistance +
+                                progress * _toastTravelDistance,
+                          Alignment.bottomCenter =>
+                            (1 - progress) * _toastTravelDistance,
+                          _ => 0,
+                        },
+                        0,
+                      ),
                     ),
-                  ),
-                ),
                 child: child,
               ),
             );
@@ -108,10 +109,7 @@ class MoonRawToast {
           child: themes.wrap(
             Semantics(
               label: semanticLabel,
-              child: Box(
-                style: style,
-                child: child,
-              ),
+              child: Box(style: style, child: child),
             ),
           ),
         );
