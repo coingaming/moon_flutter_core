@@ -1,349 +1,401 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<migration_plan>
+<migration_action_plan>
   <metadata>
-    <project>moon_flutter_core</project>
-    <from_version>mix_v1</from_version>
-    <to_version>mix_v2</to_version>
+    <description>Comprehensive migration plan from Mix v1 to Mix v2 for Moon Flutter Core</description>
+    <target>Mix v2 (beta from GitHub repository)</target>
+    <current_issues>~890 analyzer errors</current_issues>
     <breaking_changes>true</breaking_changes>
-    <estimated_tasks>45</estimated_tasks>
-    <created_date>2025-09-22</created_date>
   </metadata>
 
-  <prerequisites>
-    <task id="P1" priority="critical">
-      <title>Update Mix dependency</title>
-      <description>Update pubspec.yaml to use Mix v2</description>
+  <phase id="1" name="CLEANUP_AND_PREPARATION" priority="critical">
+    <step order="1">
+      <action>Remove generated files</action>
+      <command>rm -f lib/src/mix/attributes/icon_theme_data_dto.g.dart</command>
+      <reason>Mix v2 doesn't use code generation with mix_generator</reason>
+    </step>
+    
+    <step order="2">
+      <action>Clean pubspec dependencies</action>
       <files>
         <file>pubspec.yaml</file>
         <file>example/pubspec.yaml</file>
       </files>
       <changes>
-        <change>Replace git dependency with: mix: ^2.0.0</change>
+        <remove>mix_annotations dependency</remove>
+        <remove>mix_generator dev dependency</remove>
+        <remove>build_runner dev dependency (if only used for mix)</remove>
       </changes>
-    </task>
+    </step>
     
-    <task id="P2" priority="critical">
-      <title>Enable dot notation syntax</title>
-      <description>Add experimental feature flag for dot notation</description>
-      <files>
-        <file>analysis_options.yaml</file>
-        <file>example/analysis_options.yaml</file>
-      </files>
-      <changes>
-        <change>Add under analyzer: enable-experiment: - dot-shorthands</change>
-      </changes>
-      <note>Requires Dart SDK >= 3.9.0</note>
-    </task>
-  </prerequisites>
+    <step order="3">
+      <action>Run flutter clean and pub get</action>
+      <commands>
+        <command>flutter clean</command>
+        <command>flutter pub get</command>
+        <command>cd example && flutter pub get</command>
+      </commands>
+    </step>
+  </phase>
 
-  <phase_1_style_api_updates>
-    <task id="S1" priority="critical">
-      <title>Update Style constructor usage</title>
-      <description>Replace all Style() with positional arguments to named parameters</description>
+  <phase id="2" name="CORE_API_MIGRATION" priority="critical">
+    <step order="1">
+      <action>Replace Style constructor pattern</action>
       <pattern>
-        <old>Style($box.chain..., $text.style...)</old>
-        <new>Style.create([$box.color(), $text.style()])</new>
+        <old>Style($box.color(Colors.blue), $text.style(someStyle))</old>
+        <new>$box.color(Colors.blue).text.style(someStyle)</new>
+        <alternative>BoxStyler().color(Colors.blue) for box-only styles</alternative>
       </pattern>
-      <reference>examples.md:29-36</reference>
-      <files>
-        <file>example/lib/src/common_styles.dart</file>
-        <file>example/lib/src/styled_components/*.dart</file>
-      </files>
-    </task>
+      <files_pattern>**/*.dart</files_pattern>
+      <note>Style() constructor with multiple attributes is deprecated. Use chained methods or specific stylers.</note>
+    </step>
 
-    <task id="S2" priority="high">
-      <title>Replace .chain pattern</title>
-      <description>Remove deprecated .chain usage</description>
+    <step order="2">
+      <action>Replace Spec-based patterns</action>
+      <replacements>
+        <replace>
+          <old>BoxSpec</old>
+          <new>BoxMix</new>
+        </replace>
+        <replace>
+          <old>IconSpec</old>
+          <new>IconMix</new>
+        </replace>
+        <replace>
+          <old>TextSpec</old>
+          <new>TextMix</new>
+        </replace>
+        <replace>
+          <old>FlexSpec</old>
+          <new>FlexBoxMix</new>
+        </replace>
+        <replace>
+          <old>BoxSpecAttribute</old>
+          <new>BoxMix</new>
+        </replace>
+        <replace>
+          <old>TextSpecAttribute</old>
+          <new>TextMix</new>
+        </replace>
+        <replace>
+          <old>FlexSpecAttribute</old>
+          <new>FlexBoxMix</new>
+        </replace>
+      </replacements>
+      <note>Spec pattern is replaced with Mix pattern in v2</note>
+    </step>
+
+    <step order="3">
+      <action>Update widget imports and names</action>
+      <replacements>
+        <replace>
+          <old>HBox</old>
+          <new>RowBox</new>
+        </replace>
+        <replace>
+          <old>VBox</old>
+          <new>ColumnBox</new>
+        </replace>
+      </replacements>
+    </step>
+
+    <step order="4">
+      <action>Update chain getter usage</action>
       <pattern>
-        <old>$box.chain..color(Colors.purple)..borderRadius(8)</old>
-        <new>$box.color(Colors.purple), $box.borderRadius(8)</new>
+        <old>$box.chain</old>
+        <new>$box</new>
       </pattern>
-      <affected_lines>
-        <line>example/lib/src/common_styles.dart:7-10</line>
-        <line>example/lib/src/common_styles.dart:16-18</line>
-        <line>example/lib/src/common_styles.dart:21-23</line>
-      </affected_lines>
-    </task>
+      <note>The chain getter is no longer needed in v2</note>
+    </step>
+  </phase>
 
-    <task id="S3" priority="high">
-      <title>Update context variants ($on)</title>
-      <description>Replace $on with new variant system</description>
+  <phase id="3" name="STYLER_PATTERN_MIGRATION" priority="high">
+    <step order="1">
+      <action>Replace Style() constructors with Styler patterns</action>
+      <patterns>
+        <pattern>
+          <old>Style($box.color(color), $box.padding.all(16))</old>
+          <new>BoxStyler().color(color).paddingAll(16)</new>
+        </pattern>
+        <pattern>
+          <old>Style($text.style(textStyle))</old>
+          <new>TextStyler().style(textStyle)</new>
+        </pattern>
+        <pattern>
+          <old>Style($icon.size(24))</old>
+          <new>IconStyler().size(24)</new>
+        </pattern>
+      </patterns>
+    </step>
+
+    <step order="2">
+      <action>Update variant application patterns</action>
       <pattern>
-        <old>$on.hover($box.color(Colors.blue))</old>
-        <new>$box.color(Colors.blue).onHover()</new>
+        <old>$on.hover(Style(...))</old>
+        <new>.onHovered(BoxStyler()...)</new>
       </pattern>
+      <variants>
+        <variant old="$on.hover" new=".onHovered"/>
+        <variant old="$on.press" new=".onPressed"/>
+        <variant old="$on.focus" new=".onFocused"/>
+        <variant old="$on.disabled" new=".onDisabled"/>
+        <variant old="$on.selected" new=".onSelected"/>
+      </variants>
+    </step>
+
+    <step order="3">
+      <action>Update animation patterns</action>
       <pattern>
-        <old>($on.focus | $on.hover)(...)</old>
-        <new>MultiVariant([onFocus, onHover], [...])</new>
+        <old>style.animate(duration: 200.ms)</old>
+        <new>style.animate(AnimationConfig.easeInOut(200.ms))</new>
       </pattern>
-      <affected_lines>
-        <line>example/lib/src/common_styles.dart:20</line>
-        <line>example/lib/src/common_styles.dart:28</line>
-        <line>example/lib/src/common_styles.dart:38</line>
-      </affected_lines>
-      <reference>examples.md:175-181</reference>
-    </task>
+      <note>Animation now requires AnimationConfig objects</note>
+    </step>
+  </phase>
 
-    <task id="S4" priority="medium">
-      <title>Update animate() method</title>
-      <description>Update animation API to v2 patterns</description>
+  <phase id="4" name="TOKEN_SYSTEM_MIGRATION" priority="high">
+    <step order="1">
+      <action>Update token imports and types</action>
+      <note>All tokens are now in package:mix/mix.dart</note>
+    </step>
+
+    <step order="2">
+      <action>Create token definitions using new types</action>
+      <example>
+        <old>const token = MixToken&lt;Color&gt;('primary')</old>
+        <new>const token = ColorToken('primary')</new>
+      </example>
+      <token_types>
+        <type>ColorToken for colors</type>
+        <type>SpaceToken for spacing/sizing (double)</type>
+        <type>TextStyleToken for text styles</type>
+        <type>RadiusToken for border radius</type>
+        <type>BoxShadowToken for shadows (List&lt;BoxShadow&gt;)</type>
+      </token_types>
+    </step>
+
+    <step order="3">
+      <action>Update MixScope usage</action>
       <pattern>
-        <old>.animate()</old>
-        <new>.animate(.easeInOut(300.ms))</new>
+        <old>
+          MixScope(
+            data: MixScopeData.static(tokens: {...}),
+            child: widget,
+          )
+        </old>
+        <new>
+          MixScope(
+            colors: {colorToken: Colors.blue},
+            spaces: {spaceToken: 16.0},
+            textStyles: {textToken: TextStyle(...)},
+            radii: {radiusToken: Radius.circular(8)},
+            child: widget,
+          )
+        </new>
       </pattern>
-      <reference>examples.md:175-181</reference>
-      <files>
-        <file>example/lib/src/common_styles.dart:13,25,41</file>
-      </files>
-    </task>
+    </step>
 
-    <task id="S5" priority="medium">
-      <title>Fix shapeDecoration usage</title>
-      <description>Update deprecated shapeDecoration.as() pattern</description>
+    <step order="4">
+      <action>Update token usage in styles</action>
       <pattern>
-        <old>$box.shapeDecoration.as(ShapeDecorationWithPremultipliedAlpha(...))</old>
-        <new>$box.decoration(ShapeDecorationWithPremultipliedAlpha(...))</new>
+        <old>$box.color.token(colorToken)</old>
+        <new>$box.color(colorToken())</new>
+        <alternative>$box.color.token(colorToken) // still valid</alternative>
       </pattern>
-      <affected_lines>
-        <line>example/lib/src/common_styles.dart:29-36</line>
-      </affected_lines>
-    </task>
-  </phase_1_style_api_updates>
+      <note>Token call() method returns refs for direct use</note>
+    </step>
+  </phase>
 
-  <phase_2_utility_updates>
-    <task id="U1" priority="high">
-      <title>Update utility patterns to dot notation</title>
-      <description>Convert to new dot notation syntax when enabled</description>
+  <phase id="5" name="DEPRECATED_API_CLEANUP" priority="medium">
+    <step order="1">
+      <action>Replace deprecated color methods</action>
+      <replacements>
+        <replace pattern="\.withOpacity\(([\d.]+)\)" replacement=".withValues(alpha: $1)"/>
+        <replace pattern="\.shade(\d+)" replacement=".grey($1)"/>
+        <replace pattern="\.alpha" replacement="(color.a * 255.0).round() &amp; 0xff"/>
+        <replace pattern="\.red" replacement="(color.r * 255.0).round() &amp; 0xff"/>
+        <replace pattern="\.green" replacement="(color.g * 255.0).round() &amp; 0xff"/>
+        <replace pattern="\.blue" replacement="(color.b * 255.0).round() &amp; 0xff"/>
+        <replace pattern="\.opacity" replacement=".a"/>
+      </replacements>
+    </step>
+
+    <step order="2">
+      <action>Update FlexBox properties</action>
+      <replacements>
+        <replace old="gap" new="spacing"/>
+        <replace old=".spaceBetween" new="(MainAxisAlignment.spaceBetween)"/>
+        <replace old=".center" new="(MainAxisAlignment.center)"/>
+        <replace old=".start" new="(CrossAxisAlignment.start)"/>
+      </replacements>
+    </step>
+
+    <step order="3">
+      <action>Update deprecated Mix utilities</action>
+      <replacements>
+        <replace old="MixableDto" new="MixableType"/>
+        <replace old="OnContextVariantUtility" new="direct variant methods"/>
+        <replace old="scribbleEnabled" new="stylusHandwritingEnabled"/>
+      </replacements>
+    </step>
+  </phase>
+
+  <phase id="6" name="ATTRIBUTE_PATTERN_UPDATE" priority="medium">
+    <step order="1">
+      <action>Remove attributeOf and resolvableOf patterns</action>
       <pattern>
-        <old>$box.height(100)..width(100)..color.blue()</old>
-        <new>Style.box(.height(100).width(100).color(Colors.blue))</new>
+        <old>style.of(context).attributeOf&lt;BoxSpecAttribute&gt;()</old>
+        <new>style.of(context) // returns resolved Mix directly</new>
       </pattern>
-      <reference>examples.md:29-36, examples.md:161-169</reference>
-    </task>
+    </step>
 
-    <task id="U2" priority="medium">
-      <title>Update padding/margin utilities</title>
-      <description>Use new EdgeInsets patterns</description>
+    <step order="2">
+      <action>Update decoration patterns</action>
       <pattern>
-        <old>$box.padding(8.0, 16.0)</old>
-        <new>$box.padding.horizontal(16).vertical(8)</new>
+        <old>foregroundDecoration/shapeDecoration methods</old>
+        <new>decoration(BoxDecorationMix(...))</new>
       </pattern>
-    </task>
+    </step>
 
-    <task id="U3" priority="medium">
-      <title>Update color utilities</title>
-      <description>Remove deprecated color methods</description>
-      <pattern>
-        <old>$box.color.blue()</old>
-        <new>$box.color(Colors.blue)</new>
-      </pattern>
-    </task>
-  </phase_2_utility_updates>
+    <step order="3">
+      <action>Update gradient patterns</action>
+      <example>
+        <old>$box.linearGradient(colors: [...], stops: [...])</old>
+        <new>
+          BoxStyler().foregroundLinearGradient(
+            colors: [...],
+            stops: [...],
+          )
+        </new>
+      </example>
+    </step>
+  </phase>
 
-  <phase_3_spec_mix_architecture>
-    <task id="A1" priority="critical">
-      <title>Understand Spec->Mix->Styling pattern</title>
-      <description>Each domain follows: Spec (data) -> Mix (builder) -> Styling (with animations)</description>
-      <reference>mix-architecture-consolidation-plan.md:9-20</reference>
-    </task>
+  <phase id="7" name="ANIMATION_SYSTEM_UPDATE" priority="low">
+    <step order="1">
+      <action>Update animation configurations</action>
+      <patterns>
+        <pattern>
+          <old>animate(duration: Duration(milliseconds: 200))</old>
+          <new>animate(AnimationConfig.easeInOut(200.ms))</new>
+        </pattern>
+        <pattern name="spring">
+          <new>AnimationConfig.springWithDampingRatio(duration, ratio: 0.5)</new>
+        </pattern>
+        <pattern name="curve">
+          <new>CurveAnimationConfig(duration: 200.ms, curve: Curves.easeOut)</new>
+        </pattern>
+      </patterns>
+    </step>
 
-    <task id="A2" priority="high">
-      <title>Update imports for consolidated architecture</title>
-      <description>Update imports to use new file locations</description>
-      <changes>
-        <change>Remove iconography imports, use icon</change>
-        <change>Remove typography imports, use text</change>
-        <change>Update container to box where applicable</change>
-      </changes>
-      <reference>mix-architecture-consolidation-plan.md:85-96</reference>
-    </task>
+    <step order="2">
+      <action>Update keyframe animations</action>
+      <note>Use keyframeAnimation() with KeyframeTrack for complex animations</note>
+    </step>
 
-    <task id="A3" priority="medium">
-      <title>Update Mix class usage</title>
-      <description>Use proper Mix classes instead of Styling for composition</description>
-      <pattern>
-        <old>BoxStyling(...)</old>
-        <new>BoxMix(...).toStyle()</new>
-      </pattern>
-      <reference>mix-architecture-consolidation-plan.md:60-62</reference>
-    </task>
-  </phase_3_spec_mix_architecture>
+    <step order="3">
+      <action>Update phase animations</action>
+      <note>Use phaseAnimation() for state-based multi-phase animations</note>
+    </step>
+  </phase>
 
-  <phase_4_token_system>
-    <task id="T1" priority="high">
-      <title>Update MixScope usage</title>
-      <description>Use new MixScope constructor pattern</description>
-      <pattern>
-        <old>MixScope(data: MixScopeData.static(tokens: {...}))</old>
-        <new>MixScope(colors: {...}, spaces: {...}, textStyles: {...})</new>
-      </pattern>
-      <reference>token-migration-guide.md:559-564</reference>
-    </task>
+  <phase id="8" name="TESTING_AND_VALIDATION" priority="critical">
+    <step order="1">
+      <action>Run analyzer after each phase</action>
+      <command>flutter analyze</command>
+      <expected>Decreasing error count after each phase</expected>
+    </step>
 
-    <task id="T2" priority="medium">
-      <title>Update token declarations</title>
-      <description>Use specific token types</description>
-      <pattern>
-        <old>MixToken&lt;Color&gt;('primary')</old>
-        <new>ColorToken('primary')</new>
-      </pattern>
-      <reference>token-migration-guide.md:44-102</reference>
-    </task>
-
-    <task id="T3" priority="medium">
-      <title>Update token usage in styles</title>
-      <description>Use .token() method or call() for refs</description>
-      <pattern>
-        <old>$box.color(primaryColor)</old>
-        <new>$box.color.token(primaryColor)</new>
-      </pattern>
-      <reference>token-migration-guide.md:249-270</reference>
-    </task>
-
-    <task id="T4" priority="low">
-      <title>Update shadow tokens to list-based</title>
-      <description>BoxShadow and Shadow tokens now use lists</description>
-      <pattern>
-        <old>BoxShadowToken('shadow'): BoxShadow(...)</old>
-        <new>BoxShadowToken('shadow'): [BoxShadow(...)]</new>
-      </pattern>
-      <reference>token-migration-guide.md:615-630</reference>
-    </task>
-  </phase_4_token_system>
-
-  <phase_5_widget_updates>
-    <task id="W1" priority="high">
-      <title>Update Box widget usage</title>
-      <description>Ensure Box widgets use updated Style API</description>
-      <files>
-        <file>lib/src/widgets/common/base_interactive_widget.dart:116-119</file>
-      </files>
-    </task>
-
-    <task id="W2" priority="medium">
-      <title>Update Pressable usage</title>
-      <description>Check for any API changes in Pressable</description>
-      <files>
-        <file>lib/src/widgets/common/base_interactive_widget.dart:104-120</file>
-      </files>
-    </task>
-
-    <task id="W3" priority="low">
-      <title>Update widget state controller usage</title>
-      <description>Ensure MixWidgetStateController usage is compatible</description>
-      <reference>lib/src/widgets/common/base_interactive_widget.dart:32,112</reference>
-    </task>
-  </phase_5_widget_updates>
-
-  <phase_6_example_migration>
-    <task id="E1" priority="high">
-      <title>Migrate accordion example</title>
-      <files>
-        <file>example/lib/src/styled_components/accordion.dart</file>
-      </files>
-      <errors_to_fix>
-        <error>instantiate_abstract_class at line 19</error>
-        <error>undefined_identifier $on at lines 35, 40</error>
-        <error>undefined_method animate at line 43</error>
-        <error>undefined_method foregroundDecoration at line 36</error>
-      </errors_to_fix>
-    </task>
-
-    <task id="E2" priority="high">
-      <title>Migrate all styled_components examples</title>
-      <files>
-        <file>example/lib/src/styled_components/*.dart</file>
-      </files>
-      <note>Apply same patterns as accordion to all components</note>
-    </task>
-
-    <task id="E3" priority="medium">
-      <title>Update example main.dart</title>
-      <files>
-        <file>example/lib/main.dart</file>
-      </files>
-    </task>
-  </phase_6_example_migration>
-
-  <phase_7_testing>
-    <task id="TEST1" priority="critical">
-      <title>Run tests after each phase</title>
+    <step order="2">
+      <action>Run tests</action>
       <commands>
         <command>flutter test</command>
-        <command>flutter analyze</command>
+        <command>cd example && flutter test</command>
       </commands>
-    </task>
+    </step>
 
-    <task id="TEST2" priority="high">
-      <title>Update test files for v2 API</title>
-      <files>
-        <file>test/*.dart</file>
-      </files>
-      <note>Tests will likely need Style constructor updates</note>
-    </task>
+    <step order="3">
+      <action>Test example app</action>
+      <commands>
+        <command>cd example && flutter run</command>
+      </commands>
+      <validate>All components render correctly with Mix v2</validate>
+    </step>
 
-    <task id="TEST3" priority="high">
-      <title>Fix analyzer errors incrementally</title>
-      <description>Monitor analyzer error count reduction</description>
-      <current_errors>1468 lines</current_errors>
-      <target>0 errors</target>
-    </task>
-  </phase_7_testing>
+    <step order="4">
+      <action>Format code</action>
+      <command>dart format .</command>
+    </step>
+  </phase>
 
-  <automation_hints>
-    <hint>Use regex patterns for bulk replacements</hint>
-    <hint>Process files in dependency order (utils -> widgets -> examples)</hint>
-    <hint>Create checkpoint commits after each phase</hint>
-    <hint>Run analyzer frequently to catch issues early</hint>
-    <hint>Reference .llms/mix-context7.md for detailed Mix v2 patterns when needed</hint>
-  </automation_hints>
+  <best_practices>
+    <practice>
+      <name>Use Styler pattern over Style constructor</name>
+      <example>BoxStyler().color(Colors.blue) instead of Style($box.color(Colors.blue))</example>
+    </practice>
+    
+    <practice>
+      <name>Prefer typed token classes</name>
+      <example>ColorToken('primary') instead of MixToken&lt;Color&gt;('primary')</example>
+    </practice>
+    
+    <practice>
+      <name>Use typed MixScope parameters</name>
+      <example>MixScope(colors: {...}, spaces: {...}) instead of tokens: {...}</example>
+    </practice>
+    
+    <practice>
+      <name>Chain style methods fluently</name>
+      <example>BoxStyler().color(Colors.blue).padding(16).borderRounded(8)</example>
+    </practice>
+    
+    <practice>
+      <name>Use AnimationConfig for all animations</name>
+      <example>AnimationConfig.easeInOut(200.ms) instead of raw duration</example>
+    </practice>
+  </best_practices>
 
-  <critical_patterns>
-    <pattern id="CP1">
-      <name>Style Creation</name>
-      <v1>Style($box.chain..., $text.style...)</v1>
-      <v2>Style.create([$box.color(), $text.style()])</v2>
-      <alternative_v2>Style.box(.color(Colors.blue).padding(16))</alternative_v2>
+  <common_patterns>
+    <pattern name="Box styling">
+      <v1>Style($box.color(Colors.blue), $box.padding.all(16))</v1>
+      <v2>BoxStyler().color(Colors.blue).paddingAll(16)</v2>
     </pattern>
-
-    <pattern id="CP2">
-      <name>Context Variants</name>
-      <v1>$on.hover($box.color(Colors.blue))</v1>
-      <v2>$box.color(Colors.blue).onHover()</v2>
-      <note>$on is completely removed in v2</note>
+    
+    <pattern name="Text styling">
+      <v1>Style($text.style(TextStyle(...)))</v1>
+      <v2>TextStyler().style(TextStyle(...))</v2>
     </pattern>
-
-    <pattern id="CP3">
-      <name>Chaining</name>
-      <v1>$box.chain..color()..padding()</v1>
-      <v2>$box.color(), $box.padding()</v2>
-      <note>.chain is deprecated, use separate utilities</note>
+    
+    <pattern name="Flex styling">
+      <v1>Style($flex.gap(8), $flex.mainAxisAlignment.spaceBetween())</v1>
+      <v2>FlexBoxStyler().spacing(8).mainAxisAlignment(MainAxisAlignment.spaceBetween)</v2>
     </pattern>
-
-    <pattern id="CP4">
-      <name>Animation</name>
-      <v1>.animate()</v1>
-      <v2>.animate(.easeInOut(Duration(milliseconds: 300)))</v2>
-      <note>Animation now requires explicit configuration</note>
+    
+    <pattern name="Variants">
+      <v1>$on.hover(Style(...))</v1>
+      <v2>.onHovered(BoxStyler()...)</v2>
     </pattern>
-
-    <pattern id="CP5">
-      <name>Mix Composition</name>
-      <v1>BoxMix().merge(otherMix)</v1>
-      <v2>BoxMix().size(200, 200).merge(elevated)</v2>
-      <reference>api-composition-guidelines.md:61-64</reference>
+    
+    <pattern name="Animations">
+      <v1>.animate(duration: 200.ms)</v1>
+      <v2>.animate(AnimationConfig.easeInOut(200.ms))</v2>
     </pattern>
-  </critical_patterns>
+  </common_patterns>
 
-  <execution_order>
-    <step order="1">Prerequisites (P1-P2)</step>
-    <step order="2">Style API Updates (S1-S5)</step>
-    <step order="3">Run tests, fix immediate breaks</step>
-    <step order="4">Utility Updates (U1-U3)</step>
-    <step order="5">Architecture Updates (A1-A3)</step>
-    <step order="6">Token System (T1-T4)</step>
-    <step order="7">Widget Updates (W1-W3)</step>
-    <step order="8">Example Migration (E1-E3)</step>
-    <step order="9">Final Testing (TEST1-TEST3)</step>
-  </execution_order>
-</migration_plan>
+  <notes>
+    <note priority="high">
+      The $on variant utility is completely removed in v2. Use direct methods like .onHovered(), .onPressed() etc.
+    </note>
+    <note priority="high">
+      The chain getter is removed. Use $box directly instead of $box.chain
+    </note>
+    <note priority="medium">
+      Shadow tokens now use List types (List&lt;BoxShadow&gt; instead of BoxShadow)
+    </note>
+    <note priority="medium">
+      Consider removing historical cruft and simplifying widget implementations during migration
+    </note>
+    <note priority="low">
+      Extension methods on Duration (like 200.ms) are available from Mix
+    </note>
+  </notes>
+</migration_action_plan>

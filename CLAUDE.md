@@ -56,20 +56,6 @@ flutter pub get
 3. **MoonBaseSingleSelectWidget** - Base for single selection components
 4. **MoonBaseMultiSelectWidget** - Base for multi-selection components
 
-### Widget Pattern
-All widgets in this library follow a headless UI pattern:
-- Widgets are unstyled by default
-- They accept a `Style?` parameter for Mix-based styling
-- They focus on behavior and accessibility
-- Visual styling is applied through Mix utilities
-
-### Mix Styling Integration
-This library uses Mix (v1.7.0+) for styling. Key patterns:
-- All widgets accept `Style?` parameter
-- Use `$box`, `$text`, `$icon`, etc. utilities for styling
-- Support context variants like `$on.hover`, `$on.press`, `$on.dark`
-- Widgets use Mix's `MixWidgetStateController` for state management
-
 ## Code Conventions
 
 ### Import Organization
@@ -85,10 +71,6 @@ This library uses Mix (v1.7.0+) for styling. Key patterns:
 - Each widget has corresponding test file in `test/` directory
 - Test files follow pattern: `<widget_name>_test.dart`
 - Use Flutter's testing framework conventions
-
-### State Management
-- Use `MixWidgetStateController` for widget state
-- Support standard Flutter patterns (FocusNode, TextEditingController, etc.)
 
 ## Dependencies
 
@@ -111,5 +93,5 @@ This library uses Mix (v1.7.0+) for styling. Key patterns:
 5. Currently on branch `mix_to_v2` migrating to Mix v2
 
 # ESSENTIAL!!!
-- You can and should make liberal usage of dart MCP!!!
-- This projects foundation is a package called mix which we are using as a dependency. All documentation related to usage of mix, it's patterns, migration paths etc are included in the `.llms` directory. Do note that the file `.llms/mix-context7.md` contains full AI optimised codebase and documentation but is very large (8809 lines) thus use it pragmatically.
+- You can and should make liberal usage of the local Dart MCP!!!
+- This projects foundation is a package called `mix` which we are using as a dependency. All documentation related to usage of `mix`, it's patterns, migration paths etc are included in the `.llms` directory, especially in the file `examples.xml`. Do note that the file `tests.xml` is huge (ca 50000 lines), yet it contains all the tests in the `mix` package and thus can offer insights into more advanced patterns. 
