@@ -15,12 +15,14 @@ class StyledMenuItem extends StatelessWidget {
           ..borderRadius(8)
           ..padding(16.0),
         $flex.gap(16.0),
-        $with.defaultTextStyle.style(
-          color: Colors.black,
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
+        $with.defaultTextStyle(
+          style: TextStyleMix(
+            color: Colors.black,
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
         ),
-        $with.iconTheme.data(
+        $with.iconTheme(
           color: Colors.grey,
           size: 24,
         ),

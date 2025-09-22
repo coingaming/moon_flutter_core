@@ -35,12 +35,12 @@ class _StyledChipState extends State<StyledChip> {
         $flex.chain
           ..gap(8.0)
           ..mainAxisSize.min(),
-        $with.iconTheme.data(size: 16),
+        $with.iconTheme(size: 16),
         ($on.hover | $on.focus | $on.press | $on.longPress)(
           $box.color(Colors.grey.shade300),
         ),
         SelectedState.unselected(
-          $with.iconTheme.data(size: 0),
+          $with.iconTheme(size: 0),
           $box.padding(8.0, 16.0, 8.0, 8.0),
         ),
         SelectedState.selected(

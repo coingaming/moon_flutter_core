@@ -5,7 +5,7 @@
     <note>Analyzer failures are dominated by legacy Mix v1 APIs across example widgets (704 issues) and core library code (251 issues), plus missing lint includes.</note>
   </context>
 
-  <task id="core-architecture" priority="critical" status="todo">
+  <task id="core-architecture" priority="critical" status="in_progress">
     <title>Realign Moon Core Mix abstractions with Mix v2 Spec→Mix→Styling pattern</title>
     <description>Refactor core mix attributes, modifiers, and DTOs to match Mix v2 generics and lifecycle so that legacy DTO types and superclasses compile again.</description>
     <targets>
@@ -26,7 +26,7 @@
     </steps>
   </task>
 
-  <task id="widget-refactor" priority="critical" status="todo">
+  <task id="widget-refactor" priority="critical" status="in_progress">
     <title>Migrate Moon widgets to BoxMix/TextMix/IconMix usage</title>
     <description>Update Moon widget implementations that still depend on `Style`, `$on`, and other Mix v1 helpers to the new fluent Mix builders and token-based styling.</description>
     <targets>
@@ -47,7 +47,7 @@
     </steps>
   </task>
 
-  <task id="border-utils" priority="high" status="todo">
+  <task id="border-utils" priority="high" status="in_progress">
     <title>Update MoonBorder to extended Mix v2 border contracts</title>
     <description>Resolve inheritance and override errors in `MoonBorder` by aligning with the current `MixOutlinedBorder` (or replacement) APIs shipped with Mix v2.</description>
     <targets>
@@ -82,7 +82,7 @@
     </steps>
   </task>
 
-  <task id="example-overhaul" priority="high" status="todo">
+  <task id="example-overhaul" priority="high" status="in_progress">
     <title>Rewrite example styled components for Mix v2 API</title>
     <description>Port all example `Style`/`$on` driven components to the new spec/mix syntax so the example app compiles and serves as migration guidance.</description>
     <targets>

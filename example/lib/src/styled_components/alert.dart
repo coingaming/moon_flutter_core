@@ -28,7 +28,7 @@ class _StyledAlertState extends State<StyledAlert> {
         $flex.chain
           ..crossAxisAlignment.start()
           ..gap(8),
-        $with.defaultTextStyle.style(color: Colors.grey),
+        $with.defaultTextStyle(style: TextStyleMix(color: Colors.grey)),
       );
 
   Style get _rowStyle => Style(

@@ -23,20 +23,22 @@ class _StyledTextInputState extends State<StyledTextInput> {
         ..padding(4, 12)
         ..minHeight(30),
       $flex.gap(8),
-      $with.defaultTextStyle.chain
-        ..style.color(Colors.grey)
-        ..animate.duration(const Duration(milliseconds: 400)),
-      $with.iconTheme.chain
-        ..data.color(Colors.black)
-        ..animate.duration(const Duration(milliseconds: 400)),
+      $with.defaultTextStyle(
+        style: TextStyleMix(color: Colors.grey),
+        duration: const Duration(milliseconds: 400),
+      ),
+      $with.iconTheme(
+        color: Colors.black,
+        duration: const Duration(milliseconds: 400),
+      ),
       $with.animatedShapeDecoration(
         bgColor: Colors.white,
         border: _getBorder(Colors.grey, width: 1),
         duration: const Duration(milliseconds: 400),
       ),
       $on.hover(
-        $with.defaultTextStyle.style.color(Colors.purple),
-        $with.iconTheme.data.color(Colors.purple),
+        $with.defaultTextStyle(style: TextStyleMix(color: Colors.purple)),
+        $with.iconTheme(color: Colors.purple),
         $with.animatedShapeDecoration(
           hoverColor: Colors.black12,
           border: _getBorder(Colors.black, width: 1),

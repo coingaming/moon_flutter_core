@@ -25,8 +25,8 @@ class _StyledFormTextInputState extends State<StyledFormTextInput> {
           ..padding(4, 12),
         $flex.gap(8),
         $text.color(Colors.black),
-        $with.defaultTextStyle.style.color(Colors.grey),
-        $with.iconTheme.data.color(Colors.black),
+        $with.defaultTextStyle(style: TextStyleMix(color: Colors.grey)),
+        $with.iconTheme(color: Colors.black),
         $with.animatedShapeDecoration(
           bgColor: Colors.white,
           border: _getBorder(Colors.grey, width: 1),

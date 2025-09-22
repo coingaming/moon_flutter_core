@@ -18,12 +18,12 @@ class StyledButton extends StatelessWidget {
           ..mainAxisSize.min(),
         $with.scale(1),
         $with.opacity(1),
-        $with.defaultTextStyle.style(color: Colors.black),
-        $with.iconTheme.data(color: Colors.black, size: 16),
+        $with.defaultTextStyle(style: TextStyleMix(color: Colors.black)),
+        $with.iconTheme(color: Colors.black, size: 16),
         ($on.hover | $on.focus)(
           $box.color(Colors.grey.shade300),
-          $with.iconTheme.data(color: Colors.blue, size: 16),
-          $with.defaultTextStyle.style(color: Colors.blue),
+          $with.iconTheme(color: Colors.blue, size: 16),
+          $with.defaultTextStyle(style: TextStyleMix(color: Colors.blue)),
         ),
         ($on.press | $on.longPress)(
           $with.scale(0.95),

@@ -31,7 +31,7 @@ class _StyledAuthCodeState extends State<StyledAuthCode> {
         ($on.selected & $on.error)(
           $box.shapeDecoration.as(_getBorder(Colors.red, width: 2)),
         ),
-        $with.defaultTextStyle.style.fontSize(24),
+        $with.defaultTextStyle(style: TextStyleMix(fontSize: 24)),
       ).animate(duration: const Duration(milliseconds: 200));
 
   ShapeDecorationWithPremultipliedAlpha _getBorder(
