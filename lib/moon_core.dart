@@ -5,7 +5,6 @@ export 'package:moon_core/src/mix/attributes/moon_border_dto.dart';
 export 'package:moon_core/src/mix/context_variants/active_state_variant.dart';
 
 export 'package:moon_core/src/utils/color/color_tween_premul.dart';
-export 'package:moon_core/src/utils/extensions.dart';
 export 'package:moon_core/src/utils/methods.dart';
 export 'package:moon_core/src/utils/moon_border.dart';
 export 'package:moon_core/src/utils/shape_decoration_premul.dart';
