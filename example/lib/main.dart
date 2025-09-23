@@ -38,9 +38,7 @@ import 'package:moon_core/moon_core.dart';
 
 void main() {
   runApp(
-    MixScope.withMaterial(
-      child: const MainApp(),
-    ),
+    MainApp(),
   );
 }
 
