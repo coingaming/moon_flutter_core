@@ -70,8 +70,9 @@ class MoonLinearProgressIndicatorPainter extends CustomPainter {
     void drawBar(double x, double width) {
       if (width <= 0.0) return;
 
-      final double left =
-          textDirection == TextDirection.rtl ? size.width - width - x : x;
+      final double left = textDirection == TextDirection.rtl
+          ? size.width - width - x
+          : x;
 
       final progressRect = RRect.fromRectAndCorners(
         Offset(left, 0.0) & Size(width, size.height),

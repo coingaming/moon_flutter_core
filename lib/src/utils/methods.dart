@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'package:mix/mix.dart';
 
-BoxSpecAttribute decorationToAttribute(Decoration decoration) {
+BoxMix decorationToAttribute(Decoration decoration) {
   if (decoration is BoxDecoration) {
-    return $box.decoration.as(decoration);
+    return BoxMix(decoration: BoxDecorationMix.value(decoration));
   } else if (decoration is ShapeDecoration) {
-    return $box.shapeDecoration.as(decoration);
+    return BoxMix(decoration: ShapeDecorationMix.value(decoration));
   } else {
-    return $box.decoration();
+    return BoxMix(decoration: BoxDecorationMix());
   }
 }

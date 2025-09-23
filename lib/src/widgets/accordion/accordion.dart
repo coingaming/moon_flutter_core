@@ -4,10 +4,8 @@ import 'package:mix/mix.dart';
 
 import 'package:moon_core/moon_core.dart';
 
-typedef MoonRawAccordionTrailingWidgetBuilder = Widget Function(
-  BuildContext context,
-  Animation<double> animationView,
-);
+typedef MoonRawAccordionTrailingWidgetBuilder =
+    Widget Function(BuildContext context, Animation<double> animationView);
 
 class MoonRawAccordion<T> extends StatefulWidget {
   /// Whether to propagate gestures to the [children] of the accordion.
@@ -62,13 +60,13 @@ class MoonRawAccordion<T> extends StatefulWidget {
   final String? semanticLabel;
 
   /// The style of the accordion [header] container.
-  final Style? headerStyle;
+  final FlexBoxStyler? headerStyle;
 
   /// The style of the accordion container that contains [children].
-  final Style? contentStyle;
+  final BoxStyler? contentStyle;
 
   /// The style of the accordion outer container.
-  final Style? outerContainerStyle;
+  final BoxStyler? outerContainerStyle;
 
   /// The identity value represented by this accordion.
   final T? identityValue;
@@ -141,8 +139,10 @@ class MoonRawAccordion<T> extends StatefulWidget {
 
 class _MoonRawAccordionState<T> extends State<MoonRawAccordion<T>>
     with TickerProviderStateMixin {
-  static final Animatable<double> _halfTween =
-      Tween<double>(begin: 0.0, end: 0.5);
+  static final Animatable<double> _halfTween = Tween<double>(
+    begin: 0.0,
+    end: 0.5,
+  );
 
   late AnimationController _expansionAnimationController;
   late CurvedAnimation _expansionCurvedAnimation;
@@ -183,7 +183,8 @@ class _MoonRawAccordionState<T> extends State<MoonRawAccordion<T>>
   void initState() {
     super.initState();
 
-    _expansionAnimationController = widget.animationController ??
+    _expansionAnimationController =
+        widget.animationController ??
         AnimationController(duration: widget.transitionDuration, vsync: this);
 
     _expansionCurvedAnimation = CurvedAnimation(
@@ -191,7 +192,8 @@ class _MoonRawAccordionState<T> extends State<MoonRawAccordion<T>>
       curve: widget.transitionCurve,
     );
 
-    _isExpanded = PageStorage.maybeOf(context)?.readState(context) as bool? ??
+    _isExpanded =
+        PageStorage.maybeOf(context)?.readState(context) as bool? ??
         (widget.initiallyExpanded || widget._selected) && widget.enabled;
 
     _expansionAnimationController.addListener(_animationListener);
@@ -238,24 +240,63 @@ class _MoonRawAccordionState<T> extends State<MoonRawAccordion<T>>
   Widget _buildIcon(BuildContext context) {
     return RotationTransition(
       turns: _halfTween.animate(_expansionCurvedAnimation),
-      child: const Icon(
-        Icons.keyboard_arrow_down,
-        size: 24,
-      ),
+      child: const Icon(Icons.keyboard_arrow_down, size: 24),
     );
   }
 
-  Widget _buildDecorationContainer({required Widget child}) {
+  Widget _buildHeaderRow(BuildContext context) {
+    final trailing =
+        widget.trailingWidget?.call(
+          context,
+          _expansionAnimationController.view,
+        ) ??
+        _buildIcon(context);
+
+    final children = <Widget>[widget.header, trailing];
+
+    if (widget.headerStyle != null) {
+      return RowBox(
+        style: widget.headerStyle!,
+        children: children,
+      );
+    }
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: children,
+    );
+  }
+
+  Widget _buildInteractiveContainer({required Widget child}) {
+    final WidgetStatesController controller = WidgetStatesController()
+      ..update(WidgetState.disabled, !widget.enabled)
+      ..update(WidgetState.selected, _isExpanded);
+
+    final BoxStyler baseStyle = widget.outerContainerStyle ??
+        const BoxStyler.create();
+
     return MoonBaseInteractiveWidget(
       autofocus: widget.autofocus,
       focusNode: _effectiveFocusNode,
+      enableFeedback: widget.enableFeedback,
+      hitTestBehavior: widget.propagateGesturesToChild
+          ? HitTestBehavior.translucent
+          : HitTestBehavior.opaque,
+      stateController: controller,
       enabled: widget.enabled,
+      semanticLabel: widget.semanticLabel,
       onTap: widget.enabled ? _handleTap : null,
-      style: Style(
-        $box.chain
-          ..decoration()
-          ..clipBehavior(Clip.hardEdge),
-      ).merge(widget.outerContainerStyle),
+      style: baseStyle,
+      child: child,
+    );
+  }
+
+  Widget _wrapContent(Widget child) {
+    if (widget.contentStyle == null) return child;
+
+    return Box(
+      style: widget.contentStyle!,
       child: child,
     );
   }
@@ -269,41 +310,30 @@ class _MoonRawAccordionState<T> extends State<MoonRawAccordion<T>>
       ),
     );
 
-    final Widget header = HBox(
-      style: widget.headerStyle,
-      children: [
-        widget.header,
-        widget.trailingWidget
-                ?.call(context, _expansionAnimationController.view) ??
-            _buildIcon(context),
-      ],
-    );
+    final Widget header = _buildHeaderRow(context);
 
     return switch (widget.hasContentOutside) {
       true => Semantics(
-          label: widget.semanticLabel,
-          enabled: _isExpanded,
+        label: widget.semanticLabel,
+        enabled: _isExpanded,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            _buildInteractiveContainer(child: header),
+            _wrapContent(childWrapper),
+          ],
+        ),
+      ),
+      false => Semantics(
+        label: widget.semanticLabel,
+        enabled: _isExpanded,
+        child: _buildInteractiveContainer(
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              _buildDecorationContainer(child: header),
-              childWrapper,
-            ],
+            children: <Widget>[header, _wrapContent(childWrapper)],
           ),
         ),
-      false => Semantics(
-          label: widget.semanticLabel,
-          enabled: _isExpanded,
-          child: _buildDecorationContainer(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                header,
-                childWrapper,
-              ],
-            ),
-          ),
-        ),
+      ),
     };
   }
 
@@ -323,12 +353,13 @@ class _MoonRawAccordionState<T> extends State<MoonRawAccordion<T>>
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       if (widget.showDivider && !widget.hasContentOutside)
-                        widget.divider ??
-                            Container(height: 1, color: Colors.grey.shade300),
-                      VBox(
-                        style: Style($box.alignment.topCenter())
-                            .merge(widget.contentStyle),
-                        children: widget.children,
+                        widget.divider ?? const SizedBox(height: 1),
+                      _wrapContent(
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: widget.children,
+                        ),
                       ),
                     ],
                   ),

@@ -4,18 +4,12 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'package:mix/mix.dart';
-
 import 'package:moon_core/src/mix/attributes/moon_border_dto.dart';
 import 'package:moon_core/src/utils/color/color_premul_lerp.dart';
 
-enum BorderAlign {
-  inside,
-  center,
-  outside,
-}
+enum BorderAlign { inside, center, outside }
 
-class MoonBorder extends MixOutlinedBorder {
+class MoonBorder extends OutlinedBorder {
   /// The radius for each corner.
   ///
   /// Negative radius values are clamped to 0.0 by [getInnerPath] and [getOuterPath].
@@ -23,10 +17,10 @@ class MoonBorder extends MixOutlinedBorder {
   final BorderAlign borderAlign;
 
   const MoonBorder({
-    super.side = MoonBorderSide.none,
+    BorderSide side = MoonBorderSide.none,
     this.borderRadius = BorderRadius.zero,
     this.borderAlign = BorderAlign.inside,
-  });
+  }) : super(side: side);
 
   @override
   EdgeInsetsGeometry get dimensions {
@@ -43,10 +37,7 @@ class MoonBorder extends MixOutlinedBorder {
 
   @override
   ShapeBorder scale(double t) {
-    return MoonBorder(
-      side: side.scale(t),
-      borderRadius: borderRadius * t,
-    );
+    return MoonBorder(side: side.scale(t), borderRadius: borderRadius * t);
   }
 
   @override
@@ -54,8 +45,11 @@ class MoonBorder extends MixOutlinedBorder {
     if (a is MoonBorder) {
       return MoonBorder(
         side: MoonBorderSide.lerp(a.side, side, t),
-        borderRadius:
-            BorderRadiusGeometry.lerp(a.borderRadius, borderRadius, t)!,
+        borderRadius: BorderRadiusGeometry.lerp(
+          a.borderRadius,
+          borderRadius,
+          t,
+        )!,
       );
     }
     return super.lerpFrom(a, t);
@@ -66,8 +60,11 @@ class MoonBorder extends MixOutlinedBorder {
     if (b is MoonBorder) {
       return MoonBorder(
         side: MoonBorderSide.lerp(side, b.side, t),
-        borderRadius:
-            BorderRadiusGeometry.lerp(borderRadius, b.borderRadius, t)!,
+        borderRadius: BorderRadiusGeometry.lerp(
+          borderRadius,
+          b.borderRadius,
+          t,
+        )!,
       );
     }
     return super.lerpTo(b, t);
@@ -90,15 +87,11 @@ class MoonBorder extends MixOutlinedBorder {
       switch (borderAlign) {
         case BorderAlign.inside:
           return borderRadius.subtract(
-            BorderRadius.all(
-              Radius.circular(side.width),
-            ),
+            BorderRadius.all(Radius.circular(side.width)),
           );
         case BorderAlign.center:
           return borderRadius.subtract(
-            BorderRadius.all(
-              Radius.circular(side.width / 2),
-            ),
+            BorderRadius.all(Radius.circular(side.width / 2)),
           );
         case BorderAlign.outside:
           return borderRadius;
@@ -159,17 +152,13 @@ class MoonBorder extends MixOutlinedBorder {
           switch (borderAlign) {
             case BorderAlign.inside:
               return borderRadius.subtract(
-                BorderRadius.all(
-                  Radius.circular(side.width / 2),
-                ),
+                BorderRadius.all(Radius.circular(side.width / 2)),
               );
             case BorderAlign.center:
               return borderRadius;
             case BorderAlign.outside:
               return borderRadius.add(
-                BorderRadius.all(
-                  Radius.circular(side.width / 2),
-                ),
+                BorderRadius.all(Radius.circular(side.width / 2)),
               );
           }
         }();
@@ -180,10 +169,7 @@ class MoonBorder extends MixOutlinedBorder {
           textDirection: textDirection,
         );
 
-        canvas.drawPath(
-          outerPath,
-          side.toPaint(),
-        );
+        canvas.drawPath(outerPath, side.toPaint());
     }
   }
 
@@ -204,14 +190,7 @@ class MoonBorder extends MixOutlinedBorder {
     return '${objectRuntimeType(this, 'MoonSquircleBorder')}($side, $borderRadius, $borderAlign)';
   }
 
-  @override
-  MoonBorderDto toDto() {
-    return MoonBorderDto(
-      side: side.toDto(),
-      borderRadius: borderRadius.toDto(),
-      borderAlign: borderAlign,
-    );
-  }
+  MoonBorderMix toMix() => MoonBorderMix.value(this);
 }
 
 class MoonBorderSide with Diagnosticable {

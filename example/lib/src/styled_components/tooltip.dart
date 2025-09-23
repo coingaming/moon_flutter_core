@@ -35,16 +35,13 @@ class _StyledTooltipState extends State<StyledTooltip> {
                 show: index == 0
                     ? _showHoveredTooltip
                     : index == 1
-                        ? _showTappedTooltip
-                        : _showTappedTooltip2,
+                    ? _showTappedTooltip
+                    : _showTappedTooltip2,
                 backgroundColor: Colors.white,
                 tooltipMargin: 8,
                 borderRadius: BorderRadius.circular(8),
                 tooltipShadows: const [
-                  BoxShadow(
-                    color: Color(0x8E000000),
-                    blurRadius: 1,
-                  ),
+                  BoxShadow(color: Color(0x8E000000), blurRadius: 1),
                   BoxShadow(
                     color: Color(0xA3000000),
                     blurRadius: 6,
@@ -89,7 +86,7 @@ class _StyledTooltipState extends State<StyledTooltip> {
                                 ? _showTappedTooltip = false
                                 : _showTappedTooltip2 = false,
                           ),
-                          child: const StyledIcon(Icons.close),
+                          child: const StyledIcon(icon: Icons.close),
                         ),
                     ],
                   ),

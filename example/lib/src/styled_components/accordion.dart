@@ -16,44 +16,59 @@ class StyledAccordion extends StatefulWidget {
 class _StyledAccordionState extends State<StyledAccordion> {
   AccordionItems? _currentlyOpenAccordionItem = AccordionItems.first;
 
-  Style get _accordionStyle => Style(
-        $box.chain
-          ..color(Colors.purple.shade50)
-          ..borderRadius(8)
-          ..foregroundDecoration(
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: Colors.purple),
-          )
-          ..shadows([
-            BoxShadow(
-              color: Colors.black.withOpacity(0.3),
-              blurRadius: 4,
-              spreadRadius: 1,
-              offset: const Offset(0, 1),
-            ),
-          ]),
-        $on.focus(
-          $box.foregroundDecoration(
-            border: Border.all(color: Colors.purple, width: 2),
+  BoxStyler get _outerContainerStyle => BoxStyler()
+      .padding(
+        EdgeInsetsGeometryMix.symmetric(horizontal: 16, vertical: 12),
+      )
+      .borderRadius(
+        BorderRadiusGeometryMix.value(BorderRadius.circular(12)),
+      )
+      .border(
+        BorderMix.all(
+          BorderSideMix.value(
+            BorderSide(color: Colors.purple.shade400, width: 1.5),
           ),
         ),
-        $on.hover(
-          $box.color(Colors.purple.shade100),
+      )
+      .color(Colors.purple.shade50)
+      .shadows([
+        BoxShadowMix.value(
+          BoxShadow(
+            color: Colors.purple.withValues(alpha: 0.15),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
         ),
-      ).animate();
-
-  Style get _headerStyle => Style(
-        $box.chain
-          ..padding(8, 16)
-          ..borderRadius(8),
-        $flex.mainAxisAlignment.spaceBetween(),
+      ])
+      .onHovered(BoxStyler().color(Colors.purple.shade100))
+      .onFocused(
+        BoxStyler().border(
+          BorderMix.all(
+            BorderSideMix.value(
+              const BorderSide(color: Colors.purple, width: 2),
+            ),
+          ),
+        ),
+      )
+          .animate(
+        AnimationConfig.ease(const Duration(milliseconds: 200)),
       );
 
-  Style get _contentStyle => Style(
-        $box.chain
-          ..height(80)
-          ..borderRadius(8),
-        $flex.mainAxisAlignment.center(),
+  FlexBoxStyler get _headerStyle => FlexBoxStyler()
+      .mainAxisAlignment(MainAxisAlignment.spaceBetween)
+      .crossAxisAlignment(CrossAxisAlignment.center)
+      .spacing(12);
+
+  BoxStyler get _contentStyle => BoxStyler()
+      .padding(EdgeInsetsGeometryMix.all(16))
+      .borderRadius(
+        BorderRadiusGeometryMix.value(BorderRadius.circular(8)),
+      )
+      .color(Colors.white)
+      .wrapDefaultTextStyle(
+        TextStyleMix(
+          color: Colors.purple.shade800,
+        ),
       );
 
   @override
@@ -63,8 +78,8 @@ class _StyledAccordionState extends State<StyledAccordion> {
         MoonRawAccordion<AccordionItems>(
           identityValue: AccordionItems.first,
           groupIdentityValue: _currentlyOpenAccordionItem,
-          transitionDuration: const Duration(milliseconds: 1000),
-          outerContainerStyle: _accordionStyle,
+          transitionDuration: const Duration(milliseconds: 280),
+          outerContainerStyle: _outerContainerStyle,
           contentStyle: _contentStyle,
           headerStyle: _headerStyle,
           onExpansionChanged: (AccordionItems? value) =>
@@ -85,25 +100,22 @@ class _StyledAccordionState extends State<StyledAccordion> {
             thickness: 1,
             height: 1,
           ),
-          children: const [
-            Text("This is the content of the accordion."),
-          ],
+          children: const [Text("This is the content of the accordion.")],
         ),
         const SizedBox(height: 32),
         MoonRawAccordion<AccordionItems>(
           hasContentOutside: true,
           identityValue: AccordionItems.second,
           groupIdentityValue: _currentlyOpenAccordionItem,
-          outerContainerStyle: _accordionStyle,
+          outerContainerStyle: _outerContainerStyle,
+          contentStyle: _contentStyle,
           headerStyle: _headerStyle,
           onExpansionChanged: (AccordionItems? value) =>
               setState(() => _currentlyOpenAccordionItem = value),
           header: const Text("Ungrouped MoonRawAccordion"),
           trailingWidget: (BuildContext context, Animation<double> animation) =>
               Text(animation.value > 0.5 ? "Close" : "Open"),
-          children: const [
-            Text("This is the content of the accordion."),
-          ],
+          children: const [Text("This is the content of the accordion.")],
         ),
       ],
     );

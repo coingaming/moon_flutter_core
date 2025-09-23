@@ -7,8 +7,6 @@ class StyledLinearLoader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MoonRawLinearLoader(
-      color: Colors.purple,
-    );
+    return const MoonRawLinearLoader(color: Colors.purple);
   }
 }

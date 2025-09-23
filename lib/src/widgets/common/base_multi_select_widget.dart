@@ -44,7 +44,7 @@ class MoonBaseMultiSelectWidget extends StatelessWidget {
   final String? semanticLabel;
 
   /// The style of the widget.
-  final Style? style;
+  final BoxStyler? style;
 
   /// Called when the focus state of the [Focus] changes.
   ///
@@ -82,9 +82,9 @@ class MoonBaseMultiSelectWidget extends StatelessWidget {
     required this.onChanged,
     required this.child,
   }) : assert(
-          tristate || value != null,
-          "A non-tristate widget must have a non-null value.",
-        );
+         tristate || value != null,
+         "A non-tristate widget must have a non-null value.",
+       );
 
   void _handleTap() {
     switch (value) {
@@ -99,17 +99,22 @@ class MoonBaseMultiSelectWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final WidgetStatesController controller = WidgetStatesController()
+      ..update(WidgetState.disabled, onChanged == null)
+      ..update(WidgetState.selected, value == true);
+
     return Semantics(
       label: semanticLabel,
-      selected: value,
+      checked: value == true,
       mixed: tristate ? value == null : null,
       child: MoonBaseInteractiveWidget(
         autofocus: autofocus,
         focusNode: focusNode,
         enableFeedback: enableFeedback,
+        stateController: controller,
         style: style,
         onFocusChange: onFocusChange,
-        onTap: onChanged == null ? null : () => _handleTap(),
+        onTap: onChanged == null ? null : _handleTap,
         child: child,
       ),
     );

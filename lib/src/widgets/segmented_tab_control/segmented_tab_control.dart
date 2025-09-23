@@ -23,7 +23,7 @@ class MoonRawSegmentedTabControl extends StatefulWidget {
   final int initialIndex;
 
   /// Style of the segmented tab control container.
-  final Style? style;
+  final FlexBoxStyler? style;
 
   /// The external controller for managing segmented tab selection and animation
   /// in segmented tab control. If [tabController] is provided, then [initialIndex]
@@ -106,34 +106,39 @@ class _MoonRawSegmentedTabControlState extends State<MoonRawSegmentedTabControl>
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> children = List.generate(
-      widget.tabs.length,
-      (int index) {
-        final child = MoonBaseInteractiveWidget(
-          enabled: widget.enabled && widget.tabs[index].enabled,
-          enableFeedback: widget.tabs[index].enableFeedback,
-          autofocus: widget.tabs[index].autoFocus,
-          focusNode: widget.tabs[index].focusNode,
-          semanticLabel: widget.tabs[index].semanticLabel,
-          style: widget.tabs[index].tabStyle,
-          onTap: () => _updateTabs(index),
-          child: widget.tabs[index].child,
-        );
+    final List<Widget> children = List.generate(widget.tabs.length, (
+      int index,
+    ) {
+      final bool isEnabled = widget.enabled && widget.tabs[index].enabled;
+      final WidgetStatesController controller = WidgetStatesController()
+        ..update(WidgetState.disabled, !isEnabled)
+        ..update(WidgetState.selected, index == _selectedIndex);
 
-        return widget.isExpanded ? Expanded(child: child) : child;
-      },
+      final child = MoonBaseInteractiveWidget(
+        enabled: isEnabled,
+        enableFeedback: widget.tabs[index].enableFeedback,
+        autofocus: widget.tabs[index].autoFocus,
+        focusNode: widget.tabs[index].focusNode,
+        semanticLabel: widget.tabs[index].semanticLabel,
+        stateController: controller,
+        style: widget.tabs[index].tabStyle,
+        onTap: () => _updateTabs(index),
+        child: widget.tabs[index].child,
+      );
+
+      return widget.isExpanded ? Expanded(child: child) : child;
+    });
+
+    if (widget.axisDirection == Axis.horizontal) {
+      return RowBox(
+        style: widget.style ?? const FlexBoxStyler.create(),
+        children: children,
+      );
+    }
+
+    return ColumnBox(
+      style: widget.style ?? const FlexBoxStyler.create(),
+      children: children,
     );
-
-    return widget.axisDirection == Axis.horizontal
-        ? HBox(
-            style: widget.style,
-            children: children,
-          )
-        : VBox(
-            style: Style(
-              $box.height(MediaQuery.of(context).size.height),
-            ).merge(widget.style),
-            children: children,
-          );
   }
 }

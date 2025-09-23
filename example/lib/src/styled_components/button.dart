@@ -7,36 +7,45 @@ import 'package:moon_core/moon_core.dart';
 class StyledButton extends StatelessWidget {
   const StyledButton({super.key});
 
-  Style get _buttonStyle => Style(
-        $box.chain
-          ..color(Colors.white)
-          ..borderRadius(8)
-          ..border(color: Colors.black38)
-          ..padding(8.0),
-        $flex.chain
-          ..gap(8.0)
-          ..mainAxisSize.min(),
-        $with.scale(1),
-        $with.opacity(1),
-        $with.defaultTextStyle.style(color: Colors.black),
-        $with.iconTheme.data(color: Colors.black, size: 16),
-        ($on.hover | $on.focus)(
-          $box.color(Colors.grey.shade300),
-          $with.iconTheme.data(color: Colors.blue, size: 16),
-          $with.defaultTextStyle.style(color: Colors.blue),
-        ),
-        ($on.press | $on.longPress)(
-          $with.scale(0.95),
-        ),
-      ).animate(duration: const Duration(milliseconds: 200));
+  BoxStyler get _buttonStyle {
+    final BoxStyler hoverFocusStyle = BoxStyler()
+        .color(Colors.grey.shade300)
+        .wrapDefaultTextStyle(TextStyleMix(color: Colors.blue))
+        .wrapIconTheme(
+          const IconThemeData(color: Colors.blue, size: 16),
+        );
+
+    final BoxStyler pressedStyle =
+        BoxStyler().wrapScale(x: 0.95, y: 0.95);
+
+    return BoxStyler()
+        .color(Colors.white)
+        .borderRadius(BorderRadiusGeometryMix.circular(8))
+        .border(
+          BorderMix.all(
+            BorderSideMix.value(const BorderSide(color: Colors.black38)),
+          ),
+        )
+        .padding(EdgeInsetsGeometryMix.all(8))
+        .wrapDefaultTextStyle(TextStyleMix(color: Colors.black))
+        .wrapIconTheme(const IconThemeData(color: Colors.black, size: 16))
+        .onHovered(hoverFocusStyle)
+        .onFocused(hoverFocusStyle)
+        .onPressed(pressedStyle)
+        .animate(
+          AnimationConfig.ease(const Duration(milliseconds: 200)),
+        );
+  }
 
   @override
   Widget build(BuildContext context) {
     return MoonBaseInteractiveWidget(
       onTap: () {},
       style: _buttonStyle,
-      child: StyledRow(
-        inherit: true,
+      child: RowBox(
+        style: FlexBoxStyler()
+            .spacing(8)
+            .mainAxisSize(MainAxisSize.min),
         children: [
           const Icon(Icons.widgets_outlined),
           const SizedBox(
@@ -58,10 +67,7 @@ class StyledButton extends StatelessWidget {
                 alignment: Alignment.topCenter,
                 children: [
                   Icon(Icons.person, size: 24),
-                  Positioned(
-                    bottom: 0,
-                    child: Text("JD"),
-                  ),
+                  Positioned(bottom: 0, child: Text("JD")),
                 ],
               ),
             ),

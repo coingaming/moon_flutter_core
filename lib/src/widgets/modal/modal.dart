@@ -24,7 +24,8 @@ Future<T?> showMoonRawModal<T>({
     to: Navigator.of(context, rootNavigator: useRootNavigator).context,
   );
 
-  final String effectiveBarrierLabel = barrierLabel ??
+  final String effectiveBarrierLabel =
+      barrierLabel ??
       MaterialLocalizations.of(context).modalBarrierDismissLabel;
 
   return Navigator.of(context, rootNavigator: useRootNavigator).push<T>(
@@ -77,24 +78,25 @@ class _MoonRawModalRoute<T> extends RawDialogRoute<T> {
     CapturedThemes? themes,
     RouteTransitionsBuilder? customTransitionBuilder,
   }) : super(
-          pageBuilder: (_, __, ___) {
-            Widget modal = Builder(builder: builder);
-            if (themes != null) modal = themes.wrap(modal);
-            if (useSafeArea) modal = SafeArea(child: modal);
+         pageBuilder: (_, __, ___) {
+           Widget modal = Builder(builder: builder);
+           if (themes != null) modal = themes.wrap(modal);
+           if (useSafeArea) modal = SafeArea(child: modal);
 
-            return modal;
-          },
-          transitionBuilder: customTransitionBuilder ??
-              (_, Animation<double> animation, __, Widget child) {
-                return RepaintBoundary(
-                  child: FadeTransition(
-                    opacity: CurvedAnimation(
-                      parent: animation,
-                      curve: transitionCurve,
-                    ),
-                    child: child,
-                  ),
-                );
-              },
-        );
+           return modal;
+         },
+         transitionBuilder:
+             customTransitionBuilder ??
+             (_, Animation<double> animation, __, Widget child) {
+               return RepaintBoundary(
+                 child: FadeTransition(
+                   opacity: CurvedAnimation(
+                     parent: animation,
+                     curve: transitionCurve,
+                   ),
+                   child: child,
+                 ),
+               );
+             },
+       );
 }

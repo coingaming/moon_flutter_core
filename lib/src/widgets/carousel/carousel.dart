@@ -80,7 +80,7 @@ class MoonRawCarousel extends StatefulWidget {
   /// The 'realIndex' supports 'jumpToItem' for direct item access.
 
   final Widget Function(BuildContext context, int itemIndex, int realIndex)
-      itemBuilder;
+  itemBuilder;
 
   /// Creates a Moon Design raw carousel.
   const MoonRawCarousel({
@@ -103,9 +103,9 @@ class MoonRawCarousel extends StatefulWidget {
     this.scrollBehavior,
     this.onIndexChanged,
     required this.itemBuilder,
-  })  : assert(itemExtent > 0),
-        assert(itemCount > 0),
-        assert(velocityFactor > 0.0 && velocityFactor <= 1.0);
+  }) : assert(itemExtent > 0),
+       assert(itemCount > 0),
+       assert(velocityFactor > 0.0 && velocityFactor <= 1.0);
 
   @override
   State<MoonRawCarousel> createState() => _MoonRawCarouselState();
@@ -125,8 +125,9 @@ class _MoonRawCarouselState extends State<MoonRawCarousel> {
   double _getCenteredAnchor(BoxConstraints constraints) {
     if (!widget.isCentered) return widget.anchor;
 
-    final maxExtent =
-        _isHorizontal ? constraints.maxWidth : constraints.maxHeight;
+    final maxExtent = _isHorizontal
+        ? constraints.maxWidth
+        : constraints.maxHeight;
 
     return ((maxExtent / 2) - (widget.itemExtent / 2)) / maxExtent;
   }
@@ -163,7 +164,8 @@ class _MoonRawCarouselState extends State<MoonRawCarousel> {
   void initState() {
     super.initState();
 
-    _scrollController = (widget.controller as MoonCarouselScrollController?) ??
+    _scrollController =
+        (widget.controller as MoonCarouselScrollController?) ??
         MoonCarouselScrollController();
 
     _lastReportedItemIndex = _scrollController.initialItem;
@@ -198,21 +200,18 @@ class _MoonRawCarouselState extends State<MoonRawCarousel> {
         : EdgeInsetsDirectional.only(bottom: _effectiveGap);
 
     SliverChildDelegate buildDelegate(bool forward) =>
-        SliverChildBuilderDelegate(
-          (BuildContext context, int index) {
-            return Padding(
-              padding: resolvedPadding,
-              child: widget.itemBuilder(
-                context,
-                forward
-                    ? index.abs() % widget.itemCount
-                    : widget.itemCount - (index.abs() % widget.itemCount) - 1,
-                forward ? index : -(index + 1),
-              ),
-            );
-          },
-          childCount: widget.loop ? null : widget.itemCount,
-        );
+        SliverChildBuilderDelegate((BuildContext context, int index) {
+          return Padding(
+            padding: resolvedPadding,
+            child: widget.itemBuilder(
+              context,
+              forward
+                  ? index.abs() % widget.itemCount
+                  : widget.itemCount - (index.abs() % widget.itemCount) - 1,
+              forward ? index : -(index + 1),
+            ),
+          );
+        }, childCount: widget.loop ? null : widget.itemCount);
 
     return List.generate(
       widget.loop ? 2 : 1,
@@ -228,7 +227,8 @@ class _MoonRawCarouselState extends State<MoonRawCarousel> {
   Widget build(BuildContext context) {
     final AxisDirection axisDirection = _getDirection(context);
 
-    final ScrollBehavior effectiveScrollBehavior = widget.scrollBehavior ??
+    final ScrollBehavior effectiveScrollBehavior =
+        widget.scrollBehavior ??
         ScrollConfiguration.of(context).copyWith(
           scrollbars: false,
           overscroll: false,
@@ -243,8 +243,10 @@ class _MoonRawCarouselState extends State<MoonRawCarousel> {
         if (currentItem != _lastReportedItemIndex) {
           _lastReportedItemIndex = currentItem;
 
-          final int trueIndex =
-              _getTrueIndex(_lastReportedItemIndex, widget.itemCount);
+          final int trueIndex = _getTrueIndex(
+            _lastReportedItemIndex,
+            widget.itemCount,
+          );
 
           widget.onIndexChanged?.call(trueIndex);
         }
@@ -370,9 +372,9 @@ class MoonCarouselScrollController extends ScrollController {
   /// Returns the index of the currently selected item.
   /// If [MoonRawCarousel.loop] is true it provides the modded index value.
   int get selectedItem => _getTrueIndex(
-        (position as _MoonCarouselScrollPosition).itemIndex,
-        (position as _MoonCarouselScrollPosition).itemCount,
-      );
+    (position as _MoonCarouselScrollPosition).itemIndex,
+    (position as _MoonCarouselScrollPosition).itemCount,
+  );
 
   Future<void> _animateTo(
     double Function(_MoonCarouselScrollPosition position) targetOffset,
@@ -456,7 +458,8 @@ class MoonCarouselExtentMetrics extends FixedScrollMetrics {
       axisDirection: axisDirection ?? this.axisDirection,
       pixels: pixels ?? this.pixels,
       devicePixelRatio: devicePixelRatio ?? this.devicePixelRatio,
-      minScrollExtent: minScrollExtent ??
+      minScrollExtent:
+          minScrollExtent ??
           (hasContentDimensions ? this.minScrollExtent : 0.0),
       maxScrollExtent: maxScrollExtent ?? this.maxScrollExtent,
       viewportDimension: viewportDimension ?? this.viewportDimension,
@@ -471,8 +474,11 @@ int _getItemFromOffset({
   required double maxScrollExtent,
   required double offset,
 }) {
-  final offsetInScrollableRange =
-      _clipOffsetToScrollableRange(offset, minScrollExtent, maxScrollExtent);
+  final offsetInScrollableRange = _clipOffsetToScrollableRange(
+    offset,
+    minScrollExtent,
+    maxScrollExtent,
+  );
 
   return (offsetInScrollableRange / itemExtent).round();
 }
@@ -499,10 +505,10 @@ class _MoonCarouselScrollPosition extends ScrollPositionWithSingleContext
     required super.context,
     required int initialItem,
     super.oldPosition,
-  })  : assert(context is _MoonCarouselScrollableState),
-        super(
-          initialPixels: _getItemExtentFromScrollContext(context) * initialItem,
-        );
+  }) : assert(context is _MoonCarouselScrollableState),
+       super(
+         initialPixels: _getItemExtentFromScrollContext(context) * initialItem,
+       );
 
   double get anchor => _getAnchorFromScrollContext(context);
 
@@ -580,7 +586,8 @@ class _MoonCarouselScrollPosition extends ScrollPositionWithSingleContext
     return MoonCarouselExtentMetrics(
       axisDirection: axisDirection ?? this.axisDirection,
       devicePixelRatio: devicePixelRatio ?? this.devicePixelRatio,
-      minScrollExtent: minScrollExtent ??
+      minScrollExtent:
+          minScrollExtent ??
           (hasContentDimensions ? this.minScrollExtent : 0.0),
       maxScrollExtent: maxScrollExtent ?? this.maxScrollExtent,
       pixels: pixels ?? this.pixels,

@@ -24,9 +24,7 @@ void main() {
 
     testWidgets("Initial expansion state is respected", (tester) async {
       await tester.pumpWidget(
-        const _SingleAccordionTestWidget(
-          initiallyExpanded: true,
-        ),
+        const _SingleAccordionTestWidget(initiallyExpanded: true),
       );
 
       expect(accordion, findsOneWidget);
@@ -34,9 +32,7 @@ void main() {
     });
 
     testWidgets("Accordion expands when tapped", (tester) async {
-      await tester.pumpWidget(
-        const _SingleAccordionTestWidget(),
-      );
+      await tester.pumpWidget(const _SingleAccordionTestWidget());
 
       expect(accordion, findsOneWidget);
       expect(header, findsOneWidget);
@@ -48,13 +44,10 @@ void main() {
       expect(child, findsOneWidget);
     });
 
-    testWidgets("Disabled accordion does not expand/collapse when tapped",
-        (tester) async {
-      await tester.pumpWidget(
-        const _SingleAccordionTestWidget(
-          enabled: false,
-        ),
-      );
+    testWidgets("Disabled accordion does not expand/collapse when tapped", (
+      tester,
+    ) async {
+      await tester.pumpWidget(const _SingleAccordionTestWidget(enabled: false));
 
       expect(accordion, findsOneWidget);
       expect(child, findsNothing);
@@ -66,9 +59,7 @@ void main() {
     });
 
     testWidgets("Accordion toggles on header tap", (tester) async {
-      await tester.pumpWidget(
-        const _SingleAccordionTestWidget(),
-      );
+      await tester.pumpWidget(const _SingleAccordionTestWidget());
 
       expect(accordion, findsOneWidget);
       expect(child, findsNothing);
@@ -84,8 +75,9 @@ void main() {
       expect(child, findsNothing);
     });
 
-    testWidgets("Provided trailing widget is used and animation works",
-        (tester) async {
+    testWidgets("Provided trailing widget is used and animation works", (
+      tester,
+    ) async {
       const String open = "Open";
       const String close = "Close";
 
@@ -117,9 +109,7 @@ void main() {
     });
 
     testWidgets("Animation interruption is handled", (tester) async {
-      await tester.pumpWidget(
-        const _SingleAccordionTestWidget(),
-      );
+      await tester.pumpWidget(const _SingleAccordionTestWidget());
 
       await tester.tap(accordion);
       await tester.pump();
@@ -130,56 +120,56 @@ void main() {
     });
 
     testWidgets(
-        "Accordion has content inside header, when 'hasContentOutside' is true",
-        (WidgetTester tester) async {
-      final Finder decoratedBox = find.byType(DecoratedBox);
+      "Accordion has content outside header when 'hasContentOutside' is true",
+      (WidgetTester tester) async {
+        final Finder interactive = find.byType(MoonBaseInteractiveWidget);
 
-      await tester.pumpWidget(
-        const _SingleAccordionTestWidget(hasContentOutside: true),
-      );
+        await tester.pumpWidget(
+          const _SingleAccordionTestWidget(hasContentOutside: true),
+        );
 
-      expect(header, findsOneWidget);
+        expect(header, findsOneWidget);
 
-      await tester.tap(header);
-      await tester.pumpAndSettle();
+        await tester.tap(header);
+        await tester.pumpAndSettle();
 
-      expect(content, findsOneWidget);
-      expect(decoratedBox, findsOneWidget);
-      expect(
-        find.descendant(of: decoratedBox, matching: header),
-        findsOneWidget,
-      );
-      expect(
-        find.descendant(of: decoratedBox, matching: content),
-        findsNothing,
-      );
-    });
+        expect(content, findsOneWidget);
+        expect(interactive, findsOneWidget);
+        expect(
+          find.descendant(of: interactive, matching: header),
+          findsOneWidget,
+        );
+        expect(
+          find.descendant(of: interactive, matching: content),
+          findsNothing,
+        );
+      },
+    );
 
     testWidgets(
-        "Accordion has content inside, when 'hasContentOutside' is false",
-        (WidgetTester tester) async {
-      final Finder decoratedBox = find.byType(DecoratedBox);
+      "Accordion keeps content inside header container when 'hasContentOutside' is false",
+      (WidgetTester tester) async {
+        final Finder interactive = find.byType(MoonBaseInteractiveWidget);
 
-      await tester.pumpWidget(
-        const _SingleAccordionTestWidget(),
-      );
+        await tester.pumpWidget(const _SingleAccordionTestWidget());
 
-      expect(header, findsOneWidget);
+        expect(header, findsOneWidget);
 
-      await tester.tap(header);
-      await tester.pumpAndSettle();
+        await tester.tap(header);
+        await tester.pumpAndSettle();
 
-      expect(content, findsOneWidget);
-      expect(decoratedBox, findsOneWidget);
-      expect(
-        find.descendant(of: decoratedBox, matching: header),
-        findsOneWidget,
-      );
-      expect(
-        find.descendant(of: decoratedBox, matching: content),
-        findsOneWidget,
-      );
-    });
+        expect(content, findsOneWidget);
+        expect(interactive, findsOneWidget);
+        expect(
+          find.descendant(of: interactive, matching: header),
+          findsOneWidget,
+        );
+        expect(
+          find.descendant(of: interactive, matching: content),
+          findsOneWidget,
+        );
+      },
+    );
   });
 
   group("Grouped accordion", () {
@@ -189,9 +179,7 @@ void main() {
     final Finder child2 = find.byKey(_secondAccordionChildKey);
 
     testWidgets("Group behavior works correctly", (tester) async {
-      await tester.pumpWidget(
-        const _GroupedAccordionTestWidget(),
-      );
+      await tester.pumpWidget(const _GroupedAccordionTestWidget());
 
       expect(accordion1, findsOneWidget);
       expect(accordion2, findsOneWidget);
@@ -212,35 +200,35 @@ void main() {
     });
 
     testWidgets(
-        "When expansion changes, 'onExpansionChanged' callback is triggered",
-        (tester) async {
-      _AccordionItems? currentValue;
+      "When expansion changes, 'onExpansionChanged' callback is triggered",
+      (tester) async {
+        _AccordionItems? currentValue;
 
-      await tester.pumpWidget(
-        _GroupedAccordionTestWidget(
-          onExpansionChanged: (value) => currentValue = value,
-        ),
-      );
+        await tester.pumpWidget(
+          _GroupedAccordionTestWidget(
+            onExpansionChanged: (value) => currentValue = value,
+          ),
+        );
 
-      expect(accordion1, findsOneWidget);
-      expect(accordion2, findsOneWidget);
+        expect(accordion1, findsOneWidget);
+        expect(accordion2, findsOneWidget);
 
-      await tester.tap(accordion1);
-      await tester.pumpAndSettle();
+        await tester.tap(accordion1);
+        await tester.pumpAndSettle();
 
-      expect(currentValue, equals(_AccordionItems.first));
+        expect(currentValue, equals(_AccordionItems.first));
 
-      await tester.tap(accordion2);
-      await tester.pumpAndSettle();
+        await tester.tap(accordion2);
+        await tester.pumpAndSettle();
 
-      expect(currentValue, equals(_AccordionItems.second));
-    });
+        expect(currentValue, equals(_AccordionItems.second));
+      },
+    );
 
-    testWidgets("Grouped accordion handles rapid multiple taps",
-        (tester) async {
-      await tester.pumpWidget(
-        const _GroupedAccordionTestWidget(),
-      );
+    testWidgets("Grouped accordion handles rapid multiple taps", (
+      tester,
+    ) async {
+      await tester.pumpWidget(const _GroupedAccordionTestWidget());
 
       await tester.tap(accordion1);
       await tester.tap(accordion2);
@@ -251,28 +239,30 @@ void main() {
     });
 
     testWidgets(
-        "All grouped accordions with identical 'identityValue' expand and collapse at the same time",
-        (tester) async {
-      await tester.pumpWidget(
-        const _GroupedAccordionTestWidget(
-          accordion2Identity: _AccordionItems.first,
-        ),
-      );
+      "All grouped accordions with identical 'identityValue' expand and collapse at the same time",
+      (tester) async {
+        await tester.pumpWidget(
+          const _GroupedAccordionTestWidget(
+            accordion2Identity: _AccordionItems.first,
+          ),
+        );
 
-      expect(accordion1, findsOneWidget);
-      expect(accordion2, findsOneWidget);
-      expect(child1, findsOneWidget);
-      expect(child2, findsOneWidget);
+        expect(accordion1, findsOneWidget);
+        expect(accordion2, findsOneWidget);
+        expect(child1, findsOneWidget);
+        expect(child2, findsOneWidget);
 
-      await tester.tap(accordion1);
-      await tester.pumpAndSettle();
+        await tester.tap(accordion1);
+        await tester.pumpAndSettle();
 
-      expect(child1, findsNothing);
-      expect(child2, findsNothing);
-    });
+        expect(child1, findsNothing);
+        expect(child2, findsNothing);
+      },
+    );
 
-    testWidgets("Grouped accordion handles null 'identityValue",
-        (tester) async {
+    testWidgets("Grouped accordion handles null 'identityValue", (
+      tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -283,10 +273,7 @@ void main() {
                   groupIdentityValue: _AccordionItems.first,
                   header: Text(_accordionLabel),
                   children: [
-                    Text(
-                      key: _firstAccordionChildKey,
-                      _accordionContent,
-                    ),
+                    Text(key: _firstAccordionChildKey, _accordionContent),
                   ],
                 ),
               ],
@@ -328,10 +315,7 @@ class _SingleAccordionTestWidget extends StatelessWidget {
           header: const Text(_accordionLabel),
           trailingWidget: trailingWidget,
           children: const [
-            Text(
-              key: _singleAccordionChildKey,
-              _accordionContent,
-            ),
+            Text(key: _singleAccordionChildKey, _accordionContent),
           ],
         ),
       ),
@@ -369,15 +353,13 @@ class _GroupedAccordionTestWidgetState
               groupIdentityValue: _currentlyOpenAccordionItem,
               onExpansionChanged: (_AccordionItems? value) =>
                   widget.onExpansionChanged != null
-                      ? widget.onExpansionChanged
-                          ?.call(value ?? _AccordionItems.first)
-                      : setState(() => _currentlyOpenAccordionItem = value),
+                  ? widget.onExpansionChanged?.call(
+                      value ?? _AccordionItems.first,
+                    )
+                  : setState(() => _currentlyOpenAccordionItem = value),
               header: const Text(_accordionLabel),
               children: const [
-                Text(
-                  key: _firstAccordionChildKey,
-                  _accordionContent,
-                ),
+                Text(key: _firstAccordionChildKey, _accordionContent),
               ],
             ),
             MoonRawAccordion<_AccordionItems>(
@@ -386,15 +368,13 @@ class _GroupedAccordionTestWidgetState
               groupIdentityValue: _currentlyOpenAccordionItem,
               onExpansionChanged: (_AccordionItems? value) =>
                   widget.onExpansionChanged != null
-                      ? widget.onExpansionChanged
-                          ?.call(value ?? _AccordionItems.first)
-                      : setState(() => _currentlyOpenAccordionItem = value),
+                  ? widget.onExpansionChanged?.call(
+                      value ?? _AccordionItems.first,
+                    )
+                  : setState(() => _currentlyOpenAccordionItem = value),
               header: const Text(_accordionLabel),
               children: const [
-                Text(
-                  key: _secondAccordionChildKey,
-                  _accordionContent,
-                ),
+                Text(key: _secondAccordionChildKey, _accordionContent),
               ],
             ),
           ],

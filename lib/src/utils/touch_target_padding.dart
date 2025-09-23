@@ -85,8 +85,9 @@ class _RenderTouchTargetPadding extends RenderShiftedBox {
     );
     if (child != null) {
       final BoxParentData childParentData = child!.parentData! as BoxParentData;
-      childParentData.offset =
-          Alignment.center.alongOffset(size - child!.size as Offset);
+      childParentData.offset = Alignment.center.alongOffset(
+        size - child!.size as Offset,
+      );
     }
   }
 

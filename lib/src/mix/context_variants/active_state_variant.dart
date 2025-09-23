@@ -12,8 +12,8 @@ class ActiveStateVariant extends InheritedWidget {
   });
 
   static bool isActiveState(BuildContext context) {
-    final ActiveStateVariant? activeState =
-        context.dependOnInheritedWidgetOfExactType<ActiveStateVariant>();
+    final ActiveStateVariant? activeState = context
+        .dependOnInheritedWidgetOfExactType<ActiveStateVariant>();
 
     return activeState?.isActive ?? false;
   }
@@ -24,13 +24,8 @@ class ActiveStateVariant extends InheritedWidget {
   }
 }
 
-class ActiveVariant extends ContextVariant {
-  const ActiveVariant();
-
-  @override
-  bool when(BuildContext context) => ActiveStateVariant.isActiveState(context);
-}
-
-extension OnContextVariantUtilityX on OnContextVariantUtility {
-  ActiveVariant get active => const ActiveVariant();
-}
+/// Mix context variant that activates when [ActiveStateVariant.isActive] is true.
+const moonActiveContextVariant = ContextVariant(
+  'moon.context.active',
+  ActiveStateVariant.isActiveState,
+);

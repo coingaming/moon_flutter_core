@@ -9,23 +9,34 @@ import 'package:moon_core/moon_core.dart';
 class StyledDrawer extends StatelessWidget {
   const StyledDrawer({super.key});
 
-  Style get _drawerStyle => Style(
-        $box.chain
-          ..color(Colors.lime)
-          ..borderRadiusDirectional.topEnd(16.0)
-          ..borderRadiusDirectional.bottomEnd(16.0)
-          ..width(300),
+  BoxStyler get _drawerStyle => BoxStyler()
+      .color(Colors.lime)
+      .borderRadius(
+        BorderRadiusGeometryMix.value(
+          const BorderRadiusDirectional.only(
+            topEnd: Radius.circular(16),
+            bottomEnd: Radius.circular(16),
+          ),
+        ),
+      )
+      .width(300)
+      .padding(EdgeInsetsGeometryMix.all(24))
+      .wrapDefaultTextStyle(TextStyleMix(color: Colors.black87))
+      .animate(
+        AnimationConfig.ease(const Duration(milliseconds: 180)),
       );
 
   @override
   Widget build(BuildContext context) {
     return Box(
       style: _drawerStyle,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: ColumnBox(
+        style: FlexBoxStyler()
+            .spacing(24)
+            .mainAxisAlignment(MainAxisAlignment.center)
+            .crossAxisAlignment(CrossAxisAlignment.center),
         children: [
-          const Text("MoonRawDrawer"),
-          const SizedBox(height: 32),
+          const StyledText("MoonRawDrawer"),
           Builder(
             builder: (BuildContext context) {
               return MoonBaseInteractiveWidget(

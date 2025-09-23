@@ -1,5 +1,3 @@
-import 'package:example/src/common_styles.dart';
-
 import 'package:flutter/material.dart';
 
 import 'package:mix/mix.dart';
@@ -9,55 +7,71 @@ import 'package:moon_core/moon_core.dart';
 class StyledMenuItem extends StatelessWidget {
   const StyledMenuItem({super.key});
 
-  Style get _menuItemStyle => Style(
-        $box.chain
-          ..color(Colors.white)
-          ..borderRadius(8)
-          ..padding(16.0),
-        $flex.gap(16.0),
-        $with.defaultTextStyle.style(
-          color: Colors.black,
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-        ),
-        $with.iconTheme.data(
-          color: Colors.grey,
-          size: 24,
-        ),
-      ).merge(getEffects()).animate();
+  BoxStyler get _menuItemStyle {
+    final BoxStyler hoverFocusStyle = BoxStyler()
+        .color(Colors.grey.shade100)
+        .wrapDefaultTextStyle(
+          TextStyleMix(
+            color: Colors.blue,
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        )
+        .wrapIconTheme(
+          const IconThemeData(color: Colors.blue, size: 24),
+        );
 
-  Style get _descriptionStyle => Style(
-        $text.style(
-          color: Colors.grey,
-          fontSize: 14.0,
-          fontWeight: FontWeight.w400,
-        ),
-      );
+    final BoxStyler pressedStyle =
+        BoxStyler().wrapScale(x: 0.98, y: 0.98);
 
-  Style get _columnStyle => Style(
-        $flex.chain
-          ..crossAxisAlignment.start()
-          ..gap(4.0),
-      );
+    return BoxStyler()
+        .color(Colors.white)
+        .borderRadius(BorderRadiusGeometryMix.circular(8))
+        .padding(EdgeInsetsGeometryMix.all(16))
+        .wrapDefaultTextStyle(
+          TextStyleMix(
+            color: Colors.black,
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        )
+        .wrapIconTheme(
+          const IconThemeData(color: Colors.grey, size: 24),
+        )
+        .onHovered(hoverFocusStyle)
+        .onFocused(hoverFocusStyle)
+        .onPressed(pressedStyle)
+        .animate(AnimationConfig.ease(const Duration(milliseconds: 200)));
+  }
+
+  FlexBoxStyler get _contentStyle =>
+      FlexBoxStyler().spacing(16).mainAxisAlignment(MainAxisAlignment.start);
+
+  FlexBoxStyler get _columnStyle => FlexBoxStyler()
+      .spacing(4)
+      .crossAxisAlignment(CrossAxisAlignment.start);
+
+  static const TextStyle _descriptionTextStyle = TextStyle(
+    color: Colors.grey,
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+  );
 
   @override
   Widget build(BuildContext context) {
     return MoonBaseInteractiveWidget(
       onTap: () {},
       style: _menuItemStyle,
-      child: StyledRow(
-        inherit: true,
+      child: RowBox(
+        style: _contentStyle,
         children: [
           const Icon(Icons.account_circle_outlined),
           Expanded(
-            child: StyledColumn(
+            child: ColumnBox(
               style: _columnStyle,
               children: [
-                const StyledText("Menu item"),
-                StyledText(
-                  style: _descriptionStyle,
-                  "This is a menu item",
-                ),
+                const Text("Menu item"),
+                Text("This is a menu item", style: _descriptionTextStyle),
               ],
             ),
           ),

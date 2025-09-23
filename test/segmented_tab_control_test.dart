@@ -12,8 +12,9 @@ void main() {
   final Finder secondTab = find.text(_secondTabLabel);
   final Finder thirdTab = find.text(_thirdTabLabel);
 
-  testWidgets("Segmented tab control applies 'initialIndex' correctly",
-      (tester) async {
+  testWidgets("Segmented tab control applies 'initialIndex' correctly", (
+    tester,
+  ) async {
     final List<bool> states = [false, false, false];
 
     await tester.pumpWidget(
@@ -25,14 +26,12 @@ void main() {
               3,
               (int index) => MoonRawSegmentedTab(
                 isSelected: (bool isSelected) => states[index] = isSelected,
-                child: Text(
-                  switch (index) {
-                    0 => _firstTabLabel,
-                    1 => _secondTabLabel,
-                    2 => _thirdTabLabel,
-                    _ => '',
-                  },
-                ),
+                child: Text(switch (index) {
+                  0 => _firstTabLabel,
+                  1 => _secondTabLabel,
+                  2 => _thirdTabLabel,
+                  _ => '',
+                }),
               ),
             ),
           ),
@@ -44,95 +43,96 @@ void main() {
   });
 
   testWidgets(
-      "Segmented tab control calls 'onTabChanged' callback with correct index",
-      (tester) async {
-    int selectedIndex = 0;
+    "Segmented tab control calls 'onTabChanged' callback with correct index",
+    (tester) async {
+      int selectedIndex = 0;
 
-    await tester.pumpWidget(
-      _SegmentedTabControlTestWidget(
-        onTabChanged: (int index) => selectedIndex = index,
-      ),
-    );
+      await tester.pumpWidget(
+        _SegmentedTabControlTestWidget(
+          onTabChanged: (int index) => selectedIndex = index,
+        ),
+      );
 
-    await tester.tap(firstTab);
-    await tester.pumpAndSettle();
-    expect(selectedIndex, 0);
+      await tester.tap(firstTab);
+      await tester.pumpAndSettle();
+      expect(selectedIndex, 0);
 
-    // await tester.tap(secondTab);
-    // await tester.pumpAndSettle();
-    // expect(selectedIndex, 1);
+      // await tester.tap(secondTab);
+      // await tester.pumpAndSettle();
+      // expect(selectedIndex, 1);
 
-    await tester.tap(thirdTab);
-    await tester.pumpAndSettle();
-    expect(selectedIndex, 2);
-  });
-
-  testWidgets(
-      "Segmented tab control is not interactable when 'enabled' is set to false",
-      (tester) async {
-    int selectedIndex = 0;
-
-    await tester.pumpWidget(
-      _SegmentedTabControlTestWidget(
-        enabled: false,
-        onTabChanged: (int index) => selectedIndex = index,
-      ),
-    );
-
-    await tester.tap(secondTab);
-    await tester.pumpAndSettle();
-
-    expect(selectedIndex, 0);
-
-    await tester.tap(thirdTab);
-    await tester.pumpAndSettle();
-
-    expect(selectedIndex, 0);
-  });
+      await tester.tap(thirdTab);
+      await tester.pumpAndSettle();
+      expect(selectedIndex, 2);
+    },
+  );
 
   testWidgets(
-      "Tab can not be selected when 'disabled' for the tab has been set to true",
-      (tester) async {
-    int selectedIndex = 0;
+    "Segmented tab control is not interactable when 'enabled' is set to false",
+    (tester) async {
+      int selectedIndex = 0;
 
-    await tester.pumpWidget(
-      _SegmentedTabControlTestWidget(
-        secondTabDisabled: true,
-        onTabChanged: (int index) => selectedIndex = index,
-      ),
-    );
+      await tester.pumpWidget(
+        _SegmentedTabControlTestWidget(
+          enabled: false,
+          onTabChanged: (int index) => selectedIndex = index,
+        ),
+      );
 
-    await tester.tap(secondTab);
-    await tester.pumpAndSettle();
+      await tester.tap(secondTab);
+      await tester.pumpAndSettle();
 
-    expect(selectedIndex, 0);
-    expect(selectedIndex, isNot(1));
+      expect(selectedIndex, 0);
 
-    await tester.tap(thirdTab);
-    await tester.pumpAndSettle();
+      await tester.tap(thirdTab);
+      await tester.pumpAndSettle();
 
-    expect(selectedIndex, 2);
-  });
+      expect(selectedIndex, 0);
+    },
+  );
 
   testWidgets(
-      "Segmented tab control is expanded when 'isExpanded' is set to true",
-      (tester) async {
-    await tester.pumpWidget(
-      const _SegmentedTabControlTestWidget(
-        isExpanded: true,
-      ),
-    );
+    "Tab can not be selected when 'disabled' for the tab has been set to true",
+    (tester) async {
+      int selectedIndex = 0;
 
-    final firstTab = tester.widget<Expanded>(find.byType(Expanded).first);
+      await tester.pumpWidget(
+        _SegmentedTabControlTestWidget(
+          secondTabDisabled: true,
+          onTabChanged: (int index) => selectedIndex = index,
+        ),
+      );
 
-    expect(firstTab.child, isA<MoonBaseInteractiveWidget>());
-  });
+      await tester.tap(secondTab);
+      await tester.pumpAndSettle();
 
-  testWidgets("Segmented tab control applies 'axisDirection' correctly",
-      (tester) async {
-    await tester.pumpWidget(
-      const _SegmentedTabControlTestWidget(),
-    );
+      expect(selectedIndex, 0);
+      expect(selectedIndex, isNot(1));
+
+      await tester.tap(thirdTab);
+      await tester.pumpAndSettle();
+
+      expect(selectedIndex, 2);
+    },
+  );
+
+  testWidgets(
+    "Segmented tab control is expanded when 'isExpanded' is set to true",
+    (tester) async {
+      await tester.pumpWidget(
+        const _SegmentedTabControlTestWidget(isExpanded: true),
+      );
+
+      final firstTab = tester.widget<Expanded>(find.byType(Expanded).first);
+
+      expect(firstTab.child, isA<MoonBaseInteractiveWidget>());
+    },
+  );
+
+  testWidgets("Segmented tab control applies 'axisDirection' correctly", (
+    tester,
+  ) async {
+    await tester.pumpWidget(const _SegmentedTabControlTestWidget());
 
     final tab1Position = tester.getTopLeft(firstTab);
     final tab2Position = tester.getTopLeft(secondTab);
@@ -144,9 +144,7 @@ void main() {
     expect(tab2Position.dx, lessThan(thirdTabPosition.dx));
 
     await tester.pumpWidget(
-      const _SegmentedTabControlTestWidget(
-        axisDirection: Axis.vertical,
-      ),
+      const _SegmentedTabControlTestWidget(axisDirection: Axis.vertical),
     );
 
     final tab1VerticalPosition = tester.getTopLeft(firstTab);
@@ -159,89 +157,92 @@ void main() {
     expect(tab2VerticalPosition.dy, lessThan(tab3VerticalPosition.dy));
   });
 
-  testWidgets("Segmented tab control calls 'isSelected' callback for each tab",
-      (tester) async {
-    final List<bool> states = [false, false, false];
+  testWidgets(
+    "Segmented tab control calls 'isSelected' callback for each tab",
+    (tester) async {
+      final List<bool> states = [false, false, false];
 
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: MoonRawSegmentedTabControl(
-            tabs: List.generate(
-              3,
-              (int index) => MoonRawSegmentedTab(
-                isSelected: (bool isSelected) => states[index] = isSelected,
-                child: Text(
-                  switch (index) {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: MoonRawSegmentedTabControl(
+              tabs: List.generate(
+                3,
+                (int index) => MoonRawSegmentedTab(
+                  isSelected: (bool isSelected) => states[index] = isSelected,
+                  child: Text(switch (index) {
                     0 => _firstTabLabel,
                     1 => _secondTabLabel,
                     2 => _thirdTabLabel,
                     _ => '',
-                  },
+                  }),
                 ),
               ),
             ),
           ),
         ),
-      ),
-    );
+      );
 
-    expect(states, [true, false, false]);
+      expect(states, [true, false, false]);
 
-    await tester.tap(secondTab);
-    await tester.pumpAndSettle();
+      await tester.tap(secondTab);
+      await tester.pumpAndSettle();
 
-    expect(states, [false, true, false]);
+      expect(states, [false, true, false]);
 
-    await tester.tap(thirdTab);
-    await tester.pumpAndSettle();
+      await tester.tap(thirdTab);
+      await tester.pumpAndSettle();
 
-    expect(states, [false, false, true]);
+      expect(states, [false, false, true]);
 
-    await tester.tap(firstTab);
-    await tester.pumpAndSettle();
+      await tester.tap(firstTab);
+      await tester.pumpAndSettle();
 
-    expect(states, [true, false, false]);
-  });
+      expect(states, [true, false, false]);
+    },
+  );
 
   testWidgets(
-      "The initialIndex of 'tabController' takes precedence over the segmented control's 'initialIndex'",
-      (tester) async {
-    final TabController tabController =
-        TabController(length: 3, vsync: tester, initialIndex: 2);
+    "The initialIndex of 'tabController' takes precedence over the segmented control's 'initialIndex'",
+    (tester) async {
+      final TabController tabController = TabController(
+        length: 3,
+        vsync: tester,
+        initialIndex: 2,
+      );
 
-    final List<bool> states = [false, false, false];
+      final List<bool> states = [false, false, false];
 
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: MoonRawSegmentedTabControl(
-            initialIndex: 1,
-            tabController: tabController,
-            tabs: List.generate(
-              3,
-              (int index) => MoonRawSegmentedTab(
-                isSelected: (bool isSelected) => states[index] = isSelected,
-                child: Text(
-                  switch (index) {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: MoonRawSegmentedTabControl(
+              initialIndex: 1,
+              tabController: tabController,
+              tabs: List.generate(
+                3,
+                (int index) => MoonRawSegmentedTab(
+                  isSelected: (bool isSelected) => states[index] = isSelected,
+                  child: Text(switch (index) {
                     0 => _firstTabLabel,
                     1 => _secondTabLabel,
                     2 => _thirdTabLabel,
                     _ => '',
-                  },
+                  }),
                 ),
               ),
             ),
           ),
         ),
-      ),
-    );
+      );
 
-    expect(states, [false, false, true]);
-  });
+      expect(states, [false, false, true]);
+    },
+  );
 
-  testWidgets("Segmented tab control uses passed in 'tabController'",
-      (tester) async {
+  testWidgets("Segmented tab control uses passed in 'tabController'", (
+    tester,
+  ) async {
     final TabController tabController = TabController(length: 3, vsync: tester);
 
     int selectedIndex = 0;
@@ -298,14 +299,12 @@ class _SegmentedTabControlTestWidget extends StatelessWidget {
             3,
             (int index) => MoonRawSegmentedTab(
               enabled: index != 1 || !secondTabDisabled,
-              child: Text(
-                switch (index) {
-                  0 => _firstTabLabel,
-                  1 => _secondTabLabel,
-                  2 => _thirdTabLabel,
-                  _ => '',
-                },
-              ),
+              child: Text(switch (index) {
+                0 => _firstTabLabel,
+                1 => _secondTabLabel,
+                2 => _thirdTabLabel,
+                _ => '',
+              }),
             ),
           ),
         ),

@@ -13,11 +13,7 @@ void main() {
   testWidgets("Avatar displays the 'avatarSize' correctly", (tester) async {
     final Finder avatarIcon = find.byIcon(_avatarIcon);
 
-    await tester.pumpWidget(
-      const _AvatarTestWidget(
-        avatarSize: Size(40, 40),
-      ),
-    );
+    await tester.pumpWidget(const _AvatarTestWidget(avatarSize: Size(40, 40)));
 
     expect(avatarIcon, findsOneWidget);
     expect(badge, findsOneWidget);
@@ -29,26 +25,22 @@ void main() {
   });
 
   testWidgets("Badge is displayed when 'showBadge' is true", (tester) async {
-    await tester.pumpWidget(
-      const _AvatarTestWidget(),
-    );
+    await tester.pumpWidget(const _AvatarTestWidget());
 
     expect(badge, findsOneWidget);
   });
 
-  testWidgets("Badge is not displayed when 'showBadge' is false",
-      (tester) async {
-    await tester.pumpWidget(
-      const _AvatarTestWidget(
-        showBadge: false,
-      ),
-    );
+  testWidgets("Badge is not displayed when 'showBadge' is false", (
+    tester,
+  ) async {
+    await tester.pumpWidget(const _AvatarTestWidget(showBadge: false));
 
     expect(badge, findsNothing);
   });
 
-  testWidgets("Badge is aligned correctly according to 'badgeAlignment'",
-      (tester) async {
+  testWidgets("Badge is aligned correctly according to 'badgeAlignment'", (
+    tester,
+  ) async {
     final List<MoonBadgeAlignment> badgeAlignment = [
       MoonBadgeAlignment.topLeft,
       MoonBadgeAlignment.bottomLeft,
@@ -57,11 +49,7 @@ void main() {
     ];
 
     for (final alignment in badgeAlignment) {
-      await tester.pumpWidget(
-        _AvatarTestWidget(
-          badgeAlignment: alignment,
-        ),
-      );
+      await tester.pumpWidget(_AvatarTestWidget(badgeAlignment: alignment));
 
       expect(avatar, findsOneWidget);
       expect(badge, findsOneWidget);
@@ -87,38 +75,34 @@ void main() {
   });
 
   testWidgets(
-      "Custom clipper is applied to the avatar, if 'customClipper' is provided",
-      (tester) async {
-    final CustomClipper<Path> customClipper = _CustomClipper();
+    "Custom clipper is applied to the avatar, if 'customClipper' is provided",
+    (tester) async {
+      final CustomClipper<Path> customClipper = _CustomClipper();
 
-    await tester.pumpWidget(
-      _AvatarTestWidget(
-        customClipper: customClipper,
-      ),
-    );
+      await tester.pumpWidget(_AvatarTestWidget(customClipper: customClipper));
 
-    final clipPathFinder = find.byType(ClipPath);
-    final clipPathWidget = tester.firstWidget(clipPathFinder) as ClipPath;
+      final clipPathFinder = find.byType(ClipPath);
+      final clipPathWidget = tester.firstWidget(clipPathFinder) as ClipPath;
 
-    expect(clipPathFinder, findsOneWidget);
-    expect(clipPathWidget.clipper, isNotNull);
-    expect(clipPathWidget.clipper, isA<_CustomClipper>());
-  });
+      expect(clipPathFinder, findsOneWidget);
+      expect(clipPathWidget.clipper, isNotNull);
+      expect(clipPathWidget.clipper, isA<_CustomClipper>());
+    },
+  );
 
   testWidgets(
-      "Default clipper is applied to the avatar if 'customClipper' is not provided",
-      (tester) async {
-    await tester.pumpWidget(
-      const _AvatarTestWidget(),
-    );
+    "Default clipper is applied to the avatar if 'customClipper' is not provided",
+    (tester) async {
+      await tester.pumpWidget(const _AvatarTestWidget());
 
-    final clipPathFinder = find.byType(ClipPath);
-    final clipPathWidget = tester.firstWidget(clipPathFinder) as ClipPath;
+      final clipPathFinder = find.byType(ClipPath);
+      final clipPathWidget = tester.firstWidget(clipPathFinder) as ClipPath;
 
-    expect(clipPathFinder, findsOneWidget);
-    expect(clipPathWidget.clipper, isNotNull);
-    expect(clipPathWidget.clipper, isA<AvatarCircleClipper>());
-  });
+      expect(clipPathFinder, findsOneWidget);
+      expect(clipPathWidget.clipper, isNotNull);
+      expect(clipPathWidget.clipper, isA<AvatarCircleClipper>());
+    },
+  );
 }
 
 class _AvatarTestWidget extends StatefulWidget {

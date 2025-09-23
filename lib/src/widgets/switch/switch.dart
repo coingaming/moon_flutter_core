@@ -38,11 +38,11 @@ class MoonRawSwitch extends StatefulWidget {
   /// The semantic label for the switch.
   final String? semanticLabel;
 
-  /// The style for the switch.
-  final Style? switchStyle;
+  /// The style for the switch track container.
+  final BoxStyler? switchStyle;
 
   /// The style for the switch thumb.
-  final Style? thumbStyle;
+  final BoxStyler? thumbStyle;
 
   /// The callback that is called when the switch toggles between the
   /// active (on) and inactive (off) states.
@@ -102,6 +102,31 @@ class _MoonRawSwitchState extends State<MoonRawSwitch>
 
   bool get _isInteractive => widget.onChanged != null;
 
+  static final DecorationTween _defaultTrackDecorationTween = DecorationTween(
+    begin: const ShapeDecorationWithPremultipliedAlpha(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(12)),
+      ),
+    ),
+    end: const ShapeDecorationWithPremultipliedAlpha(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(12)),
+      ),
+    ),
+  );
+
+  BoxStyler get _defaultSwitchStyle => BoxStyler()
+      .constraints(BoxConstraintsMix.height(24))
+      .constraints(BoxConstraintsMix.width(44));
+
+  BoxStyler get _defaultThumbStyle => BoxStyler()
+      .constraints(BoxConstraintsMix.square(16))
+      .borderRadius(
+        BorderRadiusGeometryMix.value(
+          BorderRadius.circular(8),
+        ),
+      );
+
   void _resumePositionAnimation() {
     _curvedAnimationWithOvershoot
       ..curve = Curves.ease
@@ -153,38 +178,26 @@ class _MoonRawSwitchState extends State<MoonRawSwitch>
       ),
     ]).animate(_curvedAnimation);
 
-    _activeTrackWidgetFadeAnimation =
-        Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: const Interval(0.7, 1.0),
-      ),
-    );
+    _activeTrackWidgetFadeAnimation = Tween<double>(begin: 0.0, end: 1.0)
+        .animate(
+          CurvedAnimation(
+            parent: _animationController,
+            curve: const Interval(0.7, 1.0),
+          ),
+        );
 
-    _inactiveTrackWidgetFadeAnimation =
-        Tween<double>(begin: 1.0, end: 0.0).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: const Interval(0.0, 0.3),
-      ),
-    );
+    _inactiveTrackWidgetFadeAnimation = Tween<double>(begin: 1.0, end: 0.0)
+        .animate(
+          CurvedAnimation(
+            parent: _animationController,
+            curve: const Interval(0.0, 0.3),
+          ),
+        );
 
-    _trackDecorationAnimation = (widget.trackDecorationTween ??
-            DecorationTween(
-              begin: ShapeDecorationWithPremultipliedAlpha(
-                color: Colors.grey.shade400,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              end: ShapeDecorationWithPremultipliedAlpha(
-                color: Colors.deepPurple.shade500,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-            ))
-        .animate(_curvedAnimation);
+    _trackDecorationAnimation =
+        (widget.trackDecorationTween ?? _defaultTrackDecorationTween).animate(
+          _curvedAnimation,
+        );
   }
 
   @override
@@ -206,8 +219,9 @@ class _MoonRawSwitchState extends State<MoonRawSwitch>
 
     if (widget.trackDecorationTween != null &&
         widget.trackDecorationTween != oldWidget.trackDecorationTween) {
-      _trackDecorationAnimation =
-          widget.trackDecorationTween!.animate(_curvedAnimation);
+      _trackDecorationAnimation = widget.trackDecorationTween!.animate(
+        _curvedAnimation,
+      );
     }
   }
 
@@ -223,8 +237,9 @@ class _MoonRawSwitchState extends State<MoonRawSwitch>
     final EdgeInsetsGeometry effectivePadding =
         widget.padding ?? const EdgeInsets.all(4);
 
-    final EdgeInsets resolvedDirectionalPadding =
-        effectivePadding.resolve(Directionality.of(context));
+    final EdgeInsets resolvedDirectionalPadding = effectivePadding.resolve(
+      Directionality.of(context),
+    );
 
     final isLtr = Directionality.of(context) == TextDirection.ltr;
 
@@ -233,6 +248,10 @@ class _MoonRawSwitchState extends State<MoonRawSwitch>
       end: isLtr ? Alignment.centerRight : Alignment.centerLeft,
     ).animate(_curvedAnimationWithOvershoot);
 
+    final BoxStyler switchStyle = _defaultSwitchStyle.merge(widget.switchStyle);
+
+    final BoxStyler thumbStyle = widget.thumbStyle ?? _defaultThumbStyle;
+
     return Semantics(
       label: widget.semanticLabel,
       toggled: widget.value,
@@ -240,11 +259,7 @@ class _MoonRawSwitchState extends State<MoonRawSwitch>
         enabled: _isInteractive,
         autofocus: widget.autofocus,
         focusNode: widget.focusNode,
-        style: Style(
-          $box.chain
-            ..height(24)
-            ..width(44),
-        ).merge(widget.switchStyle),
+        style: switchStyle,
         onTap: _handleTap,
         child: RepaintBoundary(
           child: AnimatedBuilder(
@@ -268,9 +283,7 @@ class _MoonRawSwitchState extends State<MoonRawSwitch>
                                   )
                                 : const SizedBox.shrink(),
                           ),
-                          SizedBox(
-                            width: resolvedDirectionalPadding.left,
-                          ),
+                          SizedBox(width: resolvedDirectionalPadding.left),
                           Expanded(
                             child: widget.inactiveTrackWidget != null
                                 ? FadeTransition(
@@ -284,7 +297,7 @@ class _MoonRawSwitchState extends State<MoonRawSwitch>
                       Align(
                         alignment: alignmentAnimation.value,
                         child: Box(
-                          style: widget.thumbStyle,
+                          style: thumbStyle,
                           child: FadeTransition(
                             opacity: _thumbFadeAnimation,
                             child: _curvedAnimation.value > 0.5

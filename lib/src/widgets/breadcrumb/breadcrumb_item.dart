@@ -7,7 +7,7 @@ class MoonRawBreadcrumbItem {
   final String? semanticLabel;
 
   /// The style of the breadcrumb item.
-  final Style? style;
+  final BoxStyler? style;
 
   /// The callback that is called when the breadcrumb item is tapped or pressed.
   /// If the [onTap] is null, the breadcrumb item is disabled.

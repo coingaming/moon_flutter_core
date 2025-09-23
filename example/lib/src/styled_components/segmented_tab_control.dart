@@ -20,81 +20,82 @@ class _StyledSegmentedTabControlState extends State<StyledSegmentedTabControl>
 
   int _selectedIndex = 1;
 
-  Style get _pillTabContainerStyle => Style(
-        $box.chain
-          ..borderRadius(8)
-          ..padding(4)
-          ..height(40)
-          ..margin.bottom(4)
-          ..color(Colors.grey.shade300),
-        $flex.chain
-          ..gap(4.0)
-          ..mainAxisSize.min(),
-      );
+  FlexBoxStyler get _pillTabContainerStyle => FlexBoxStyler()
+      .borderRadius(BorderRadiusGeometryMix.circular(8))
+      .padding(EdgeInsetsGeometryMix.all(4))
+      .constraints(BoxConstraintsMix.height(40))
+      .margin(EdgeInsetsGeometryMix.only(bottom: 4))
+      .color(Colors.grey.shade300)
+      .spacing(4)
+      .mainAxisSize(MainAxisSize.min);
 
-  Style get _pillTabStyle => Style(
-        $box.chain
-          ..borderRadius(8)
-          ..padding(8.0, 16.0)
-          ..width(100),
-        $text.style.color(Colors.black),
-        ($on.hover | $on.focus | $on.press | $on.longPress)(
-          $box.color(Colors.purple.shade400),
-          $text.style.color(Colors.white),
-        ),
-        $on.disabled(
-          $box.color(Colors.transparent),
-          $text.style.color(Colors.black),
-          $with.opacity(0.5),
-        ),
-        SelectedState.selected(
-          $box.color(Colors.purple.shade400),
-          $text.style.color(Colors.white),
-        ),
-      ).animate(duration: _duration);
+  BoxStyler get _pillTabStyle {
+    final BoxStyler activeState = BoxStyler()
+        .color(Colors.purple.shade400)
+        .wrapDefaultTextStyle(TextStyleMix(color: Colors.white));
 
-  Style get _indicatorTabStyle => Style(
-        $box.height(32),
-        $text.style.color(Colors.black),
-        ($on.hover | $on.focus | $on.press | $on.longPress)(
-          $text.style.color(Colors.deepPurple),
-        ),
-        $on.disabled(
-          $with.opacity(0.5),
-          $text.style.color(Colors.black),
-        ),
-        SelectedState.selected(
-          $text.style.color(Colors.deepPurple),
-        ),
-      ).animate(duration: _duration);
+    final BoxStyler disabledState = BoxStyler()
+        .wrapDefaultTextStyle(TextStyleMix(color: Colors.black))
+        .wrapOpacity(0.5);
 
-  Style getIndicatorStyle(double width) => Style(
-        $box.chain
-          ..width(0)
-          ..height(2)
-          ..color(Colors.deepPurple),
-        $with.align(alignment: Alignment.bottomLeft),
-        ($on.hover | $on.focus | $on.press | $on.longPress)(
-          $box.width(width),
-        ),
-        $on.disabled(
-          $box.width(0),
-        ),
-        SelectedState.selected(
-          $box.width(width),
-        ),
-      ).animate(duration: _duration);
+    return BoxStyler()
+        .borderRadius(BorderRadiusGeometryMix.circular(8))
+        .padding(
+          EdgeInsetsGeometryMix.symmetric(vertical: 8, horizontal: 16),
+        )
+        .constraints(BoxConstraintsMix.width(100))
+        .wrapDefaultTextStyle(TextStyleMix(color: Colors.black))
+        .onHovered(activeState)
+        .onFocused(activeState)
+        .onPressed(activeState)
+        .onSelected(activeState)
+        .onDisabled(disabledState)
+        .animate(AnimationConfig.ease(_duration));
+  }
+
+  BoxStyler get _indicatorTabStyle {
+    final BoxStyler activeText = BoxStyler()
+        .wrapDefaultTextStyle(TextStyleMix(color: Colors.deepPurple));
+
+    final BoxStyler disabledText = BoxStyler()
+        .wrapDefaultTextStyle(TextStyleMix(color: Colors.black))
+        .wrapOpacity(0.5);
+
+    return BoxStyler()
+        .constraints(BoxConstraintsMix.height(32))
+        .wrapDefaultTextStyle(TextStyleMix(color: Colors.black))
+        .onHovered(activeText)
+        .onFocused(activeText)
+        .onPressed(activeText)
+        .onSelected(activeText)
+        .onDisabled(disabledText)
+        .animate(AnimationConfig.ease(_duration));
+  }
+
+  BoxStyler getIndicatorStyle(double width) {
+    final BoxStyler expandWidth =
+        BoxStyler().constraints(BoxConstraintsMix.width(width));
+
+    return BoxStyler()
+        .constraints(BoxConstraintsMix.height(2))
+        .constraints(BoxConstraintsMix.width(0))
+        .color(Colors.deepPurple)
+        .wrapAlign(Alignment.bottomLeft)
+        .onHovered(expandWidth)
+        .onFocused(expandWidth)
+        .onPressed(expandWidth)
+        .onSelected(expandWidth)
+        .onDisabled(
+          BoxStyler().constraints(BoxConstraintsMix.width(0)),
+        )
+        .animate(AnimationConfig.ease(_duration));
+  }
 
   Color _getContentBgColor(int index) => index == 0
       ? Colors.purple.shade100
       : index == 1
-          ? Colors.blue.shade100
-          : Colors.pink.shade100;
-
-  SelectedState _getVariant(int index, {bool hasController = true}) =>
-      index == (hasController ? _tabController.index : _selectedIndex)
-          ? SelectedState.selected
-          : SelectedState.unselected;
+      ? Colors.blue.shade100
+      : Colors.pink.shade100;
 
   @override
   void initState() {
@@ -121,49 +122,39 @@ class _StyledSegmentedTabControlState extends State<StyledSegmentedTabControl>
           tabs: List.generate(
             3,
             (int index) => MoonRawSegmentedTab(
-              tabStyle: _pillTabStyle.applyVariant(
-                _getVariant(index, hasController: false),
-              ),
-              child: Center(
-                child: StyledText("Tab ${index + 1}"),
-              ),
+              tabStyle: _pillTabStyle,
+              child: Center(child: StyledText("Tab ${index + 1}")),
             ),
           ),
         ),
-        ...List.generate(
-          3,
-          (int index) {
-            return Offstage(
-              offstage: index != _selectedIndex,
-              child: KeyedSubtree(
-                key: Key(index.toString()),
-                child: Container(
-                  height: 100,
-                  width: 316,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8.0),
-                    color: _getContentBgColor(index),
-                  ),
-                  child: Center(
-                    child: Text("Tab ${index + 1} content"),
-                  ),
+        ...List.generate(3, (int index) {
+          return Offstage(
+            offstage: index != _selectedIndex,
+            child: KeyedSubtree(
+              key: Key(index.toString()),
+              child: Container(
+                height: 100,
+                width: 316,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8.0),
+                  color: _getContentBgColor(index),
                 ),
+                child: Center(child: Text("Tab ${index + 1} content")),
               ),
-            );
-          },
-        ),
+            ),
+          );
+        }),
         const SizedBox(height: 24),
         MoonRawSegmentedTabControl(
           isExpanded: true,
           tabController: _tabController,
-          style: Style($flex.gap(4.0)),
-          onTabChanged: (int index) => setState(
-            () => _tabController.index = index,
-          ),
+          style: FlexBoxStyler().spacing(4),
+          onTabChanged: (int index) =>
+              setState(() => _tabController.index = index),
           tabs: List.generate(
             3,
             (int index) => MoonRawSegmentedTab(
-              tabStyle: _indicatorTabStyle.applyVariant(_getVariant(index)),
+              tabStyle: _indicatorTabStyle,
               child: Stack(
                 alignment: Alignment.center,
                 children: [
@@ -175,8 +166,7 @@ class _StyledSegmentedTabControlState extends State<StyledSegmentedTabControl>
                     child: LayoutBuilder(
                       builder: (context, constraints) {
                         return Box(
-                          style: getIndicatorStyle(constraints.maxWidth)
-                              .applyVariant(_getVariant(index)),
+                          style: getIndicatorStyle(constraints.maxWidth),
                         );
                       },
                     ),
@@ -198,13 +188,11 @@ class _StyledSegmentedTabControlState extends State<StyledSegmentedTabControl>
                   onTap: () => _tabController.index = index == 0
                       ? 1
                       : index == 1
-                          ? 2
-                          : 0,
+                      ? 2
+                      : 0,
                   child: ColoredBox(
                     color: Colors.deepPurpleAccent.shade100,
-                    child: Center(
-                      child: Text("Tab ${index + 1} content"),
-                    ),
+                    child: Center(child: Text("Tab ${index + 1} content")),
                   ),
                 ),
               ),

@@ -16,37 +16,52 @@ class _StyledSwitchState extends State<StyledSwitch> {
   bool _switchTextValue = false;
   bool _switchIconValue = false;
 
-  Style get _switchStyle => Style(
-        $box.chain
-          ..width(64)
-          ..height(32),
-      );
+  BoxStyler get _switchTrackStyle => BoxStyler()
+      .constraints(BoxConstraintsMix.width(64))
+      .constraints(BoxConstraintsMix.height(32));
 
-  Style get _customThumbStyle => Style(
-        $box.chain
-          ..width(20)
-          ..height(20)
-          ..color(_switchValue ? Colors.deepPurple : Colors.purple)
-          ..borderRadius(_switchValue ? 6 : 14)
-          ..border(
-            color: Colors.transparent,
-            strokeAlign: BorderSide.strokeAlignOutside,
-          ),
-        $on.focus(
-          $box.border(
-            color: Colors.grey.shade400,
-            width: 4,
-            strokeAlign: BorderSide.strokeAlignOutside,
+  BoxStyler _customThumbStyle(bool isActive) => BoxStyler()
+      .constraints(BoxConstraintsMix.square(20))
+      .color(isActive ? Colors.deepPurple : Colors.purple)
+      .borderRadius(
+        BorderRadiusGeometryMix.value(
+          BorderRadius.circular(isActive ? 6 : 14),
+        ),
+      )
+      .border(
+        BorderMix.all(
+          BorderSideMix.value(
+            const BorderSide(
+              color: Colors.transparent,
+              strokeAlign: BorderSide.strokeAlignOutside,
+            ),
           ),
         ),
-      ).animate();
+      )
+      .onFocused(
+        BoxStyler().border(
+          BorderMix.all(
+            BorderSideMix.value(
+              BorderSide(
+                color: Colors.grey.shade400,
+                width: 4,
+                strokeAlign: BorderSide.strokeAlignOutside,
+              ),
+            ),
+          ),
+        ),
+      )
+      .animate(
+        AnimationConfig.ease(const Duration(milliseconds: 200)),
+      );
 
-  Style get _thumbStyle => Style(
-        $box.chain
-          ..width(16)
-          ..height(16)
-          ..color(Colors.white)
-          ..borderRadius(32),
+  BoxStyler get _thumbStyle => BoxStyler()
+      .constraints(BoxConstraintsMix.square(16))
+      .color(Colors.white)
+      .borderRadius(
+        BorderRadiusGeometryMix.value(
+          BorderRadius.circular(32),
+        ),
       );
 
   @override
@@ -56,17 +71,17 @@ class _StyledSwitchState extends State<StyledSwitch> {
         MoonRawSwitch(
           value: _switchValue,
           thumbAnimatesWithOvershoot: false,
-          switchStyle: _switchStyle,
-          thumbStyle: _customThumbStyle,
+          switchStyle: _switchTrackStyle,
+          thumbStyle: _customThumbStyle(_switchValue),
           onChanged: (bool newValue) => setState(() => _switchValue = newValue),
           trackDecorationTween: DecorationTween(
             begin: BoxDecoration(
-              color: Colors.purple.withOpacity(0.1),
+              color: Colors.purple.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(color: Colors.purple, width: 2),
             ),
             end: BoxDecoration(
-              color: Colors.deepPurple.withOpacity(0.1),
+              color: Colors.deepPurple.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
               border: Border.all(color: Colors.deepPurple, width: 2),
             ),
@@ -81,6 +96,7 @@ class _StyledSwitchState extends State<StyledSwitch> {
           activeThumbWidget: const Icon(Icons.check, size: 12),
           inactiveThumbWidget: const Icon(Icons.close, size: 12),
           thumbStyle: _thumbStyle,
+          switchStyle: _switchTrackStyle,
           activeTrackWidget: const Text(
             "ON",
             textAlign: TextAlign.center,
@@ -99,15 +115,13 @@ class _StyledSwitchState extends State<StyledSwitch> {
           onChanged: (bool newValue) =>
               setState(() => _switchIconValue = newValue),
           thumbStyle: _thumbStyle,
+          switchStyle: _switchTrackStyle,
           activeTrackWidget: const Icon(
             Icons.nightlight_outlined,
             size: 12,
             color: Colors.white,
           ),
-          inactiveTrackWidget: const Icon(
-            Icons.wb_sunny_outlined,
-            size: 12,
-          ),
+          inactiveTrackWidget: const Icon(Icons.wb_sunny_outlined, size: 12),
         ),
       ],
     );

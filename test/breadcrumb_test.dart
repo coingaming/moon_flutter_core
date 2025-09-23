@@ -14,27 +14,26 @@ void main() {
   final Finder breadcrumbItem = find.textContaining(_breadcrumbItem);
 
   testWidgets(
-      "Tapping on a 'show more' button expands collapsed items, and the button becomes hidden",
-      (tester) async {
-    await tester.pumpWidget(const _BreadCrumbTestWidget());
+    "Tapping on a 'show more' button expands collapsed items, and the button becomes hidden",
+    (tester) async {
+      await tester.pumpWidget(const _BreadCrumbTestWidget());
 
-    expect(showMoreButton, findsOneWidget);
-    expect(collapsedItem, findsNothing);
+      expect(showMoreButton, findsOneWidget);
+      expect(collapsedItem, findsNothing);
 
-    await tester.tap(showMoreButton);
-    await tester.pumpAndSettle();
+      await tester.tap(showMoreButton);
+      await tester.pumpAndSettle();
 
-    expect(collapsedItem, findsOneWidget);
-    expect(showMoreButton, findsNothing);
-  });
+      expect(collapsedItem, findsOneWidget);
+      expect(showMoreButton, findsNothing);
+    },
+  );
 
   testWidgets("Breadcrumb displays content correctly", (tester) async {
     final Finder leading = find.byIcon(_breadcrumbLeadingIcon);
     final Finder divider = find.byIcon(_breadcrumbDividerIcon);
 
-    await tester.pumpWidget(
-      const _BreadCrumbTestWidget(),
-    );
+    await tester.pumpWidget(const _BreadCrumbTestWidget());
 
     expect(breadcrumbItem, findsWidgets);
     expect(leading, findsWidgets);
@@ -42,38 +41,33 @@ void main() {
   });
 
   testWidgets(
-      "Only N items are shown, where N is defined by the value of 'itemsToShow'",
-      (tester) async {
-    await tester.pumpWidget(
-      const _BreadCrumbTestWidget(
-        itemsToShow: 3,
-      ),
-    );
+    "Only N items are shown, where N is defined by the value of 'itemsToShow'",
+    (tester) async {
+      await tester.pumpWidget(const _BreadCrumbTestWidget(itemsToShow: 3));
 
-    expect(showMoreButton, findsOneWidget);
-    expect(breadcrumbItem, findsNWidgets(3));
-    expect(find.textContaining("0"), findsOneWidget);
-    expect(collapsedItem, findsNothing);
-    expect(find.textContaining("2"), findsOneWidget);
-    expect(find.textContaining("3"), findsOneWidget);
+      expect(showMoreButton, findsOneWidget);
+      expect(breadcrumbItem, findsNWidgets(3));
+      expect(find.textContaining("0"), findsOneWidget);
+      expect(collapsedItem, findsNothing);
+      expect(find.textContaining("2"), findsOneWidget);
+      expect(find.textContaining("3"), findsOneWidget);
 
-    await tester.tap(showMoreButton);
-    await tester.pumpAndSettle();
+      await tester.tap(showMoreButton);
+      await tester.pumpAndSettle();
 
-    expect(breadcrumbItem, findsNWidgets(4));
-    expect(find.textContaining("0"), findsOneWidget);
-    expect(collapsedItem, findsOneWidget);
-    expect(find.textContaining("2"), findsOneWidget);
-    expect(find.textContaining("3"), findsOneWidget);
-  });
+      expect(breadcrumbItem, findsNWidgets(4));
+      expect(find.textContaining("0"), findsOneWidget);
+      expect(collapsedItem, findsOneWidget);
+      expect(find.textContaining("2"), findsOneWidget);
+      expect(find.textContaining("3"), findsOneWidget);
+    },
+  );
 
   testWidgets("Breadcrumb item callback works", (tester) async {
     int value = 0;
 
     await tester.pumpWidget(
-      _BreadCrumbTestWidget(
-        onTap: (int index) => value = index,
-      ),
+      _BreadCrumbTestWidget(onTap: (int index) => value = index),
     );
 
     await tester.tap(find.textContaining("0"));
@@ -99,9 +93,7 @@ void main() {
 
     await tester.pumpWidget(
       const _BreadCrumbTestWidget(
-        showMoreWidget: MoonRawBreadcrumbItem(
-          child: Text(expand),
-        ),
+        showMoreWidget: MoonRawBreadcrumbItem(child: Text(expand)),
       ),
     );
 
@@ -132,20 +124,17 @@ class _BreadCrumbTestWidget extends StatelessWidget {
             divider: const Icon(_breadcrumbDividerIcon),
             showMoreWidget: showMoreWidget,
             items: [
-              ...List.generate(
-                4,
-                (int index) {
-                  return MoonRawBreadcrumbItem(
-                    child: Row(
-                      children: [
-                        const Icon(_breadcrumbLeadingIcon),
-                        Text('$_breadcrumbItem $index'),
-                      ],
-                    ),
-                    onTap: () => onTap?.call(index),
-                  );
-                },
-              ),
+              ...List.generate(4, (int index) {
+                return MoonRawBreadcrumbItem(
+                  child: Row(
+                    children: [
+                      const Icon(_breadcrumbLeadingIcon),
+                      Text('$_breadcrumbItem $index'),
+                    ],
+                  ),
+                  onTap: () => onTap?.call(index),
+                );
+              }),
             ],
           ),
         ),

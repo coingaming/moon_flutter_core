@@ -129,8 +129,9 @@ class MoonRawTooltip extends StatelessWidget with OverlayPositionResolver {
   Widget build(BuildContext context) {
     final double effectiveArrowLength = hasArrow ? arrowLength : 0.0;
 
-    final BorderRadius resolvedBorderRadius =
-        borderRadius!.resolve(Directionality.of(context));
+    final BorderRadius resolvedBorderRadius = borderRadius!.resolve(
+      Directionality.of(context),
+    );
 
     return MoonBaseOverlay(
       key: key,
@@ -154,10 +155,10 @@ class MoonRawTooltip extends StatelessWidget with OverlayPositionResolver {
 
                 final OverlayAnchorPosition tooltipPosition =
                     getResolvedOverlayPosition(
-                  context,
-                  targetRenderBox!,
-                  tooltipAnchorPosition,
-                );
+                      context,
+                      targetRenderBox!,
+                      tooltipAnchorPosition,
+                    );
 
                 return DecoratedBox(
                   decoration: ShapeDecoration(

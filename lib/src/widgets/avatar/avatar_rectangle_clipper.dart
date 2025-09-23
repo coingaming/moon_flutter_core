@@ -26,20 +26,19 @@ class AvatarRectangleClipper extends CustomClipper<Path> {
   Path _getBadgePath() {
     final Offset badgeOffset = _calculateBadgeOffset();
 
-    return Path()
-      ..addRRect(
-        RRect.fromRectAndCorners(
-          Rect.fromCenter(
-            center: badgeOffset,
-            width: badgeSize.width + 2 * badgeMarginValue,
-            height: badgeSize.height + 2 * badgeMarginValue,
-          ),
-          topLeft: badgeBorderRadius.resolve(textDirection).topLeft,
-          topRight: badgeBorderRadius.resolve(textDirection).topRight,
-          bottomLeft: badgeBorderRadius.resolve(textDirection).bottomLeft,
-          bottomRight: badgeBorderRadius.resolve(textDirection).bottomRight,
+    return Path()..addRRect(
+      RRect.fromRectAndCorners(
+        Rect.fromCenter(
+          center: badgeOffset,
+          width: badgeSize.width + 2 * badgeMarginValue,
+          height: badgeSize.height + 2 * badgeMarginValue,
         ),
-      );
+        topLeft: badgeBorderRadius.resolve(textDirection).topLeft,
+        topRight: badgeBorderRadius.resolve(textDirection).topRight,
+        bottomLeft: badgeBorderRadius.resolve(textDirection).bottomLeft,
+        bottomRight: badgeBorderRadius.resolve(textDirection).bottomRight,
+      ),
+    );
   }
 
   Offset _calculateBadgeOffset() {
@@ -76,16 +75,15 @@ class AvatarRectangleClipper extends CustomClipper<Path> {
   }
 
   Path _getAvatarPath() {
-    return Path()
-      ..addRRect(
-        RRect.fromRectAndCorners(
-          Rect.fromLTWH(0, 0, avatarSize.width, avatarSize.height),
-          topLeft: avatarBorderRadius.resolve(textDirection).topLeft,
-          topRight: avatarBorderRadius.resolve(textDirection).topRight,
-          bottomLeft: avatarBorderRadius.resolve(textDirection).bottomLeft,
-          bottomRight: avatarBorderRadius.resolve(textDirection).bottomRight,
-        ),
-      );
+    return Path()..addRRect(
+      RRect.fromRectAndCorners(
+        Rect.fromLTWH(0, 0, avatarSize.width, avatarSize.height),
+        topLeft: avatarBorderRadius.resolve(textDirection).topLeft,
+        topRight: avatarBorderRadius.resolve(textDirection).topRight,
+        bottomLeft: avatarBorderRadius.resolve(textDirection).bottomLeft,
+        bottomRight: avatarBorderRadius.resolve(textDirection).bottomRight,
+      ),
+    );
   }
 
   @override

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actionPlan createdAt="2025-09-22T21:01:11Z" owner="agent">
+  <meta>
+    <objective>Migrate moon_flutter_core to Mix v2 patterns while keeping the core headless, minimal, and analyzer-clean.</objective>
+    <references>
+      <doc path="AGENTS.md" purpose="Repository rules and agent expectations" />
+      <doc path=".llms/mix-scope-and-theming.md" purpose="MixScope usage and token provisioning" />
+      <doc path=".llms/token-migration-guide.md" purpose="Mix v2 token APIs and migration notes" />
+      <doc path=".llms/examples.xml" purpose="Authoritative Mix v2 widget/style examples" />
+      <doc path=".llms/tests.xml" purpose="Reference behaviours and advanced patterns from Mix core" />
+    </references>
+    <currentState>
+      <analyzerIssues count="808" source="dart analyze" sampleFile="example/lib/src/common_styles.dart" summary="Style() constructor removed, $on.* API deprecated, gap/withOpacity/shade helpers deprecated, widespread mix v1 usage." />
+      <dependency name="mix" source="git" revision="e745fd834914ceefe101e7c3746b1fa0dc3fe87a" version="2.0.0-dev.2" note="New fluent stylers, MixScope tokens, RowBox/FlexBox widgets, state variants like onHovered." />
+      <constraint>Keep Dart style (2-space indent, 80 column) and ASCII output.</constraint>
+      <constraint>Use Mix v2 fluent APIs (BoxStyler(), TextStyler(), $box.color...) and variant helpers (.onHovered, .onFocused, etc.).</constraint>
+      <constraint>Initial cleanup must delete generated *.g.dart files before other refactors.</constraint>
+    </currentState>
+  </meta>
+  <tasks>
+    <task id="T0" title="Confirm Mix v2 foundations" status="todo">
+      <description>Digest Mix v2 API surface and align migration strategy before touching code.</description>
+      <todo>Re-read .llms/mix-scope-and-theming.md and token-migration-guide.md; note MixScope wiring expectations while reaffirming that Moon core stays token-agnostic.</todo>
+      <todo>Skim relevant sections of .llms/examples.xml (components, fluent API, RowBox/FlexBox, Pressable) to capture canonical patterns.</todo>
+      <todo>Document key deltas vs Mix v1 (no Style(), deprecated $on, gap → spacing, Color.withValues) in a short internal note (docs/mix_v2_notes.md) to guide later tasks.</todo>
+      <definitionOfDone>Reference note committed alongside migration outlining MixScope setup, fluent styler usage, and variant conversion rules.</definitionOfDone>
+    </task>
+    <task id="T1" title="Repository hygiene & generated file purge" status="todo" dependsOn="T0">
+      <description>Remove stale generated assets and baseline tool state ahead of refactors.</description>
+      <todo>Locate and delete all *.g.dart (and other stale generated artifacts) across repo; ensure .gitignore prevents regeneration.</todo>
+      <todo>Remove obsolete build/ outputs or cached analyzer JSON that will be regenerated (verify necessity with maintainers if uncertain).</todo>
+      <todo>Run flutter pub get to refresh dependency graph after deletions.</todo>
+      <definitionOfDone>Working tree free of generated files, pubspec.lock unchanged aside from dependency resolution, flutter pub get succeeds.</definitionOfDone>
+    </task>
+    <task id="T2" title="Baseline diagnostics snapshot" status="todo" dependsOn="T1">
+      <description>Capture current analyzer/test output to track migration progress.</description>
+      <todo>Run dart analyze --format json and store results at tools/reports/analyze.pre_migration.json for comparison.</todo>
+      <todo>Attempt flutter test -r expanded; save failing summary (even if failing) to tools/reports/tests.pre_migration.txt.</todo>
+      <definitionOfDone>Pre-migration analyzer and test snapshots stored under tools/reports/.</definitionOfDone>
+    </task>
+    <task id="T3" title="Headless core guardrails" status="todo" dependsOn="T0">
+      <description>Establish guardrails that keep lib/ free of opinionated styling while adopting Mix v2.</description>
+      <todo>Audit existing components for baked-in colors, spacing, or typography and document extraction targets for the example layer.</todo>
+      <todo>Outline the "component trio" workflow (core widget, tests, example) to apply consistently through the migration.</todo>
+      <definitionOfDone>Guidelines committed detailing headless expectations and trio workflow; core components limited to structural defaults only.</definitionOfDone>
+    </task>
+    <task id="T4" title="Upgrade custom Mix infrastructure" status="todo" dependsOn="T3">
+      <description>Align Moon-specific mix utilities/modifiers with Mix v2 core semantics.</description>
+      <todo>Audit lib/src/mix/attributes (MoonBorderMix, variants) to ensure they extend Style&lt;Spec&gt; correctly and expose fluent APIs matching Mix v2 (Prop.maybeMix, .onHovered, etc.).</todo>
+      <todo>Refactor lib/src/mix/modifiers/* to new WidgetModifier APIs (ensure utilities return MixUtility&lt;T, ModifierMix&gt; and expose wrap helpers).</todo>
+      <todo>Replace deprecated helpers ($with.*, Interactable) with Mix v2 equivalents (wrapOpacity, WidgetModifierConfig, Pressable) across mix extensions.</todo>
+      <todo>Add regression tests (if feasible) covering Moon modifiers resolving correctly via StyleSpecBuilder (lib or test/mix_modifiers_test.dart).</todo>
+      <definitionOfDone>Custom mix utilities compile against Mix v2, expose fluent builder surface, and are covered by sanity tests.</definitionOfDone>
+    </task>
+    <task id="T5" title="Refactor base interactive primitives" status="todo" dependsOn="T4">
+      <description>Migrate MoonBaseInteractiveWidget, selection widgets, and overlay primitives to typed stylers.</description>
+      <todo>Change style-typed properties from Style? to BoxStyler?/FlexBoxStyler? as appropriate; add generic type params if needed.</todo>
+      <todo>Replace Interactable usages with Pressable or Mix widget state controllers; ensure WidgetStatesController wiring remains intact.</todo>
+      <todo>Ensure base widgets expose style hooks without introducing default padding, colors, or typography.</todo>
+      <todo>Update unit tests (base_interactive_widget_test, base_single_select_widget_test, base_multi_select_widget_test, base_overlay_widget_test) to assert headless behaviour and state wiring.</todo>
+      <definitionOfDone>Base primitives compile with Mix v2 stylers, tests updated and passing.</definitionOfDone>
+    </task>
+    <task id="T6" title="Component migration: interactive & surface widgets" status="todo" dependsOn="T5">
+      <description>Port buttons, chips, tags, avatars, breadcrumb, menu item, segmented tab control, carousel to Mix v2 fluent APIs.</description>
+      <todo>Rewrite component style builders to use BoxStyler()/FlexBoxStyler() fluent chains (no Style() constructor, no $on.* pipes).</todo>
+      <todo>Replace StyledRow/StyledColumn with RowBox/ColumnBox (or FlexBox.createWidget) and update spacing() usage instead of gap().</todo>
+      <todo>Ensure components rely on passed stylers/state rather than hard-coded colors or spacing.</todo>
+      <todo>Update public APIs to return typed stylers (e.g., MoonButtonStyle builder returns BoxStyler) or builder delegates as needed and adjust exports.</todo>
+      <todo>Refresh component tests (button, chip, tag, avatar, breadcrumb, segmented_tab_control, carousel) to assert new style wiring.</todo>
+      <definitionOfDone>All interactive surface widgets compile with new stylers, remain headless, and have tests covering primary states.</definitionOfDone>
+    </task>
+    <task id="T7" title="Component migration: inputs & form controls" status="todo" dependsOn="T5">
+      <description>Migrate text inputs, form inputs, auth code, progress pin, radio, checkbox, switch to Mix v2.</description>
+      <todo>Refactor text input style pipeline: replace Style.merge/add with BoxStyler().merge, RowBox, wrapDefaultTextStyle, onFocused/onError variants.</todo>
+      <todo>Rewrite form/auth code containers to use BoxStyler.wrap* and expose border builders without embedding palette choices.</todo>
+      <todo>Update selection controls (radio, checkbox, switch) to use WidgetStatesController + onSelected/onDisabled stylers, cleaning up toggle logic.</todo>
+      <todo>Revisit MoonMessage/validation error rendering to rely on TextStyler hooks and structural spacing only.</todo>
+      <todo>Update associated widget tests (text_input_test, form_text_input_test, auth_code_test, switch_test, base_single_select_widget_test, base_multi_select_widget_test, progress_pin tests) to reflect new stylers and states.</todo>
+      <definitionOfDone>Form controls fully migrated, tests green, no remaining Style() usage in input stack.</definitionOfDone>
+    </task>
+    <task id="T8" title="Component migration: feedback & overlays" status="todo" dependsOn="T6,T7">
+      <description>Migrate alerts, toasts, modals, bottom sheets, popovers, tooltips, loaders, progress indicators.</description>
+      <todo>Update container stylers to BoxStyler fluent API (wrapOpacity, wrapPadding, animate(AnimationConfig)).</todo>
+      <todo>Ensure transitions use Mix v2 animation helpers (AnimationConfig.easeInOut, keyframes where relevant).</todo>
+      <todo>Replace deprecated Color.withOpacity/shade access with withValues() or consumer-supplied colors.</todo>
+      <todo>Update tests (alert_test, toast_test, modal_test, bottom_sheet_test, tooltip_test, linear_progress_indicator_test, circular_progress_indicator_test, loaders) to new stylers.</todo>
+      <definitionOfDone>Feedback/overlay widgets compile, remain headless, pass tests, and no deprecated APIs remain.</definitionOfDone>
+    </task>
+    <task id="T9" title="Example app & documentation refresh" status="todo" dependsOn="T6,T7,T8">
+      <description>Bring example/ and docs in sync with new API.</description>
+      <todo>Rewrite example/src/common_styles.dart and styled_components/* to use fluent $box/$flex APIs, RowBox, BoxStyler.onHovered, etc.</todo>
+      <todo>Swap StyledRow/StyledColumn for RowBox/ColumnBox and replace gap() with spacing().</todo>
+      <todo>Provide example-level MixScope/token wiring (outside of lib/) and ensure the sample still runs.</todo>
+      <todo>Refresh README usage snippets to demonstrate Mix v2 pattern (e.g., BoxStyler().color($brandPrimary()), onHovered).</todo>
+      <todo>Add MIGRATION.md summarising breaking changes for downstream consumers.</todo>
+      <definitionOfDone>Example app builds, docs updated, MIGRATION.md present.</definitionOfDone>
+    </task>
+    <task id="T10" title="Deprecated API & color cleanup" status="todo" dependsOn="T6,T7,T8">
+      <description>Eliminate lingering deprecated Flutter or Mix API usage.</description>
+      <todo>Replace Color.withOpacity -> withValues(), Color.alpha/red/green/blue -> .a/.r/.g/.b per flutter lint guidance.</todo>
+      <todo>Swap Colors.grey.shade* to ColorScheme or Colors.grey(*).</todo>
+      <todo>Ensure no references to gap, $with, Interactable, StyledRow remain (use ripgrep audit).</todo>
+      <definitionOfDone>rg checks confirm absence of deprecated symbols, analyzer reports zero deprecated_member_use.</definitionOfDone>
+    </task>
+    <task id="T11" title="Test suite expansion & stabilization" status="todo" dependsOn="T6,T7,T8">
+      <description>Strengthen automated coverage for Mix-driven components.</description>
+      <todo>Add golden/widget tests for key stylers (e.g., BoxStyler resolves expected colors when provided) referencing .llms/tests.xml patterns.</todo>
+      <todo>Create integration test verifying example-level theming flows through MixScope across components (flutter_test using WidgetTester).</todo>
+      <todo>Ensure tests run deterministically with WidgetStatesController; add helpers under test/utils/.</todo>
+      <definitionOfDone>New/updated tests in place, flutter test -r expanded passes locally.</definitionOfDone>
+    </task>
+    <task id="T12" title="Project polish & CI readiness" status="todo" dependsOn="T9,T10,T11">
+      <description>Finalize migration, ensure quality gates, and document release.</description>
+      <todo>Run dart format . and dart analyze (expect zero issues).</todo>
+      <todo>Run flutter test -r expanded; ensure widget goldens updated if needed.</todo>
+      <todo>Update CHANGELOG.md with breaking Mix v2 migration notes and instructions.</todo>
+      <todo>Prepare release checklist (docs/release_notes/mix_v2_migration.md) summarising key API changes, testing performed, known follow-ups.</todo>
+      <definitionOfDone>Analyser/test suites green, docs updated, release notes ready.</definitionOfDone>
+    </task>
+  </tasks>
+</actionPlan>

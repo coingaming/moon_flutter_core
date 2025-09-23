@@ -7,10 +7,8 @@ import 'package:flutter/services.dart';
 
 import 'package:mix/mix.dart';
 
-typedef MoonTextInputErrorBuilder = Widget Function(
-  BuildContext context,
-  String? errorText,
-);
+typedef MoonTextInputErrorBuilder =
+    Widget Function(BuildContext context, String? errorText);
 
 class MoonTextInputConfiguration {
   /// If [maxLength] is set to this value, only the "current input length" part
@@ -64,10 +62,10 @@ class MoonTextInputConfiguration {
   final String? initialValue;
 
   /// The style of the text input container.
-  final Style? inputStyle;
+  final BoxStyler? inputStyle;
 
   /// The style of the both helper and error based on the state.
-  final Style? helperErrorStyle;
+  final BoxStyler? helperErrorStyle;
 
   /// Defines where the floating [label] should be displayed.
   final AlignmentDirectional? floatingLabelTextAlign;
@@ -148,8 +146,8 @@ class MoonTextInputConfiguration {
   /// {@macro flutter.widgets.editableText.readOnly}
   final bool readOnly;
 
-  /// {@macro flutter.widgets.editableText.scribbleEnabled}
-  final bool scribbleEnabled;
+  /// {@macro flutter.widgets.editableText.stylusHandwritingEnabled}
+  final bool stylusHandwritingEnabled;
 
   /// {@macro flutter.widgets.editableText.showCursor}
   final bool? showCursor;
@@ -538,7 +536,7 @@ class MoonTextInputConfiguration {
     this.onTapOutside,
     this.readOnly = false,
     this.restorationId,
-    this.scribbleEnabled = true,
+    this.stylusHandwritingEnabled = true,
     this.scrollController,
     this.scrollPadding = const EdgeInsets.all(20.0),
     this.scrollPhysics,
@@ -558,43 +556,46 @@ class MoonTextInputConfiguration {
     SmartDashesType? smartDashesType,
     SmartQuotesType? smartQuotesType,
     TextInputType? keyboardType,
-  })  : enableInteractiveSelection =
-            enableInteractiveSelection ?? (!readOnly || !obscureText),
-        smartDashesType = smartDashesType ??
-            (obscureText ? SmartDashesType.disabled : SmartDashesType.enabled),
-        smartQuotesType = smartQuotesType ??
-            (obscureText ? SmartQuotesType.disabled : SmartQuotesType.enabled),
-        keyboardType = keyboardType ??
-            (maxLines == 1 ? TextInputType.text : TextInputType.multiline),
-        assert(maxLength == null || maxLength == noMaxLength || maxLength > 0),
-        assert(inputTextVerticalOffsetValue >= 0),
-        assert(obscuringCharacter.length == 1),
-        assert(maxLines == null || maxLines > 0),
-        assert(minLines == null || minLines > 0),
-        assert(
-          (maxLines == null) || (minLines == null) || (maxLines >= minLines),
-          "MinLines can't be greater than maxLines.",
-        ),
-        assert(
-          !expands || (maxLines == null && minLines == null),
-          "MinLines and maxLines must be null when expands is true.",
-        ),
-        assert(
-          !obscureText || maxLines == 1,
-          "Obscured fields cannot be multiline.",
-        ),
-        // Ensure no unexpected changes occur in the users set value.
-        assert(
-          !identical(textInputAction, TextInputAction.newline) ||
-              maxLines == 1 ||
-              !identical(keyboardType, TextInputType.text),
-          "Use keyboardType TextInputType.multiline when using "
-          "TextInputAction.newline on a multiline MoonTextInput.",
-        ),
-        assert(
-          !hasFloatingLabel || !expands,
-          "Expandable text input cannot have a floating label.",
-        );
+  }) : enableInteractiveSelection =
+           enableInteractiveSelection ?? (!readOnly || !obscureText),
+       smartDashesType =
+           smartDashesType ??
+           (obscureText ? SmartDashesType.disabled : SmartDashesType.enabled),
+       smartQuotesType =
+           smartQuotesType ??
+           (obscureText ? SmartQuotesType.disabled : SmartQuotesType.enabled),
+       keyboardType =
+           keyboardType ??
+           (maxLines == 1 ? TextInputType.text : TextInputType.multiline),
+       assert(maxLength == null || maxLength == noMaxLength || maxLength > 0),
+       assert(inputTextVerticalOffsetValue >= 0),
+       assert(obscuringCharacter.length == 1),
+       assert(maxLines == null || maxLines > 0),
+       assert(minLines == null || minLines > 0),
+       assert(
+         (maxLines == null) || (minLines == null) || (maxLines >= minLines),
+         "MinLines can't be greater than maxLines.",
+       ),
+       assert(
+         !expands || (maxLines == null && minLines == null),
+         "MinLines and maxLines must be null when expands is true.",
+       ),
+       assert(
+         !obscureText || maxLines == 1,
+         "Obscured fields cannot be multiline.",
+       ),
+       // Ensure no unexpected changes occur in the users set value.
+       assert(
+         !identical(textInputAction, TextInputAction.newline) ||
+             maxLines == 1 ||
+             !identical(keyboardType, TextInputType.text),
+         "Use keyboardType TextInputType.multiline when using "
+         "TextInputAction.newline on a multiline MoonTextInput.",
+       ),
+       assert(
+         !hasFloatingLabel || !expands,
+         "Expandable text input cannot have a floating label.",
+       );
 
   MoonTextInputConfiguration copyWith({
     // Moon Design System properties.
@@ -604,10 +605,10 @@ class MoonTextInputConfiguration {
     AlignmentDirectional? floatingLabelTextAlign,
     bool? hasFloatingLabel,
     Widget? helper,
-    Style? helperErrorStyle,
+    BoxStyler? helperErrorStyle,
     Widget? hint,
     String? initialValue,
-    Style? inputStyle,
+    BoxStyler? inputStyle,
     double? inputTextVerticalOffsetValue,
     TextAlignVertical? labelTextAlignVertical,
     Widget? label,
@@ -659,7 +660,7 @@ class MoonTextInputConfiguration {
     TapRegionCallback? onTapOutside,
     bool? readOnly,
     String? restorationId,
-    bool? scribbleEnabled,
+    bool? stylusHandwritingEnabled,
     ScrollController? scrollController,
     EdgeInsets? scrollPadding,
     ScrollPhysics? scrollPhysics,
@@ -743,7 +744,8 @@ class MoonTextInputConfiguration {
       onTapOutside: onTapOutside ?? this.onTapOutside,
       readOnly: readOnly ?? this.readOnly,
       restorationId: restorationId ?? this.restorationId,
-      scribbleEnabled: scribbleEnabled ?? this.scribbleEnabled,
+      stylusHandwritingEnabled:
+          stylusHandwritingEnabled ?? this.stylusHandwritingEnabled,
       scrollController: scrollController ?? this.scrollController,
       scrollPadding: scrollPadding ?? this.scrollPadding,
       scrollPhysics: scrollPhysics ?? this.scrollPhysics,
@@ -870,11 +872,7 @@ void textInputDebugFillProperties(
     ),
   );
   properties.add(
-    IntProperty(
-      "maxLines",
-      textInputConfiguration.maxLines,
-      defaultValue: 1,
-    ),
+    IntProperty("maxLines", textInputConfiguration.maxLines, defaultValue: 1),
   );
   properties.add(
     IntProperty(
@@ -1068,8 +1066,8 @@ void textInputDebugFillProperties(
   );
   properties.add(
     DiagnosticsProperty<bool>(
-      "scribbleEnabled",
-      textInputConfiguration.scribbleEnabled,
+      "stylusHandwritingEnabled",
+      textInputConfiguration.stylusHandwritingEnabled,
       defaultValue: true,
     ),
   );

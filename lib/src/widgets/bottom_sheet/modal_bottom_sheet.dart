@@ -19,7 +19,7 @@ Future<T?> showMoonRawModalBottomSheet<T>({
   Curve transitionCurve = const Cubic(0.0, 0.0, 0.2, 1.0),
   RouteSettings? settings,
   String? semanticLabel,
-  Style? bottomSheetStyle,
+  BoxStyler? bottomSheetStyle,
   AnimationController? animationController,
   required WidgetBuilder builder,
 }) async {
@@ -28,7 +28,7 @@ Future<T?> showMoonRawModalBottomSheet<T>({
 
   final bool hasMaterialLocalizations =
       Localizations.of<MaterialLocalizations>(context, MaterialLocalizations) !=
-          null;
+      null;
 
   final String barrierLabel = hasMaterialLocalizations
       ? MaterialLocalizations.of(context).modalBarrierDismissLabel
@@ -39,25 +39,25 @@ Future<T?> showMoonRawModalBottomSheet<T>({
     to: Navigator.of(context, rootNavigator: useRootNavigator).context,
   );
 
-  final T? result =
-      await Navigator.of(context, rootNavigator: useRootNavigator).push(
-    _MoonModalBottomSheetRoute<T>(
-      enableDrag: enableDrag,
-      isDismissible: isDismissible,
-      isExpanded: isExpanded,
-      themes: themes,
-      modalBarrierColor: barrierColor,
-      closeProgressThreshold: closeProgressThreshold,
-      animationDuration: transitionDuration,
-      animationCurve: transitionCurve,
-      settings: settings,
-      semanticLabel: semanticLabel,
-      bottomSheetStyle: bottomSheetStyle,
-      barrierLabel: barrierLabel,
-      animationController: animationController,
-      builder: builder,
-    ),
-  );
+  final T? result = await Navigator.of(context, rootNavigator: useRootNavigator)
+      .push(
+        _MoonModalBottomSheetRoute<T>(
+          enableDrag: enableDrag,
+          isDismissible: isDismissible,
+          isExpanded: isExpanded,
+          themes: themes,
+          modalBarrierColor: barrierColor,
+          closeProgressThreshold: closeProgressThreshold,
+          animationDuration: transitionDuration,
+          animationCurve: transitionCurve,
+          settings: settings,
+          semanticLabel: semanticLabel,
+          bottomSheetStyle: bottomSheetStyle,
+          barrierLabel: barrierLabel,
+          animationController: animationController,
+          builder: builder,
+        ),
+      );
 
   return result;
 }
@@ -72,7 +72,7 @@ class _MoonModalBottomSheetRoute<T> extends PageRoute<T> {
   final Duration animationDuration;
   final Curve animationCurve;
   final String? semanticLabel;
-  final Style? bottomSheetStyle;
+  final BoxStyler? bottomSheetStyle;
   final AnimationController? animationController;
   final ScrollController? scrollController;
   final WidgetBuilder builder;
@@ -172,7 +172,7 @@ class _ModalBottomSheet<T> extends StatefulWidget {
   final Duration transitionDuration;
   final Curve transitionCurve;
   final String? semanticLabel;
-  final Style? bottomSheetStyle;
+  final BoxStyler? bottomSheetStyle;
   final AnimationController? animationController;
   final _MoonModalBottomSheetRoute<T> route;
 
@@ -197,14 +197,10 @@ class _ModalBottomSheetState<T> extends State<_ModalBottomSheet<T>> {
 
   String _getRouteLabel() {
     final MaterialLocalizations? materialLocalizations =
-        Localizations.of<MaterialLocalizations>(
-      context,
-      MaterialLocalizations,
-    );
+        Localizations.of<MaterialLocalizations>(context, MaterialLocalizations);
 
     return switch (Theme.of(context).platform) {
-      TargetPlatform.android ||
-      TargetPlatform.fuchsia =>
+      TargetPlatform.android || TargetPlatform.fuchsia =>
         materialLocalizations?.dialogLabel ??
             const DefaultMaterialLocalizations().dialogLabel,
       _ => '',
@@ -247,7 +243,7 @@ class _ModalBottomSheetState<T> extends State<_ModalBottomSheet<T>> {
 
     final ScrollController scrollController =
         PrimaryScrollController.maybeOf(context) ??
-            (_scrollController ??= ScrollController());
+        (_scrollController ??= ScrollController());
 
     return PrimaryScrollController(
       controller: scrollController,

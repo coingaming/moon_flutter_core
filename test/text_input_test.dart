@@ -34,72 +34,69 @@ void main() {
 
   group('Error state related tests', () {
     testWidgets(
-        "When invalid text is entered and submitted, validation error is displayed",
-        (tester) async {
-      await tester.pumpWidget(
-        const _TextInputTestWidget(),
-      );
+      "When invalid text is entered and submitted, validation error is displayed",
+      (tester) async {
+        await tester.pumpWidget(const _TextInputTestWidget());
 
-      await tester.enterText(textInput, _invalidInput);
+        await tester.enterText(textInput, _invalidInput);
 
-      expect(invalidInput, findsOneWidget);
+        expect(invalidInput, findsOneWidget);
 
-      await submit(tester);
+        await submit(tester);
 
-      expect(error, findsOneWidget);
-    });
-
-    testWidgets(
-        "When valid text is entered and submitted, validation error is not displayed",
-        (tester) async {
-      await tester.pumpWidget(
-        const _TextInputTestWidget(),
-      );
-
-      await tester.enterText(textInput, _validInput);
-
-      expect(validInput, findsOneWidget);
-
-      await submit(tester);
-
-      expect(error, findsNothing);
-    });
+        expect(error, findsOneWidget);
+      },
+    );
 
     testWidgets(
-        "Custom 'errorBuilder' is shown with correct error text when 'errorText' is not null",
-        (tester) async {
+      "When valid text is entered and submitted, validation error is not displayed",
+      (tester) async {
+        await tester.pumpWidget(const _TextInputTestWidget());
+
+        await tester.enterText(textInput, _validInput);
+
+        expect(validInput, findsOneWidget);
+
+        await submit(tester);
+
+        expect(error, findsNothing);
+      },
+    );
+
+    testWidgets(
+      "Custom 'errorBuilder' is shown with correct error text when 'errorText' is not null",
+      (tester) async {
+        await tester.pumpWidget(
+          _TextInputTestWidget(
+            errorText: _customErrorText,
+            errorBuilder: (BuildContext context, String? error) {
+              return Text(
+                error ?? '',
+                style: const TextStyle(color: Colors.red),
+              );
+            },
+          ),
+        );
+
+        final Finder customError = find.byWidgetPredicate(
+          (Widget widget) =>
+              widget is Text &&
+              widget.data == _customErrorText &&
+              widget.style!.color == Colors.red,
+        );
+
+        expect(customError, findsOneWidget);
+      },
+    );
+
+    testWidgets("Validator errors take precedence over 'errorText'", (
+      tester,
+    ) async {
       await tester.pumpWidget(
         _TextInputTestWidget(
           errorText: _customErrorText,
           errorBuilder: (BuildContext context, String? error) {
-            return Text(
-              error ?? '',
-              style: const TextStyle(color: Colors.red),
-            );
-          },
-        ),
-      );
-
-      final Finder customError = find.byWidgetPredicate(
-        (Widget widget) =>
-            widget is Text &&
-            widget.data == _customErrorText &&
-            widget.style!.color == Colors.red,
-      );
-
-      expect(customError, findsOneWidget);
-    });
-
-    testWidgets("Validator errors take precedence over 'errorText'",
-        (tester) async {
-      await tester.pumpWidget(
-        _TextInputTestWidget(
-          errorText: _customErrorText,
-          errorBuilder: (BuildContext context, String? error) {
-            return Text(
-              error ?? '',
-              style: const TextStyle(color: Colors.red),
-            );
+            return Text(error ?? '', style: const TextStyle(color: Colors.red));
           },
         ),
       );
@@ -129,56 +126,46 @@ void main() {
       final Finder initialValue = find.text(initialValueText);
 
       await tester.pumpWidget(
-        const _TextInputTestWidget(
-          initialValue: initialValueText,
-        ),
+        const _TextInputTestWidget(initialValue: initialValueText),
       );
 
       expect(initialValue, findsOneWidget);
     });
 
-    testWidgets("Text input displays 'helper' widget if set to true",
-        (tester) async {
+    testWidgets("Text input displays 'helper' widget if set to true", (
+      tester,
+    ) async {
       final Finder helper = find.text(_helperText);
 
-      await tester.pumpWidget(
-        const _TextInputTestWidget(
-          showHelper: true,
-        ),
-      );
+      await tester.pumpWidget(const _TextInputTestWidget(showHelper: true));
 
       expect(helper, findsOneWidget);
     });
 
-    testWidgets("Text input displays 'hint' widget if set to true",
-        (tester) async {
+    testWidgets("Text input displays 'hint' widget if set to true", (
+      tester,
+    ) async {
       final Finder hint = find.text(_hintText);
 
-      await tester.pumpWidget(
-        const _TextInputTestWidget(
-          showHint: true,
-        ),
-      );
+      await tester.pumpWidget(const _TextInputTestWidget(showHint: true));
 
       expect(hint, findsOneWidget);
     });
 
     testWidgets(
-        "Text input displays 'leading' and 'trailing' widget if set to true",
-        (tester) async {
-      final Finder leadingIcon = find.byIcon(_textInputLeadingIcon);
-      final Finder trailingIcon = find.byIcon(_textInputTrailingIcon);
+      "Text input displays 'leading' and 'trailing' widget if set to true",
+      (tester) async {
+        final Finder leadingIcon = find.byIcon(_textInputLeadingIcon);
+        final Finder trailingIcon = find.byIcon(_textInputTrailingIcon);
 
-      await tester.pumpWidget(
-        const _TextInputTestWidget(
-          showLeading: true,
-          showTrailing: true,
-        ),
-      );
+        await tester.pumpWidget(
+          const _TextInputTestWidget(showLeading: true, showTrailing: true),
+        );
 
-      expect(leadingIcon, findsOneWidget);
-      expect(trailingIcon, findsOneWidget);
-    });
+        expect(leadingIcon, findsOneWidget);
+        expect(trailingIcon, findsOneWidget);
+      },
+    );
 
     testWidgets("Text input respects 'maxLength'", (tester) async {
       const int maxLength = 5;
@@ -187,11 +174,7 @@ void main() {
       final Finder fullLengthText = find.text(longText);
       final Finder maxLengthText = find.text(longText.substring(0, maxLength));
 
-      await tester.pumpWidget(
-        const _TextInputTestWidget(
-          maxLength: maxLength,
-        ),
-      );
+      await tester.pumpWidget(const _TextInputTestWidget(maxLength: maxLength));
 
       await tester.enterText(textInput, longText);
       await tester.pump();
@@ -200,14 +183,14 @@ void main() {
       expect(fullLengthText, findsNothing);
     });
 
-    testWidgets("Long press on text input opens the text selection toolbar",
-        (tester) async {
-      final Finder textSelectionToolbar =
-          find.byType(AdaptiveTextSelectionToolbar);
-
-      await tester.pumpWidget(
-        const _TextInputTestWidget(),
+    testWidgets("Long press on text input opens the text selection toolbar", (
+      tester,
+    ) async {
+      final Finder textSelectionToolbar = find.byType(
+        AdaptiveTextSelectionToolbar,
       );
+
+      await tester.pumpWidget(const _TextInputTestWidget());
 
       expect(textSelectionToolbar, findsNothing);
 
@@ -218,98 +201,98 @@ void main() {
     });
 
     testWidgets(
-        "'textAlignVertical' aligns input and hint correctly based on its value",
-        (WidgetTester tester) async {
-      const double delta = 2;
-      const List<TextAlignVertical> verticalAlignments = [
-        TextAlignVertical.top,
-        TextAlignVertical.center,
-        TextAlignVertical.bottom,
-      ];
+      "'textAlignVertical' aligns input and hint correctly based on its value",
+      (WidgetTester tester) async {
+        const double delta = 2;
+        const List<TextAlignVertical> verticalAlignments = [
+          TextAlignVertical.top,
+          TextAlignVertical.center,
+          TextAlignVertical.bottom,
+        ];
 
-      for (final verticalAlign in verticalAlignments) {
-        await tester.pumpWidget(
-          _TextInputTestWidget(
-            textAlignVertical: verticalAlign,
-            showHint: true,
-          ),
-        );
+        for (final verticalAlign in verticalAlignments) {
+          await tester.pumpWidget(
+            _TextInputTestWidget(
+              textAlignVertical: verticalAlign,
+              showHint: true,
+            ),
+          );
 
-        await tester.pumpAndSettle();
+          await tester.pumpAndSettle();
 
-        final hintTopDy = tester.getTopLeft(hint).dy;
-        final hintCenterDy = tester.getCenter(hint).dy;
-        final hintBottomDy = tester.getBottomLeft(hint).dy;
+          final hintTopDy = tester.getTopLeft(hint).dy;
+          final hintCenterDy = tester.getCenter(hint).dy;
+          final hintBottomDy = tester.getBottomLeft(hint).dy;
 
-        final editableTopDy = tester.getTopLeft(editableText).dy;
-        final editableCenterDy = tester.getCenter(editableText).dy;
-        final editableBottomDy = tester.getBottomLeft(editableText).dy;
+          final editableTopDy = tester.getTopLeft(editableText).dy;
+          final editableCenterDy = tester.getCenter(editableText).dy;
+          final editableBottomDy = tester.getBottomLeft(editableText).dy;
 
-        final inputTopDy = tester.getTopLeft(textInput).dy;
+          final inputTopDy = tester.getTopLeft(textInput).dy;
 
-        switch (verticalAlign) {
-          case TextAlignVertical.top:
-            expect(hintTopDy, closeTo(inputTopDy, delta));
-            expect(editableTopDy, closeTo(inputTopDy, delta));
-          case TextAlignVertical.center:
-            expect(hintCenterDy, greaterThan(hintTopDy));
-            expect(editableCenterDy, greaterThan(editableTopDy));
-          case TextAlignVertical.bottom:
-            expect(hintBottomDy, greaterThan(hintCenterDy));
-            expect(editableBottomDy, greaterThan(editableCenterDy));
+          switch (verticalAlign) {
+            case TextAlignVertical.top:
+              expect(hintTopDy, closeTo(inputTopDy, delta));
+              expect(editableTopDy, closeTo(inputTopDy, delta));
+            case TextAlignVertical.center:
+              expect(hintCenterDy, greaterThan(hintTopDy));
+              expect(editableCenterDy, greaterThan(editableTopDy));
+            case TextAlignVertical.bottom:
+              expect(hintBottomDy, greaterThan(hintCenterDy));
+              expect(editableBottomDy, greaterThan(editableCenterDy));
+          }
         }
-      }
-    });
+      },
+    );
 
     testWidgets(
-        "'textAlign' aligns input and hint correctly based on its value",
-        (WidgetTester tester) async {
-      const double delta = 1;
-      const List<TextAlign> textAlignments = [
-        TextAlign.start,
-        TextAlign.center,
-        TextAlign.end,
-      ];
+      "'textAlign' aligns input and hint correctly based on its value",
+      (WidgetTester tester) async {
+        const double delta = 1;
+        const List<TextAlign> textAlignments = [
+          TextAlign.start,
+          TextAlign.center,
+          TextAlign.end,
+        ];
 
-      for (final textAlign in textAlignments) {
-        await tester.pumpWidget(
-          _TextInputTestWidget(
-            textAlign: textAlign,
-            showHint: true,
-          ),
-        );
+        for (final textAlign in textAlignments) {
+          await tester.pumpWidget(
+            _TextInputTestWidget(textAlign: textAlign, showHint: true),
+          );
 
-        await tester.pumpAndSettle();
+          await tester.pumpAndSettle();
 
-        final RenderBox textRenderBox = tester.renderObject(textInput);
-        final double inputOffsetDx =
-            textRenderBox.localToGlobal(Offset.zero).dx;
-        final double inputWidth = textRenderBox.size.width;
+          final RenderBox textRenderBox = tester.renderObject(textInput);
+          final double inputOffsetDx = textRenderBox
+              .localToGlobal(Offset.zero)
+              .dx;
+          final double inputWidth = textRenderBox.size.width;
 
-        final double hintStartDx = tester.getTopLeft(hint).dx;
-        final double hintCenterDx = tester.getCenter(hint).dx;
-        final double hintEndDx = tester.getTopRight(hint).dx;
+          final double hintStartDx = tester.getTopLeft(hint).dx;
+          final double hintCenterDx = tester.getCenter(hint).dx;
+          final double hintEndDx = tester.getTopRight(hint).dx;
 
-        final double editableStartDx = tester.getTopLeft(editableText).dx;
-        final double editableCenterDx = tester.getCenter(editableText).dx;
-        final double editableEndDx = tester.getTopRight(editableText).dx;
+          final double editableStartDx = tester.getTopLeft(editableText).dx;
+          final double editableCenterDx = tester.getCenter(editableText).dx;
+          final double editableEndDx = tester.getTopRight(editableText).dx;
 
-        final double inputEndOffsetDx = inputOffsetDx + inputWidth;
+          final double inputEndOffsetDx = inputOffsetDx + inputWidth;
 
-        switch (textAlign) {
-          case TextAlign.start:
-            expect(editableStartDx, closeTo(inputOffsetDx, delta));
-            expect(hintStartDx, closeTo(inputOffsetDx, delta));
-          case TextAlign.center:
-            expect(editableCenterDx, closeTo(inputEndOffsetDx / 2, delta));
-            expect(hintCenterDx, closeTo(inputEndOffsetDx / 2, delta));
-          case TextAlign.end:
-            expect(editableEndDx, closeTo(inputEndOffsetDx, delta));
-            expect(hintEndDx, closeTo(inputEndOffsetDx, delta));
-          default:
+          switch (textAlign) {
+            case TextAlign.start:
+              expect(editableStartDx, closeTo(inputOffsetDx, delta));
+              expect(hintStartDx, closeTo(inputOffsetDx, delta));
+            case TextAlign.center:
+              expect(editableCenterDx, closeTo(inputEndOffsetDx / 2, delta));
+              expect(hintCenterDx, closeTo(inputEndOffsetDx / 2, delta));
+            case TextAlign.end:
+              expect(editableEndDx, closeTo(inputEndOffsetDx, delta));
+              expect(hintEndDx, closeTo(inputEndOffsetDx, delta));
+            default:
+          }
         }
-      }
-    });
+      },
+    );
   });
 
   group('Callback related tests', () {
@@ -317,9 +300,7 @@ void main() {
       String? changedText;
 
       await tester.pumpWidget(
-        _TextInputTestWidget(
-          onChanged: (text) => changedText = text,
-        ),
+        _TextInputTestWidget(onChanged: (text) => changedText = text),
       );
 
       await tester.enterText(textInput, _validInput);
@@ -332,9 +313,7 @@ void main() {
       String? submittedText;
 
       await tester.pumpWidget(
-        _TextInputTestWidget(
-          onSubmitted: (text) => submittedText = text,
-        ),
+        _TextInputTestWidget(onSubmitted: (text) => submittedText = text),
       );
 
       await tester.enterText(textInput, _validInput);
@@ -347,11 +326,7 @@ void main() {
     testWidgets("'onTap' callback is triggered", (tester) async {
       bool tapped = false;
 
-      await tester.pumpWidget(
-        _TextInputTestWidget(
-          onTap: () => tapped = true,
-        ),
-      );
+      await tester.pumpWidget(_TextInputTestWidget(onTap: () => tapped = true));
 
       await tester.tap(textInput);
       await tester.pump();
@@ -377,13 +352,10 @@ void main() {
   });
 
   group('Miscellaneous tests', () {
-    testWidgets("When text input is 'disabled', input can not be entered",
-        (tester) async {
-      await tester.pumpWidget(
-        const _TextInputTestWidget(
-          enabled: false,
-        ),
-      );
+    testWidgets("When text input is 'disabled', input can not be entered", (
+      tester,
+    ) async {
+      await tester.pumpWidget(const _TextInputTestWidget(enabled: false));
       expect(validInput, findsNothing);
 
       await tester.enterText(textInput, _validInput);
@@ -391,13 +363,10 @@ void main() {
       expect(validInput, findsNothing);
     });
 
-    testWidgets("Text input is read-only if 'readOnly' is set to true",
-        (tester) async {
-      await tester.pumpWidget(
-        const _TextInputTestWidget(
-          readOnly: true,
-        ),
-      );
+    testWidgets("Text input is read-only if 'readOnly' is set to true", (
+      tester,
+    ) async {
+      await tester.pumpWidget(const _TextInputTestWidget(readOnly: true));
 
       await tester.enterText(textInput, _validInput);
       await tester.pump();
@@ -408,11 +377,7 @@ void main() {
     testWidgets("Text input can gain and lose focus", (tester) async {
       final FocusNode focusNode = FocusNode();
 
-      await tester.pumpWidget(
-        _TextInputTestWidget(
-          focusNode: focusNode,
-        ),
-      );
+      await tester.pumpWidget(_TextInputTestWidget(focusNode: focusNode));
 
       expect(focusNode.hasFocus, isFalse);
 
@@ -423,11 +388,7 @@ void main() {
     });
 
     testWidgets("Text input can be cleared", (tester) async {
-      await tester.pumpWidget(
-        const _TextInputTestWidget(
-          showTrailing: true,
-        ),
-      );
+      await tester.pumpWidget(const _TextInputTestWidget(showTrailing: true));
 
       await tester.enterText(textInput, _validInput);
       await tester.pump();

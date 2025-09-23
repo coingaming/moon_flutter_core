@@ -18,10 +18,6 @@ class MoonBaseInteractiveWidget extends StatelessWidget {
   /// clicking sound, while a long-press may trigger a short vibration.
   final bool enableFeedback;
 
-  /// The duration to wait after the press is released before the state of
-  /// pressed is removed.
-  final Duration unpressDelay;
-
   /// {@macro flutter.widgets.Focus.focusNode}
   final FocusNode? focusNode;
 
@@ -29,7 +25,7 @@ class MoonBaseInteractiveWidget extends StatelessWidget {
   final HitTestBehavior hitTestBehavior;
 
   /// The controller for the widget state.
-  final MixWidgetStateController? stateController;
+  final WidgetStatesController? stateController;
 
   /// The cursor for a mouse pointer when it enters or is hovering over the widget.
   final MouseCursor? mouseCursor;
@@ -44,7 +40,7 @@ class MoonBaseInteractiveWidget extends StatelessWidget {
   final String? semanticLabel;
 
   /// The style of the widget.
-  final Style? style;
+  final BoxStyler? style;
 
   /// The callback that is called when the widget is tapped or otherwise activated.
   ///
@@ -73,7 +69,6 @@ class MoonBaseInteractiveWidget extends StatelessWidget {
     this.autofocus = false,
     this.enabled = true,
     this.enableFeedback = false,
-    this.unpressDelay = const Duration(milliseconds: 200),
     this.focusNode,
     this.hitTestBehavior = HitTestBehavior.opaque,
     this.stateController,
@@ -107,16 +102,17 @@ class MoonBaseInteractiveWidget extends StatelessWidget {
             enabled: isEnabled,
             enableFeedback: enableFeedback,
             hitTestBehavior: hitTestBehavior,
-            unpressDelay: unpressDelay,
             mouseCursor: mouseCursor,
             controller: stateController,
             onFocusChange: onFocusChange,
             onPress: enabled ? onTap : null,
             onLongPress: enabled ? onLongPress : null,
-            child: Box(
-              style: style,
-              child: child,
-            ),
+            child: style != null
+                ? Box(
+                    style: style!,
+                    child: child,
+                  )
+                : child,
           ),
         ),
       ),

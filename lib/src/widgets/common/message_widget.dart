@@ -33,10 +33,7 @@ class _MoonMessageState extends State<MoonMessage>
   void initState() {
     super.initState();
 
-    _controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
-    );
+    _controller = AnimationController(duration: widget.duration, vsync: this);
     _opacityAnimation = CurvedAnimation(
       parent: _controller,
       curve: widget.curve,
@@ -62,13 +59,11 @@ class _MoonMessageState extends State<MoonMessage>
         children: [
           widget.icon ??
               StyledIcon(
-                style: Style($icon.size(16)),
-                Icons.error_outline_rounded,
+                icon: Icons.error_outline_rounded,
+                style: IconStyler().size(16),
               ),
           SizedBox(width: widget.horizontalGap),
-          Flexible(
-            child: StyledText(widget.text),
-          ),
+          Flexible(child: StyledText(widget.text)),
         ],
       ),
     );

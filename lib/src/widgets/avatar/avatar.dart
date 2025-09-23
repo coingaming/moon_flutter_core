@@ -4,12 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:moon_core/src/widgets/avatar/avatar_circle_clipper.dart';
 import 'package:moon_core/src/widgets/avatar/avatar_rectangle_clipper.dart';
 
-enum MoonBadgeAlignment {
-  topLeft,
-  topRight,
-  bottomLeft,
-  bottomRight,
-}
+enum MoonBadgeAlignment { topLeft, topRight, bottomLeft, bottomRight }
 
 class MoonRawAvatar extends StatelessWidget {
   /// Whether to show the avatar badge.
@@ -64,13 +59,13 @@ class MoonRawAvatar extends StatelessWidget {
     this.semanticLabel,
     this.badge,
     required this.content,
-  })  : assert(
-          badge != null || !showBadge,
-          "If showBadge is true, badge can not be null.",
-        ),
-        avatarClipperBorderRadius = null,
-        badgeClipperBorderRadius = null,
-        badgeSize = null;
+  }) : assert(
+         badge != null || !showBadge,
+         "If showBadge is true, badge can not be null.",
+       ),
+       avatarClipperBorderRadius = null,
+       badgeClipperBorderRadius = null,
+       badgeSize = null;
 
   /// Creates a Moon Design raw avatar with rectangular cutout.
   const MoonRawAvatar.rectangle({
@@ -86,11 +81,11 @@ class MoonRawAvatar extends StatelessWidget {
     this.semanticLabel,
     this.badge,
     required this.content,
-  })  : assert(
-          badge != null || !showBadge,
-          "If showBadge is true, badge can not be null.",
-        ),
-        badgeSizeValue = null;
+  }) : assert(
+         badge != null || !showBadge,
+         "If showBadge is true, badge can not be null.",
+       ),
+       badgeSizeValue = null;
 
   bool get _isRectangleClipper =>
       customClipper == null && avatarClipperBorderRadius != null;
@@ -153,8 +148,8 @@ class MoonRawAvatar extends StatelessWidget {
                     // Clipper does not work properly on mobile web/PWA,
                     // so it is disabled;
                     isWebPwa
-                        ? null
-                        : (customClipper ?? _getDefaultClipper(context)),
+                    ? null
+                    : (customClipper ?? _getDefaultClipper(context)),
                 child: content,
               ),
             ),

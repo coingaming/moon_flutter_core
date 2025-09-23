@@ -7,8 +7,6 @@ class StyledCircularLoader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MoonRawCircularLoader(
-      color: Colors.purple,
-    );
+    return const MoonRawCircularLoader(color: Colors.purple);
   }
 }

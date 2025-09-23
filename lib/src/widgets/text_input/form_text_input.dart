@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:moon_core/src/widgets/text_input/text_input.dart';
 import 'package:moon_core/src/widgets/text_input/text_input_configuration.dart';
 
-typedef MoonFormTextInputValidationStatusCallback = void Function(
-  String? validationErrorText,
-);
+typedef MoonFormTextInputValidationStatusCallback =
+    void Function(String? validationErrorText);
 
 class MoonRawFormTextInput extends FormField<String> {
   final MoonTextInputConfiguration configuration;
@@ -21,53 +20,54 @@ class MoonRawFormTextInput extends FormField<String> {
     AutovalidateMode? autovalidateMode,
     MoonTextInputConfiguration? textInputConfiguration,
     MoonFormTextInputValidationStatusCallback? validationStatusCallback,
-  })  : configuration =
-            textInputConfiguration ?? const MoonTextInputConfiguration(),
-        super(
-          enabled: textInputConfiguration?.enabled ?? true,
-          autovalidateMode: autovalidateMode ?? AutovalidateMode.disabled,
-          initialValue: textInputConfiguration?.controller?.text ??
-              textInputConfiguration?.initialValue ??
-              "",
-          builder: (FormFieldState<String> field) {
-            final MoonTextInputConfiguration configuration =
-                textInputConfiguration ?? const MoonTextInputConfiguration();
+  }) : configuration =
+           textInputConfiguration ?? const MoonTextInputConfiguration(),
+       super(
+         enabled: textInputConfiguration?.enabled ?? true,
+         autovalidateMode: autovalidateMode ?? AutovalidateMode.disabled,
+         initialValue:
+             textInputConfiguration?.controller?.text ??
+             textInputConfiguration?.initialValue ??
+             "",
+         builder: (FormFieldState<String> field) {
+           final MoonTextInputConfiguration configuration =
+               textInputConfiguration ?? const MoonTextInputConfiguration();
 
-            validationStatusCallback?.call(field.errorText);
+           validationStatusCallback?.call(field.errorText);
 
-            void onChangedHandler(String value) {
-              field.didChange(value);
+           void onChangedHandler(String value) {
+             field.didChange(value);
 
-              if (textInputConfiguration?.onChanged != null) {
-                textInputConfiguration!.onChanged!(value);
-              }
-            }
+             if (textInputConfiguration?.onChanged != null) {
+               textInputConfiguration!.onChanged!(value);
+             }
+           }
 
-            return UnmanagedRestorationScope(
-              bucket: field.bucket,
-              child: MoonRawTextInput(
-                textInputConfiguration: configuration.copyWith(
-                  restorationId: field.restorationId ??
-                      textInputConfiguration?.restorationId ??
-                      "editable",
-                  errorText:
-                      field.errorText ?? textInputConfiguration?.errorText,
-                  controller:
-                      (field as _MoonFormTextInputState)._effectiveController,
-                  onChanged: onChangedHandler,
-                ),
-              ),
-            );
-          },
-        );
+           return UnmanagedRestorationScope(
+             bucket: field.bucket,
+             child: MoonRawTextInput(
+               textInputConfiguration: configuration.copyWith(
+                 restorationId:
+                     field.restorationId ??
+                     textInputConfiguration?.restorationId ??
+                     "editable",
+                 errorText:
+                     field.errorText ?? textInputConfiguration?.errorText,
+                 controller:
+                     (field as _MoonFormTextInputState)._effectiveController,
+                 onChanged: onChangedHandler,
+               ),
+             ),
+           );
+         },
+       );
 
   static Widget defaultContextMenuBuilder(
     BuildContext context,
     EditableTextState editableTextState,
-  ) =>
-      AdaptiveTextSelectionToolbar.editableText(
-        editableTextState: editableTextState,
-      );
+  ) => AdaptiveTextSelectionToolbar.editableText(
+    editableTextState: editableTextState,
+  );
 
   @override
   FormFieldState<String> createState() => _MoonFormTextInputState();

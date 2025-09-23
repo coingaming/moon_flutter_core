@@ -11,26 +11,21 @@ void main() {
   final Finder closeButton = find.byIcon(_closeAlertIcon);
 
   testWidgets("Alert is visible when 'show' is true", (tester) async {
-    await tester.pumpWidget(
-      const _AlertTestWidget(),
-    );
+    await tester.pumpWidget(const _AlertTestWidget());
 
     expect(alert, findsOneWidget);
   });
 
   testWidgets("Alert is not visible when 'show' is false", (tester) async {
-    await tester.pumpWidget(
-      const _AlertTestWidget(show: false),
-    );
+    await tester.pumpWidget(const _AlertTestWidget(show: false));
 
     expect(alert, findsNothing);
   });
 
-  testWidgets("Alert disappears when the 'close' button is tapped",
-      (tester) async {
-    await tester.pumpWidget(
-      const _AlertTestWidget(),
-    );
+  testWidgets("Alert disappears when the 'close' button is tapped", (
+    tester,
+  ) async {
+    await tester.pumpWidget(const _AlertTestWidget());
 
     expect(closeButton, findsOneWidget);
     expect(alert, findsOneWidget);
@@ -42,25 +37,26 @@ void main() {
   });
 
   testWidgets(
-      "When alert's visibility changes, 'onVisibilityChanged' callback is called",
-      (tester) async {
-    bool callbackTriggered = false;
+    "When alert's visibility changes, 'onVisibilityChanged' callback is called",
+    (tester) async {
+      bool callbackTriggered = false;
 
-    await tester.pumpWidget(
-      _AlertTestWidget(
-        onVisibilityChanged: (bool newValue) => callbackTriggered = true,
-      ),
-    );
+      await tester.pumpWidget(
+        _AlertTestWidget(
+          onVisibilityChanged: (bool newValue) => callbackTriggered = true,
+        ),
+      );
 
-    expect(closeButton, findsOneWidget);
-    expect(alert, findsOneWidget);
+      expect(closeButton, findsOneWidget);
+      expect(alert, findsOneWidget);
 
-    await tester.tap(closeButton);
-    await tester.pumpAndSettle();
+      await tester.tap(closeButton);
+      await tester.pumpAndSettle();
 
-    expect(callbackTriggered, isTrue);
-    expect(alert, findsNothing);
-  });
+      expect(callbackTriggered, isTrue);
+      expect(alert, findsNothing);
+    },
+  );
 }
 
 class _AlertTestWidget extends StatefulWidget {

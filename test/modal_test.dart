@@ -12,11 +12,10 @@ void main() {
   final Finder showModalButton = find.byKey(_showButtonKey);
   final Finder modal = find.text(_modalContent);
 
-  testWidgets("Modal is displayed when the 'show' button is tapped",
-      (tester) async {
-    await tester.pumpWidget(
-      const _ModalTestWidget(),
-    );
+  testWidgets("Modal is displayed when the 'show' button is tapped", (
+    tester,
+  ) async {
+    await tester.pumpWidget(const _ModalTestWidget());
 
     expect(showModalButton, findsOneWidget);
 
@@ -26,11 +25,10 @@ void main() {
     expect(modal, findsOneWidget);
   });
 
-  testWidgets("Modal stays visible when tapped inside its content",
-      (tester) async {
-    await tester.pumpWidget(
-      const _ModalTestWidget(),
-    );
+  testWidgets("Modal stays visible when tapped inside its content", (
+    tester,
+  ) async {
+    await tester.pumpWidget(const _ModalTestWidget());
 
     expect(showModalButton, findsOneWidget);
 
@@ -40,8 +38,9 @@ void main() {
     expect(modal, findsOneWidget);
 
     final RenderBox modalBox = tester.renderObject(modal);
-    final Offset modalCenter =
-        modalBox.localToGlobal(modalBox.size.center(Offset.zero));
+    final Offset modalCenter = modalBox.localToGlobal(
+      modalBox.size.center(Offset.zero),
+    );
 
     await tester.tapAt(modalCenter);
     await tester.pumpAndSettle();
@@ -50,55 +49,47 @@ void main() {
   });
 
   testWidgets(
-      "Modal closes when a tap occurs outside its content, if 'barrierDismissible'",
-      (
-    tester,
-  ) async {
-    await tester.pumpWidget(
-      const _ModalTestWidget(),
-    );
+    "Modal closes when a tap occurs outside its content, if 'barrierDismissible'",
+    (tester) async {
+      await tester.pumpWidget(const _ModalTestWidget());
 
-    expect(showModalButton, findsOneWidget);
+      expect(showModalButton, findsOneWidget);
 
-    await tester.tap(showModalButton);
-    await tester.pumpAndSettle();
+      await tester.tap(showModalButton);
+      await tester.pumpAndSettle();
 
-    expect(modal, findsOneWidget);
+      expect(modal, findsOneWidget);
 
-    await tester.tapAt(const Offset(10, 10));
-    await tester.pumpAndSettle();
+      await tester.tapAt(const Offset(10, 10));
+      await tester.pumpAndSettle();
 
-    expect(modal, findsNothing);
-  });
+      expect(modal, findsNothing);
+    },
+  );
 
   testWidgets(
-      "Modal stays visible when a tap occurs outside its content, if not 'barrierDismissible'",
-      (tester) async {
-    await tester.pumpWidget(
-      const _ModalTestWidget(
-        isDismissible: false,
-      ),
-    );
+    "Modal stays visible when a tap occurs outside its content, if not 'barrierDismissible'",
+    (tester) async {
+      await tester.pumpWidget(const _ModalTestWidget(isDismissible: false));
 
-    expect(showModalButton, findsOneWidget);
+      expect(showModalButton, findsOneWidget);
 
-    await tester.tap(showModalButton);
-    await tester.pumpAndSettle();
+      await tester.tap(showModalButton);
+      await tester.pumpAndSettle();
 
-    expect(modal, findsOneWidget);
+      expect(modal, findsOneWidget);
 
-    await tester.tapAt(const Offset(10, 10));
-    await tester.pumpAndSettle();
+      await tester.tapAt(const Offset(10, 10));
+      await tester.pumpAndSettle();
 
-    expect(modal, findsOneWidget);
-  });
+      expect(modal, findsOneWidget);
+    },
+  );
 
   testWidgets("Modal closes when the 'close' button is tapped", (tester) async {
     final Finder closeButton = find.byKey(_closeButtonKey);
 
-    await tester.pumpWidget(
-      const _ModalTestWidget(),
-    );
+    await tester.pumpWidget(const _ModalTestWidget());
 
     expect(showModalButton, findsOneWidget);
 
@@ -117,9 +108,7 @@ void main() {
     const String routeName = "/customModal";
 
     await tester.pumpWidget(
-      const _ModalTestWidget(
-        routeSettings: RouteSettings(name: routeName),
-      ),
+      const _ModalTestWidget(routeSettings: RouteSettings(name: routeName)),
     );
 
     await tester.tap(showModalButton);
@@ -149,8 +138,10 @@ void main() {
     await tester.tap(showModalButton);
     await tester.pumpAndSettle();
 
-    final modalTransitionFinder =
-        find.ancestor(of: modal, matching: scaleTransition);
+    final modalTransitionFinder = find.ancestor(
+      of: modal,
+      matching: scaleTransition,
+    );
 
     expect(modalTransitionFinder, findsOneWidget);
   });

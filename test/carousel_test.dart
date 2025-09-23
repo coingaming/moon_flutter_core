@@ -18,9 +18,7 @@ void main() {
   final Finder item4 = find.text("4");
 
   testWidgets("Carousel initializes correctly", (tester) async {
-    await tester.pumpWidget(
-      const _CarouselTestWidget(),
-    );
+    await tester.pumpWidget(const _CarouselTestWidget());
 
     expect(item0, findsOneWidget);
     expect(item1, findsOneWidget);
@@ -28,9 +26,7 @@ void main() {
   });
 
   testWidgets("Carousel items visibility changes on scroll", (tester) async {
-    await tester.pumpWidget(
-      const _CarouselTestWidget(),
-    );
+    await tester.pumpWidget(const _CarouselTestWidget());
 
     expect(item0, findsOneWidget);
     expect(item1, findsOneWidget);
@@ -47,42 +43,35 @@ void main() {
   });
 
   testWidgets(
-      "Carousel 'autoPlay' works correctly if set to true with custom 'autoPlayDelay'",
-      (tester) async {
-    await tester.pumpWidget(
-      const _CarouselTestWidget(
-        autoPlay: true,
-      ),
-    );
+    "Carousel 'autoPlay' works correctly if set to true with custom 'autoPlayDelay'",
+    (tester) async {
+      await tester.pumpWidget(const _CarouselTestWidget(autoPlay: true));
 
-    expect(item0, findsOneWidget);
-    expect(item1, findsOneWidget);
-    expect(item2, findsNothing);
+      expect(item0, findsOneWidget);
+      expect(item1, findsOneWidget);
+      expect(item2, findsNothing);
 
-    await tester.pump(_autoPlayDelay);
-    await tester.pumpAndSettle();
+      await tester.pump(_autoPlayDelay);
+      await tester.pumpAndSettle();
 
-    expect(item0, findsOneWidget);
-    expect(item1, findsOneWidget);
-    expect(item2, findsOneWidget);
-    expect(item3, findsNothing);
+      expect(item0, findsOneWidget);
+      expect(item1, findsOneWidget);
+      expect(item2, findsOneWidget);
+      expect(item3, findsNothing);
 
-    await tester.pump(_autoPlayDelay);
-    await tester.pumpAndSettle();
+      await tester.pump(_autoPlayDelay);
+      await tester.pumpAndSettle();
 
-    expect(item0, findsNothing);
-    expect(item1, findsOneWidget);
-    expect(item2, findsOneWidget);
-    expect(item3, findsOneWidget);
-    expect(item4, findsNothing);
-  });
+      expect(item0, findsNothing);
+      expect(item1, findsOneWidget);
+      expect(item2, findsOneWidget);
+      expect(item3, findsOneWidget);
+      expect(item4, findsNothing);
+    },
+  );
 
   testWidgets("Carousel 'loop' works correctly if set to true", (tester) async {
-    await tester.pumpWidget(
-      const _CarouselTestWidget(
-        loop: true,
-      ),
-    );
+    await tester.pumpWidget(const _CarouselTestWidget(loop: true));
 
     await tester.drag(carousel, const Offset(-1000, 0));
     await tester.pumpAndSettle();
@@ -91,14 +80,13 @@ void main() {
     expect(item1, findsOneWidget);
   });
 
-  testWidgets("'onIndexChanged' callback is called when index changes",
-      (tester) async {
+  testWidgets("'onIndexChanged' callback is called when index changes", (
+    tester,
+  ) async {
     int? changedIndex;
 
     await tester.pumpWidget(
-      _CarouselTestWidget(
-        onIndexChanged: (int index) => changedIndex = index,
-      ),
+      _CarouselTestWidget(onIndexChanged: (int index) => changedIndex = index),
     );
 
     await tester.drag(carousel, const Offset(-150, 0));
@@ -108,54 +96,48 @@ void main() {
   });
 
   testWidgets(
-      "Carousel scrolls horizontally when 'axisDirection' is Axis.horizontal",
-      (tester) async {
-    await tester.pumpWidget(
-      const _CarouselTestWidget(),
-    );
+    "Carousel scrolls horizontally when 'axisDirection' is Axis.horizontal",
+    (tester) async {
+      await tester.pumpWidget(const _CarouselTestWidget());
 
-    expect(item0, findsOneWidget);
-    expect(item1, findsOneWidget);
-    expect(item2, findsNothing);
+      expect(item0, findsOneWidget);
+      expect(item1, findsOneWidget);
+      expect(item2, findsNothing);
 
-    await tester.drag(carousel, const Offset(-150, 0));
-    await tester.pumpAndSettle();
+      await tester.drag(carousel, const Offset(-150, 0));
+      await tester.pumpAndSettle();
 
-    expect(item0, findsNothing);
-    expect(item1, findsOneWidget);
-    expect(item2, findsOneWidget);
-  });
+      expect(item0, findsNothing);
+      expect(item1, findsOneWidget);
+      expect(item2, findsOneWidget);
+    },
+  );
 
   testWidgets(
-      "Carousel scrolls vertically when 'axisDirection' is Axis.vertical",
-      (tester) async {
-    await tester.pumpWidget(
-      const _CarouselTestWidget(
-        axisDirection: Axis.vertical,
-      ),
-    );
+    "Carousel scrolls vertically when 'axisDirection' is Axis.vertical",
+    (tester) async {
+      await tester.pumpWidget(
+        const _CarouselTestWidget(axisDirection: Axis.vertical),
+      );
 
-    expect(item0, findsOneWidget);
-    expect(item1, findsOneWidget);
-    expect(item2, findsNothing);
+      expect(item0, findsOneWidget);
+      expect(item1, findsOneWidget);
+      expect(item2, findsNothing);
 
-    await tester.drag(carousel, const Offset(0, -150));
-    await tester.pumpAndSettle();
+      await tester.drag(carousel, const Offset(0, -150));
+      await tester.pumpAndSettle();
 
-    expect(item0, findsNothing);
-    expect(item1, findsOneWidget);
-    expect(item2, findsOneWidget);
-  });
+      expect(item0, findsNothing);
+      expect(item1, findsOneWidget);
+      expect(item2, findsOneWidget);
+    },
+  );
 
   testWidgets("Passed in controller works correctly", (tester) async {
     final MoonCarouselScrollController controller =
         MoonCarouselScrollController();
 
-    await tester.pumpWidget(
-      _CarouselTestWidget(
-        controller: controller,
-      ),
-    );
+    await tester.pumpWidget(_CarouselTestWidget(controller: controller));
 
     expect(item0, findsOneWidget);
     expect(item1, findsOneWidget);
@@ -172,29 +154,24 @@ void main() {
   });
 
   testWidgets(
-      "Carousel with 'isCentered' set to true starts with the first item visually centered",
-      (tester) async {
-    await tester.pumpWidget(
-      const _CarouselTestWidget(),
-    );
+    "Carousel with 'isCentered' set to true starts with the first item visually centered",
+    (tester) async {
+      await tester.pumpWidget(const _CarouselTestWidget());
 
-    final Rect carouselRect = tester.getRect(carousel);
-    final double carouselCenterX = carouselRect.left + carouselRect.width / 2;
+      final Rect carouselRect = tester.getRect(carousel);
+      final double carouselCenterX = carouselRect.left + carouselRect.width / 2;
 
-    final Rect item0Rect = tester.getRect(item0);
-    final double item0CenterX = item0Rect.left + item0Rect.width / 2;
+      final Rect item0Rect = tester.getRect(item0);
+      final double item0CenterX = item0Rect.left + item0Rect.width / 2;
 
-    expect(item0CenterX, carouselCenterX);
-  });
+      expect(item0CenterX, carouselCenterX);
+    },
+  );
 
   testWidgets(
     "Carousel with 'isCentered' set to false starts with the first item at the beginning of the screen",
     (tester) async {
-      await tester.pumpWidget(
-        const _CarouselTestWidget(
-          isCentered: false,
-        ),
-      );
+      await tester.pumpWidget(const _CarouselTestWidget(isCentered: false));
 
       final Rect carouselRect = tester.getRect(carousel);
 
@@ -211,10 +188,7 @@ void main() {
       const double anchor = 0.25;
 
       await tester.pumpWidget(
-        const _CarouselTestWidget(
-          isCentered: false,
-          anchor: anchor,
-        ),
+        const _CarouselTestWidget(isCentered: false, anchor: anchor),
       );
 
       final Rect carouselRect = tester.getRect(carousel);

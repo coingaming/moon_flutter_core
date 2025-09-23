@@ -14,11 +14,10 @@ void main() {
   final Finder overlay = find.byKey(_childKey);
   final Finder target = find.byKey(_targetKey);
 
-  testWidgets("Overlay is displayed when the 'target' is tapped",
-      (tester) async {
-    await tester.pumpWidget(
-      const _BaseOverlayTestWidget(),
-    );
+  testWidgets("Overlay is displayed when the 'target' is tapped", (
+    tester,
+  ) async {
+    await tester.pumpWidget(const _BaseOverlayTestWidget());
 
     expect(target, findsOneWidget);
 
@@ -28,13 +27,12 @@ void main() {
     expect(overlay, findsOneWidget);
   });
 
-  testWidgets("Overlay closes when the 'close' button is tapped",
-      (tester) async {
+  testWidgets("Overlay closes when the 'close' button is tapped", (
+    tester,
+  ) async {
     final Finder closeButton = find.text(_close);
 
-    await tester.pumpWidget(
-      const _BaseOverlayTestWidget(),
-    );
+    await tester.pumpWidget(const _BaseOverlayTestWidget());
 
     expect(target, findsOneWidget);
 
@@ -51,57 +49,54 @@ void main() {
   });
 
   testWidgets(
-      "Overlay closes when a tap occurs outside its content, if 'dismissible'",
-      (tester) async {
-    await tester.pumpWidget(
-      const _BaseOverlayTestWidget(),
-    );
+    "Overlay closes when a tap occurs outside its content, if 'dismissible'",
+    (tester) async {
+      await tester.pumpWidget(const _BaseOverlayTestWidget());
 
-    expect(target, findsOneWidget);
+      expect(target, findsOneWidget);
 
-    await tester.tap(target);
-    await tester.pumpAndSettle();
+      await tester.tap(target);
+      await tester.pumpAndSettle();
 
-    expect(overlay, findsOneWidget);
+      expect(overlay, findsOneWidget);
 
-    await tester.tapAt(const Offset(10, 10));
-    await tester.pumpAndSettle();
+      await tester.tapAt(const Offset(10, 10));
+      await tester.pumpAndSettle();
 
-    expect(overlay, findsNothing);
-  });
+      expect(overlay, findsNothing);
+    },
+  );
 
   testWidgets(
-      "Overlay stays visible when a tap occurs outside its content, if not 'dismissible'",
-      (tester) async {
-    await tester.pumpWidget(
-      const _BaseOverlayTestWidget(
-        isDismissible: false,
-      ),
-    );
+    "Overlay stays visible when a tap occurs outside its content, if not 'dismissible'",
+    (tester) async {
+      await tester.pumpWidget(
+        const _BaseOverlayTestWidget(isDismissible: false),
+      );
 
-    expect(target, findsOneWidget);
+      expect(target, findsOneWidget);
 
-    await tester.tap(target);
-    await tester.pumpAndSettle();
+      await tester.tap(target);
+      await tester.pumpAndSettle();
 
-    expect(overlay, findsOneWidget);
+      expect(overlay, findsOneWidget);
 
-    await tester.tapAt(const Offset(10, 10));
-    await tester.pumpAndSettle();
+      await tester.tapAt(const Offset(10, 10));
+      await tester.pumpAndSettle();
 
-    expect(overlay, findsOneWidget);
-  });
+      expect(overlay, findsOneWidget);
+    },
+  );
 
-  testWidgets("Overlay calls 'onTap' callback when overlay 'child' is tapped",
-      (WidgetTester tester) async {
+  testWidgets("Overlay calls 'onTap' callback when overlay 'child' is tapped", (
+    WidgetTester tester,
+  ) async {
     final Finder content = find.text(_content);
 
     bool onTapCalled = false;
 
     await tester.pumpWidget(
-      _BaseOverlayTestWidget(
-        onTap: () => onTapCalled = true,
-      ),
+      _BaseOverlayTestWidget(onTap: () => onTapCalled = true),
     );
 
     await tester.tap(target);
@@ -113,14 +108,13 @@ void main() {
     expect(onTapCalled, isTrue);
   });
 
-  testWidgets("Overlay calls 'onTapOutside' callback when tapped outside",
-      (WidgetTester tester) async {
+  testWidgets("Overlay calls 'onTapOutside' callback when tapped outside", (
+    WidgetTester tester,
+  ) async {
     bool onTapOutsideCalled = false;
 
     await tester.pumpWidget(
-      _BaseOverlayTestWidget(
-        onTapOutside: () => onTapOutsideCalled = true,
-      ),
+      _BaseOverlayTestWidget(onTapOutside: () => onTapOutsideCalled = true),
     );
 
     await tester.tap(target);
@@ -132,14 +126,13 @@ void main() {
     expect(onTapOutsideCalled, isTrue);
   });
 
-  testWidgets("Overlay has correct semantic label when displayed",
-      (WidgetTester tester) async {
+  testWidgets("Overlay has correct semantic label when displayed", (
+    WidgetTester tester,
+  ) async {
     const String semanticLabel = "Test Semantic Label";
 
     await tester.pumpWidget(
-      const _BaseOverlayTestWidget(
-        semanticLabel: semanticLabel,
-      ),
+      const _BaseOverlayTestWidget(semanticLabel: semanticLabel),
     );
 
     await tester.tap(target);
@@ -151,64 +144,65 @@ void main() {
   });
 
   testWidgets(
-      "Overlay is positioned correctly relative to target based on 'overlayAnchorPosition' and 'distanceToTarget'",
-      (tester) async {
-    final List<OverlayAnchorPosition> anchorPositions = [
-      OverlayAnchorPosition.top,
-      OverlayAnchorPosition.bottom,
-      OverlayAnchorPosition.left,
-      OverlayAnchorPosition.right,
-    ];
+    "Overlay is positioned correctly relative to target based on 'overlayAnchorPosition' and 'distanceToTarget'",
+    (tester) async {
+      final List<OverlayAnchorPosition> anchorPositions = [
+        OverlayAnchorPosition.top,
+        OverlayAnchorPosition.bottom,
+        OverlayAnchorPosition.left,
+        OverlayAnchorPosition.right,
+      ];
 
-    for (final position in anchorPositions) {
-      await tester.pumpWidget(
-        _BaseOverlayTestWidget(
-          overlayAnchorPosition: position,
-          distanceToTarget: _distanceToTarget,
-        ),
-      );
-      expect(target, findsOneWidget);
-
-      await tester.tap(target);
-      await tester.pump();
-      await tester.pumpAndSettle();
-
-      final RenderBox targetWidget = tester.renderObject<RenderBox>(target);
-      final RenderBox childWidget = tester.renderObject<RenderBox>(overlay);
-      final Offset targetPosition = targetWidget.localToGlobal(Offset.zero);
-      final Offset childPosition = childWidget.localToGlobal(Offset.zero);
-
-      final double childHeight = childWidget.size.height;
-      final double childWidth = childWidget.size.width;
-      final double targetHeight = targetWidget.size.height;
-      final double targetWidth = targetWidget.size.width;
-
-      if (position == OverlayAnchorPosition.top) {
-        expect(
-          childPosition.dy + childHeight,
-          equals(targetPosition.dy - _distanceToTarget),
+      for (final position in anchorPositions) {
+        await tester.pumpWidget(
+          _BaseOverlayTestWidget(
+            overlayAnchorPosition: position,
+            distanceToTarget: _distanceToTarget,
+          ),
         );
-      } else if (position == OverlayAnchorPosition.bottom) {
-        expect(
-          childPosition.dy,
-          equals(targetHeight + targetPosition.dy + _distanceToTarget),
-        );
-      } else if (position == OverlayAnchorPosition.left) {
-        expect(
-          childPosition.dx + childWidth,
-          equals(targetPosition.dx - _distanceToTarget),
-        );
-      } else if (position == OverlayAnchorPosition.right) {
-        expect(
-          childPosition.dx,
-          equals(targetWidth + targetPosition.dx + _distanceToTarget),
-        );
+        expect(target, findsOneWidget);
+
+        await tester.tap(target);
+        await tester.pump();
+        await tester.pumpAndSettle();
+
+        final RenderBox targetWidget = tester.renderObject<RenderBox>(target);
+        final RenderBox childWidget = tester.renderObject<RenderBox>(overlay);
+        final Offset targetPosition = targetWidget.localToGlobal(Offset.zero);
+        final Offset childPosition = childWidget.localToGlobal(Offset.zero);
+
+        final double childHeight = childWidget.size.height;
+        final double childWidth = childWidget.size.width;
+        final double targetHeight = targetWidget.size.height;
+        final double targetWidth = targetWidget.size.width;
+
+        if (position == OverlayAnchorPosition.top) {
+          expect(
+            childPosition.dy + childHeight,
+            equals(targetPosition.dy - _distanceToTarget),
+          );
+        } else if (position == OverlayAnchorPosition.bottom) {
+          expect(
+            childPosition.dy,
+            equals(targetHeight + targetPosition.dy + _distanceToTarget),
+          );
+        } else if (position == OverlayAnchorPosition.left) {
+          expect(
+            childPosition.dx + childWidth,
+            equals(targetPosition.dx - _distanceToTarget),
+          );
+        } else if (position == OverlayAnchorPosition.right) {
+          expect(
+            childPosition.dx,
+            equals(targetWidth + targetPosition.dx + _distanceToTarget),
+          );
+        }
+
+        await tester.tapAt(const Offset(10, 10));
+        await tester.pumpAndSettle();
       }
-
-      await tester.tapAt(const Offset(10, 10));
-      await tester.pumpAndSettle();
-    }
-  });
+    },
+  );
 }
 
 class _BaseOverlayTestWidget extends StatefulWidget {
@@ -246,7 +240,8 @@ class _BaseOverlayTestWidgetState extends State<_BaseOverlayTestWidget> {
             semanticLabel: widget.semanticLabel,
             overlayAnchorPosition: widget.overlayAnchorPosition,
             onTap: widget.onTap,
-            onTapOutside: widget.onTapOutside ??
+            onTapOutside:
+                widget.onTapOutside ??
                 () => setState(() => _show = !widget.isDismissible),
             target: MoonBaseInteractiveWidget(
               key: _targetKey,

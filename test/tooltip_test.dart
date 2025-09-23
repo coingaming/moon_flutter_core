@@ -14,9 +14,7 @@ void main() {
   final Finder target = find.text(_target);
 
   testWidgets("Tapping on target opens tooltip", (WidgetTester tester) async {
-    await tester.pumpWidget(
-      const _TooltipTestWidget(show: false),
-    );
+    await tester.pumpWidget(const _TooltipTestWidget(show: false));
 
     expect(target, findsOneWidget);
 
@@ -26,11 +24,10 @@ void main() {
     expect(overlay, findsOneWidget);
   });
 
-  testWidgets("Renders tooltip correctly when 'show' is true",
-      (WidgetTester tester) async {
-    await tester.pumpWidget(
-      const _TooltipTestWidget(),
-    );
+  testWidgets("Renders tooltip correctly when 'show' is true", (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(const _TooltipTestWidget());
 
     await tester.pumpAndSettle();
 
@@ -38,59 +35,57 @@ void main() {
     expect(overlay, findsOneWidget);
   });
 
-  testWidgets("Does not render tooltip when 'show' is false",
-      (WidgetTester tester) async {
-    await tester.pumpWidget(
-      const _TooltipTestWidget(show: false),
-    );
+  testWidgets("Does not render tooltip when 'show' is false", (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(const _TooltipTestWidget(show: false));
 
     expect(target, findsOneWidget);
     expect(overlay, findsNothing);
   });
 
-  testWidgets("Renders tooltip with arrow when 'hasArrow' is true",
-      (WidgetTester tester) async {
-    await tester.pumpWidget(
-      const _TooltipTestWidget(),
-    );
+  testWidgets("Renders tooltip with arrow when 'hasArrow' is true", (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(const _TooltipTestWidget());
 
     await tester.pumpAndSettle();
 
     expect(target, findsOneWidget);
     expect(overlay, findsOneWidget);
 
-    final TooltipShape tooltipShape = (tester
-            .widget<DecoratedBox>(find.byType(DecoratedBox))
-            .decoration as ShapeDecoration)
-        .shape as TooltipShape;
+    final TooltipShape tooltipShape =
+        (tester.widget<DecoratedBox>(find.byType(DecoratedBox)).decoration
+                    as ShapeDecoration)
+                .shape
+            as TooltipShape;
 
     expect(tooltipShape.arrowLength, greaterThan(0));
   });
 
-  testWidgets("Renders tooltip without an arrow when 'hasArrow' is false",
-      (WidgetTester tester) async {
-    await tester.pumpWidget(
-      const _TooltipTestWidget(hasArrow: false),
-    );
+  testWidgets("Renders tooltip without an arrow when 'hasArrow' is false", (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(const _TooltipTestWidget(hasArrow: false));
 
     await tester.pumpAndSettle();
 
     expect(target, findsOneWidget);
     expect(overlay, findsOneWidget);
 
-    final TooltipShape tooltipShape = (tester
-            .widget<DecoratedBox>(find.byType(DecoratedBox))
-            .decoration as ShapeDecoration)
-        .shape as TooltipShape;
+    final TooltipShape tooltipShape =
+        (tester.widget<DecoratedBox>(find.byType(DecoratedBox)).decoration
+                    as ShapeDecoration)
+                .shape
+            as TooltipShape;
 
     expect(tooltipShape.arrowLength, equals(0));
   });
 
-  testWidgets("Tooltip triggers 'onTap' callback when tapped",
-      (WidgetTester tester) async {
-    await tester.pumpWidget(
-      const _TooltipTestWidget(),
-    );
+  testWidgets("Tooltip triggers 'onTap' callback when tapped", (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(const _TooltipTestWidget());
 
     await tester.pumpAndSettle();
 
@@ -104,37 +99,33 @@ void main() {
   });
 
   testWidgets(
-      "Tooltip distance to target is correct when 'distanceToTarget' is set",
-      (WidgetTester tester) async {
-    const double distanceToTarget = 32.0;
+    "Tooltip distance to target is correct when 'distanceToTarget' is set",
+    (WidgetTester tester) async {
+      const double distanceToTarget = 32.0;
 
-    await tester.pumpWidget(
-      const _TooltipTestWidget(
-        distanceToTarget: distanceToTarget,
-      ),
-    );
+      await tester.pumpWidget(
+        const _TooltipTestWidget(distanceToTarget: distanceToTarget),
+      );
 
-    await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
 
-    expect(target, findsOneWidget);
-    expect(overlay, findsOneWidget);
+      expect(target, findsOneWidget);
+      expect(overlay, findsOneWidget);
 
-    final RenderBox targetWidget = tester.renderObject<RenderBox>(target);
-    final RenderBox tooltipChild = tester.renderObject<RenderBox>(overlay);
+      final RenderBox targetWidget = tester.renderObject<RenderBox>(target);
+      final RenderBox tooltipChild = tester.renderObject<RenderBox>(overlay);
 
-    await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
 
-    final double targetTop = targetWidget.localToGlobal(Offset.zero).dy;
-    final double tooltipChildBottom =
-        tooltipChild.localToGlobal(Offset.zero).dy +
-            tooltipChild.size.height +
-            arrowLength;
+      final double targetTop = targetWidget.localToGlobal(Offset.zero).dy;
+      final double tooltipChildBottom =
+          tooltipChild.localToGlobal(Offset.zero).dy +
+          tooltipChild.size.height +
+          arrowLength;
 
-    expect(
-      (tooltipChildBottom - targetTop).abs(),
-      equals(distanceToTarget),
-    );
-  });
+      expect((tooltipChildBottom - targetTop).abs(), equals(distanceToTarget));
+    },
+  );
 
   testWidgets(
     "Tooltip is positioned correctly relative to target based on 'tooltipAnchorPosition'",
@@ -150,9 +141,7 @@ void main() {
 
       for (final position in anchorPositions) {
         await tester.pumpWidget(
-          _TooltipTestWidget(
-            tooltipAnchorPosition: position,
-          ),
+          _TooltipTestWidget(tooltipAnchorPosition: position),
         );
 
         await tester.pumpAndSettle();
@@ -204,49 +193,53 @@ void main() {
   );
 
   testWidgets(
-      "Default tooltip shape is used when 'useDefaultTooltipShape' is true",
-      (tester) async {
-    await tester.pumpWidget(
-      const _TooltipTestWidget(),
-    );
+    "Default tooltip shape is used when 'useDefaultTooltipShape' is true",
+    (tester) async {
+      await tester.pumpWidget(const _TooltipTestWidget());
 
-    await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
 
-    expect(target, findsOneWidget);
-    expect(overlay, findsOneWidget);
+      expect(target, findsOneWidget);
+      expect(overlay, findsOneWidget);
 
-    final bool tooltipShapeUsed =
-        tester.allWidgets.whereType<DecoratedBox>().where((decoratedBox) {
-      return (decoratedBox.decoration as ShapeDecoration).shape is TooltipShape;
-    }).isNotEmpty;
+      final bool tooltipShapeUsed = tester.allWidgets
+          .whereType<DecoratedBox>()
+          .where((decoratedBox) {
+            return (decoratedBox.decoration as ShapeDecoration).shape
+                is TooltipShape;
+          })
+          .isNotEmpty;
 
-    expect(tooltipShapeUsed, isTrue);
-  });
+      expect(tooltipShapeUsed, isTrue);
+    },
+  );
 
   testWidgets(
-      "Default tooltip shape is not used when 'useDefaultTooltipShape' is false",
-      (tester) async {
-    await tester.pumpWidget(
-      const _TooltipTestWidget(useDefaultTooltipShape: false),
-    );
+    "Default tooltip shape is not used when 'useDefaultTooltipShape' is false",
+    (tester) async {
+      await tester.pumpWidget(
+        const _TooltipTestWidget(useDefaultTooltipShape: false),
+      );
 
-    await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
 
-    expect(target, findsOneWidget);
-    expect(overlay, findsOneWidget);
+      expect(target, findsOneWidget);
+      expect(overlay, findsOneWidget);
 
-    final bool tooltipShapeUsed =
-        tester.allWidgets.whereType<DecoratedBox>().where((decoratedBox) {
-      return (decoratedBox.decoration as ShapeDecoration).shape is TooltipShape;
-    }).isNotEmpty;
+      final bool tooltipShapeUsed = tester.allWidgets
+          .whereType<DecoratedBox>()
+          .where((decoratedBox) {
+            return (decoratedBox.decoration as ShapeDecoration).shape
+                is TooltipShape;
+          })
+          .isNotEmpty;
 
-    expect(tooltipShapeUsed, isFalse);
-  });
+      expect(tooltipShapeUsed, isFalse);
+    },
+  );
 
   testWidgets("Provided background color is used.", (tester) async {
-    await tester.pumpWidget(
-      const _TooltipTestWidget(color: Colors.blue),
-    );
+    await tester.pumpWidget(const _TooltipTestWidget(color: Colors.blue));
 
     await tester.pumpAndSettle();
 

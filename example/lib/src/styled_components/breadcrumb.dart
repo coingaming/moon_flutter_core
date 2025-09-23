@@ -12,64 +12,83 @@ class StyledBreadcrumb extends StatefulWidget {
 }
 
 class _StyledBreadcrumbState extends State<StyledBreadcrumb> {
-  Duration get _duration => const Duration(milliseconds: 150);
+  static const Duration _duration = Duration(milliseconds: 150);
   int _pagesCount = 7;
 
-  Style get _showMoreWidgetStyle => Style(
-        $box.padding.horizontal(8),
-        $icon.chain
-          ..color(Colors.black54)
-          ..size(14),
-        ($on.hover | $on.focus)(
-          $box.padding.horizontal(12),
-          $icon.color(Colors.black),
+  BoxStyler get _showMoreStyle => BoxStyler()
+      .padding(EdgeInsetsGeometryMix.symmetric(horizontal: 8, vertical: 4))
+      .borderRadius(
+        BorderRadiusGeometryMix.value(
+          BorderRadius.circular(8),
         ),
-      ).animate(duration: _duration);
+      )
+      .wrapDefaultTextStyle(TextStyleMix(color: Colors.black54))
+      .onHovered(
+        BoxStyler()
+            .color(Colors.grey.shade200)
+            .wrapDefaultTextStyle(TextStyleMix(color: Colors.black)),
+      )
+      .onFocused(
+        BoxStyler()
+            .color(Colors.grey.shade300)
+            .wrapDefaultTextStyle(TextStyleMix(color: Colors.black)),
+      )
+      .animate(AnimationConfig.ease(_duration));
 
-  Style get _breadcrumbItemStyle => Style(
-        $box.padding.horizontal(8),
-        $text.style.color(Colors.black54),
-        ($on.hover | $on.focus)(
-          $text.style.color(Colors.black),
+  BoxStyler get _breadcrumbBaseStyle => BoxStyler()
+      .padding(EdgeInsetsGeometryMix.symmetric(horizontal: 8, vertical: 4))
+      .borderRadius(
+        BorderRadiusGeometryMix.value(
+          BorderRadius.circular(6),
         ),
-        SelectedState.selected(
-          $text.style.color(Colors.black),
-        ),
-      ).animate(duration: _duration);
+      )
+      .onHovered(
+        BoxStyler().wrapDefaultTextStyle(TextStyleMix(color: Colors.black)),
+      )
+      .animate(AnimationConfig.ease(_duration));
 
-  Variant _getVariant(int index) => index == _pagesCount - 1
-      ? SelectedState.selected
-      : SelectedState.unselected;
+  BoxStyler get _breadcrumbInactiveStyle =>
+      BoxStyler().wrapDefaultTextStyle(TextStyleMix(color: Colors.black54));
+
+  BoxStyler get _breadcrumbActiveStyle =>
+      BoxStyler().wrapDefaultTextStyle(TextStyleMix(color: Colors.black));
 
   @override
   Widget build(BuildContext context) {
     return MoonRawBreadcrumb(
+      style: FlexBoxStyler()
+          .mainAxisSize(MainAxisSize.min)
+          .crossAxisAlignment(CrossAxisAlignment.center)
+          .spacing(8),
+      divider: const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 4),
+        child: Text('/'),
+      ),
       showMoreWidget: MoonRawBreadcrumbItem(
-        style: _showMoreWidgetStyle,
-        child: const StyledIcon(Icons.menu),
+        style: _showMoreStyle,
+        child: const Icon(Icons.menu, size: 14, color: Colors.black54),
       ),
-      items: List.generate(
-        _pagesCount,
-        (int index) {
-          final String itemName = index == 0 ? "Home" : "Page $index";
+      items: List.generate(_pagesCount, (int index) {
+        final String itemName = index == 0 ? "Home" : "Page $index";
+        final bool isActive = index == _pagesCount - 1;
+        final BoxStyler itemStyle = _breadcrumbBaseStyle.merge(
+          isActive ? _breadcrumbActiveStyle : _breadcrumbInactiveStyle,
+        );
 
-          return MoonRawBreadcrumbItem(
-            style: _breadcrumbItemStyle.applyVariant(_getVariant(index)),
-            child: StyledText(itemName),
-            onTap: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  duration: const Duration(milliseconds: 400),
-                  content: Center(
-                    child: Text(itemName),
-                  ),
-                ),
-              );
-              setState(() => _pagesCount = index + 1);
-            },
-          );
-        },
-      ),
+        return MoonRawBreadcrumbItem(
+          style: itemStyle,
+          child: Text(itemName),
+          onTap: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                duration: const Duration(milliseconds: 400),
+                content: Center(child: Text(itemName)),
+              ),
+            );
+            setState(() => _pagesCount = index + 1);
+          },
+        );
+      }),
     );
   }
 }

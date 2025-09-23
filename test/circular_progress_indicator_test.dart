@@ -11,72 +11,68 @@ void main() {
     matching: find.byType(CustomPaint),
   );
 
-  testWidgets(
-    "Indicator is continuously animating in indeterminate state",
-    (WidgetTester tester) async {
-      double getRotationValue() {
-        final CustomPaint customPaint = tester.widget(customPainterFinder);
-        return (customPaint.painter! as MoonCircularProgressIndicatorPainter)
-            .rotationValue;
-      }
+  testWidgets("Indicator is continuously animating in indeterminate state", (
+    WidgetTester tester,
+  ) async {
+    double getRotationValue() {
+      final CustomPaint customPaint = tester.widget(customPainterFinder);
+      return (customPaint.painter! as MoonCircularProgressIndicatorPainter)
+          .rotationValue;
+    }
 
-      await tester.pumpWidget(
-        const _CircularProgressIndicatorTestWidget(),
-      );
+    await tester.pumpWidget(const _CircularProgressIndicatorTestWidget());
 
-      expect(getRotationValue(), 0.0);
+    expect(getRotationValue(), 0.0);
 
-      await tester.pump(const Duration(milliseconds: 500));
+    await tester.pump(const Duration(milliseconds: 500));
 
-      final firstRotationValue = getRotationValue();
-      expect(firstRotationValue, greaterThan(0.0));
+    final firstRotationValue = getRotationValue();
+    expect(firstRotationValue, greaterThan(0.0));
 
-      await tester.pump(const Duration(milliseconds: 500));
+    await tester.pump(const Duration(milliseconds: 500));
 
-      expect(getRotationValue(), greaterThan(firstRotationValue));
-    },
-  );
+    expect(getRotationValue(), greaterThan(firstRotationValue));
+  });
 
-  testWidgets(
-    "Indicator is not continuously animating in determinate state",
-    (WidgetTester tester) async {
-      double getRotationValue() {
-        final CustomPaint customPaint = tester.widget(customPainterFinder);
-        return (customPaint.painter! as MoonCircularProgressIndicatorPainter)
-            .rotationValue;
-      }
+  testWidgets("Indicator is not continuously animating in determinate state", (
+    WidgetTester tester,
+  ) async {
+    double getRotationValue() {
+      final CustomPaint customPaint = tester.widget(customPainterFinder);
+      return (customPaint.painter! as MoonCircularProgressIndicatorPainter)
+          .rotationValue;
+    }
 
-      await tester.pumpWidget(
-        const _CircularProgressIndicatorTestWidget(value: 0.5),
-      );
+    await tester.pumpWidget(
+      const _CircularProgressIndicatorTestWidget(value: 0.5),
+    );
 
-      expect(getRotationValue(), 0.0);
+    expect(getRotationValue(), 0.0);
 
-      await tester.pump(const Duration(milliseconds: 500));
+    await tester.pump(const Duration(milliseconds: 500));
 
-      expect(getRotationValue(), 0.0);
+    expect(getRotationValue(), 0.0);
 
-      await tester.pump(const Duration(milliseconds: 500));
+    await tester.pump(const Duration(milliseconds: 500));
 
-      expect(getRotationValue(), 0.0);
-    },
-  );
+    expect(getRotationValue(), 0.0);
+  });
 
   testWidgets("Indicator has correct progress value", (tester) async {
     await tester.pumpWidget(
-      const _CircularProgressIndicatorTestWidget(
-        value: 0.5,
-      ),
+      const _CircularProgressIndicatorTestWidget(value: 0.5),
     );
 
-    final MoonCircularProgressIndicator indicator =
-        tester.widget(progressIndicator);
+    final MoonCircularProgressIndicator indicator = tester.widget(
+      progressIndicator,
+    );
 
     expect(indicator.value, 0.5);
   });
 
-  testWidgets("Stroke width and stroke cap properties are correct",
-      (tester) async {
+  testWidgets("Stroke width and stroke cap properties are correct", (
+    tester,
+  ) async {
     await tester.pumpWidget(
       const _CircularProgressIndicatorTestWidget(
         strokeWidth: 12.0,
@@ -84,8 +80,9 @@ void main() {
       ),
     );
 
-    final MoonCircularProgressIndicator indicator =
-        tester.widget(progressIndicator);
+    final MoonCircularProgressIndicator indicator = tester.widget(
+      progressIndicator,
+    );
 
     expect(indicator.strokeWidth, 12.0);
     expect(indicator.strokeCap, StrokeCap.square);

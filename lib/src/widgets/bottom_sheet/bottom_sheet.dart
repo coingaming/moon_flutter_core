@@ -39,7 +39,7 @@ class MoonRawBottomSheet extends StatefulWidget {
   final String? semanticLabel;
 
   /// The style of the bottom sheet.
-  final Style? bottomSheetStyle;
+  final BoxStyler? bottomSheetStyle;
 
   /// The callback that is called when the bottom sheet begins the closing
   /// process.
@@ -274,8 +274,9 @@ class MoonRawBottomSheetState extends State<MoonRawBottomSheet>
 
       // Otherwise, the velocity is calculated using a VelocityTracker.
       if (_velocityTracker == null) {
-        final PointerDeviceKind pointerKind =
-            _defaultPointerDeviceKind(context);
+        final PointerDeviceKind pointerKind = _defaultPointerDeviceKind(
+          context,
+        );
 
         _velocityTracker = VelocityTracker.withKind(pointerKind);
         _startTime = DateTime.now();
@@ -308,8 +309,10 @@ class MoonRawBottomSheetState extends State<MoonRawBottomSheet>
 
         return;
       } else if (_isDragging) {
-        final double velocity =
-            velocityTracker.getVelocity().pixelsPerSecond.dy;
+        final double velocity = velocityTracker
+            .getVelocity()
+            .pixelsPerSecond
+            .dy;
 
         _velocityTracker = null;
         _startTime = null;
@@ -336,8 +339,9 @@ class MoonRawBottomSheetState extends State<MoonRawBottomSheet>
         builder: (BuildContext context, Widget? child) {
           assert(child != null);
 
-          final double animationValue =
-              _transitionCurve!.transform(widget.animationController.value);
+          final double animationValue = _transitionCurve!.transform(
+            widget.animationController.value,
+          );
 
           final draggableChild = widget.enableDrag
               ? KeyedSubtree(
@@ -383,11 +387,7 @@ class MoonRawBottomSheetState extends State<MoonRawBottomSheet>
             child: Semantics(
               label: widget.semanticLabel,
               child: Box(
-                style: Style(
-                  $box.chain
-                    ..height(MediaQuery.of(context).size.height * 0.8)
-                    ..color(Colors.white),
-                ).merge(widget.bottomSheetStyle),
+                style: widget.bottomSheetStyle ?? const BoxStyler.create(),
                 child: widget.child,
               ),
             ),

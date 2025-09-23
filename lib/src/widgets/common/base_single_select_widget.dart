@@ -41,7 +41,7 @@ class MoonBaseSingleSelectWidget<T> extends StatelessWidget {
   final String? semanticLabel;
 
   /// The style of the widget.
-  final Style? style;
+  final BoxStyler? style;
 
   /// The value represented by this widget.
   final T value;
@@ -93,6 +93,10 @@ class MoonBaseSingleSelectWidget<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final WidgetStatesController controller = WidgetStatesController()
+      ..update(WidgetState.disabled, onChanged == null)
+      ..update(WidgetState.selected, _isSelected);
+
     return Semantics(
       label: semanticLabel,
       inMutuallyExclusiveGroup: true,
@@ -103,6 +107,7 @@ class MoonBaseSingleSelectWidget<T> extends StatelessWidget {
           autofocus: autofocus,
           focusNode: focusNode,
           enableFeedback: enableFeedback,
+          stateController: controller,
           style: style,
           onFocusChange: onFocusChange,
           onTap: onChanged == null

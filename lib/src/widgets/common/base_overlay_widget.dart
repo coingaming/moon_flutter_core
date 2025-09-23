@@ -42,14 +42,16 @@ mixin OverlayPositionResolver {
         OverlayAnchorPosition.topRight => OverlayAnchorPosition.topLeft,
         OverlayAnchorPosition.bottomLeft => OverlayAnchorPosition.bottomRight,
         OverlayAnchorPosition.bottomRight => OverlayAnchorPosition.bottomLeft,
-        OverlayAnchorPosition.vertical => overlayTargetGlobalCenter.dy <
-                overlayRenderBox.size.center(Offset.zero).dy
-            ? OverlayAnchorPosition.bottom
-            : OverlayAnchorPosition.top,
-        OverlayAnchorPosition.horizontal => overlayTargetGlobalCenter.dx <
-                overlayRenderBox.size.center(Offset.zero).dx
-            ? OverlayAnchorPosition.right
-            : OverlayAnchorPosition.left,
+        OverlayAnchorPosition.vertical =>
+          overlayTargetGlobalCenter.dy <
+                  overlayRenderBox.size.center(Offset.zero).dy
+              ? OverlayAnchorPosition.bottom
+              : OverlayAnchorPosition.top,
+        OverlayAnchorPosition.horizontal =>
+          overlayTargetGlobalCenter.dx <
+                  overlayRenderBox.size.center(Offset.zero).dx
+              ? OverlayAnchorPosition.right
+              : OverlayAnchorPosition.left,
         _ => overlayPosition,
       };
     }
@@ -135,8 +137,8 @@ class MoonBaseOverlay extends StatefulWidget {
   // Clear existing overlays, excluding the current and all persistent ones.
   static void _removeOtherOverLays(MoonBaseOverlayState current) {
     if (_openedOverlays.isNotEmpty) {
-      final List<MoonBaseOverlayState> openedOverlays =
-          _openedOverlays.toList();
+      final List<MoonBaseOverlayState> openedOverlays = _openedOverlays
+          .toList();
 
       for (final MoonBaseOverlayState state in openedOverlays) {
         if (state == current || state.widget.isPersistent) continue;
@@ -212,68 +214,70 @@ class MoonBaseOverlayState extends State<MoonBaseOverlay>
   }) {
     return switch (overlayPosition) {
       OverlayAnchorPosition.top => _OverlayPositionProperties(
-          offset: Offset(0, -distanceToTarget),
-          targetAnchor: Alignment.topCenter,
-          followerAnchor: Alignment.bottomCenter,
-          overlayMaxWidth: overlayWidth -
-              ((overlayWidth / 2 - overlayTargetGlobalCenter) * 2).abs() -
-              widget.overlayMargin * 2,
-        ),
-      OverlayAnchorPosition.bottom => _OverlayPositionProperties(
-          offset: Offset(0, distanceToTarget),
-          targetAnchor: Alignment.bottomCenter,
-          followerAnchor: Alignment.topCenter,
-          overlayMaxWidth: overlayWidth -
-              ((overlayWidth / 2 - overlayTargetGlobalCenter) * 2).abs() -
-              widget.overlayMargin * 2,
-        ),
-      OverlayAnchorPosition.left => _OverlayPositionProperties(
-          offset: Offset(-distanceToTarget, 0),
-          targetAnchor: Alignment.centerLeft,
-          followerAnchor: Alignment.centerRight,
-          overlayMaxWidth: max(
-            0,
-            overlayTargetGlobalLeft - distanceToTarget - widget.overlayMargin,
-          ),
-        ),
-      OverlayAnchorPosition.right => _OverlayPositionProperties(
-          offset: Offset(distanceToTarget, 0),
-          targetAnchor: Alignment.centerRight,
-          followerAnchor: Alignment.centerLeft,
-          overlayMaxWidth: max(
-            0,
+        offset: Offset(0, -distanceToTarget),
+        targetAnchor: Alignment.topCenter,
+        followerAnchor: Alignment.bottomCenter,
+        overlayMaxWidth:
             overlayWidth -
-                overlayTargetGlobalRight -
-                distanceToTarget -
-                widget.overlayMargin,
-          ),
+            ((overlayWidth / 2 - overlayTargetGlobalCenter) * 2).abs() -
+            widget.overlayMargin * 2,
+      ),
+      OverlayAnchorPosition.bottom => _OverlayPositionProperties(
+        offset: Offset(0, distanceToTarget),
+        targetAnchor: Alignment.bottomCenter,
+        followerAnchor: Alignment.topCenter,
+        overlayMaxWidth:
+            overlayWidth -
+            ((overlayWidth / 2 - overlayTargetGlobalCenter) * 2).abs() -
+            widget.overlayMargin * 2,
+      ),
+      OverlayAnchorPosition.left => _OverlayPositionProperties(
+        offset: Offset(-distanceToTarget, 0),
+        targetAnchor: Alignment.centerLeft,
+        followerAnchor: Alignment.centerRight,
+        overlayMaxWidth: max(
+          0,
+          overlayTargetGlobalLeft - distanceToTarget - widget.overlayMargin,
         ),
+      ),
+      OverlayAnchorPosition.right => _OverlayPositionProperties(
+        offset: Offset(distanceToTarget, 0),
+        targetAnchor: Alignment.centerRight,
+        followerAnchor: Alignment.centerLeft,
+        overlayMaxWidth: max(
+          0,
+          overlayWidth -
+              overlayTargetGlobalRight -
+              distanceToTarget -
+              widget.overlayMargin,
+        ),
+      ),
       OverlayAnchorPosition.topLeft => _OverlayPositionProperties(
-          offset: Offset(0, -distanceToTarget),
-          targetAnchor: Alignment.topLeft,
-          followerAnchor: Alignment.bottomLeft,
-          overlayMaxWidth:
-              overlayWidth - overlayTargetGlobalLeft - widget.overlayMargin,
-        ),
+        offset: Offset(0, -distanceToTarget),
+        targetAnchor: Alignment.topLeft,
+        followerAnchor: Alignment.bottomLeft,
+        overlayMaxWidth:
+            overlayWidth - overlayTargetGlobalLeft - widget.overlayMargin,
+      ),
       OverlayAnchorPosition.topRight => _OverlayPositionProperties(
-          offset: Offset(0, -distanceToTarget),
-          targetAnchor: Alignment.topRight,
-          followerAnchor: Alignment.bottomRight,
-          overlayMaxWidth: overlayTargetGlobalRight - widget.overlayMargin,
-        ),
+        offset: Offset(0, -distanceToTarget),
+        targetAnchor: Alignment.topRight,
+        followerAnchor: Alignment.bottomRight,
+        overlayMaxWidth: overlayTargetGlobalRight - widget.overlayMargin,
+      ),
       OverlayAnchorPosition.bottomLeft => _OverlayPositionProperties(
-          offset: Offset(0, distanceToTarget),
-          targetAnchor: Alignment.bottomLeft,
-          followerAnchor: Alignment.topLeft,
-          overlayMaxWidth:
-              overlayWidth - overlayTargetGlobalLeft - widget.overlayMargin,
-        ),
+        offset: Offset(0, distanceToTarget),
+        targetAnchor: Alignment.bottomLeft,
+        followerAnchor: Alignment.topLeft,
+        overlayMaxWidth:
+            overlayWidth - overlayTargetGlobalLeft - widget.overlayMargin,
+      ),
       OverlayAnchorPosition.bottomRight => _OverlayPositionProperties(
-          offset: Offset(0, distanceToTarget),
-          targetAnchor: Alignment.bottomRight,
-          followerAnchor: Alignment.topRight,
-          overlayMaxWidth: overlayTargetGlobalRight - widget.overlayMargin,
-        ),
+        offset: Offset(0, distanceToTarget),
+        targetAnchor: Alignment.bottomRight,
+        followerAnchor: Alignment.topRight,
+        overlayMaxWidth: overlayTargetGlobalRight - widget.overlayMargin,
+      ),
       _ => throw AssertionError("No match: $overlayPosition"),
     };
   }
