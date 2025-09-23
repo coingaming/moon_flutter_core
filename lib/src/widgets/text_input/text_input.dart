@@ -341,7 +341,8 @@ class _MoonRawTextInputState extends State<MoonRawTextInput>
             : cupertinoDesktopTextSelectionHandleControls;
         paintCursorAboveText = true;
         cursorOpacityAnimates ??= defaultTargetPlatform == TargetPlatform.iOS;
-        selectionColor ??= cupertinoTheme.primaryColor.withOpacity(0.40);
+        selectionColor ??=
+            cupertinoTheme.primaryColor.withValues(alpha: 0.40);
         cursorRadius ??= const Radius.circular(2.0);
         cursorOffset = Offset(iOSHorizontalOffset / devicePixelRatio, 0);
         if (defaultTargetPlatform == TargetPlatform.iOS) {
@@ -363,7 +364,7 @@ class _MoonRawTextInputState extends State<MoonRawTextInput>
         cursorOpacityAnimates ??= false;
         selectionColor ??= Theme.of(
           context,
-        ).colorScheme.primary.withOpacity(0.40);
+        ).colorScheme.primary.withValues(alpha: 0.40);
         textSelectionControls ??=
             (defaultTargetPlatform == TargetPlatform.android ||
                 defaultTargetPlatform == TargetPlatform.fuchsia)
@@ -429,7 +430,7 @@ class _MoonRawTextInputState extends State<MoonRawTextInput>
           readOnly: _config.readOnly || !_isEnabled,
           rendererIgnoresPointer: true,
           restorationId: "editable",
-          scribbleEnabled: _config.scribbleEnabled,
+          stylusHandwritingEnabled: _config.stylusHandwritingEnabled,
           scrollController: _config.scrollController,
           scrollPadding: _config.scrollPadding,
           scrollPhysics: _config.scrollPhysics,

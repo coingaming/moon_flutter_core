@@ -273,9 +273,8 @@ class _MoonRawAccordionState<T> extends State<MoonRawAccordion<T>>
       ..update(WidgetState.disabled, !widget.enabled)
       ..update(WidgetState.selected, _isExpanded);
 
-    final BoxStyler baseStyle = BoxStyler()
-        .clipBehavior(Clip.hardEdge)
-        .merge(widget.outerContainerStyle);
+    final BoxStyler baseStyle = widget.outerContainerStyle ??
+        const BoxStyler.create();
 
     return MoonBaseInteractiveWidget(
       autofocus: widget.autofocus,

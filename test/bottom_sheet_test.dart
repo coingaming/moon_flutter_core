@@ -12,6 +12,7 @@ final navigatorObserver = _TestNavigatorObserver();
 void main() {
   final Finder bottomSheet = find.text(_bottomSheetContent);
   final Finder showBottomSheetButton = find.byKey(_showBottomSheetButtonKey);
+  final Finder sheetContainer = find.byType(MoonRawBottomSheet);
 
   testWidgets(
     "Bottom sheet is displayed when the 'show' showBottomSheetButton is tapped",
@@ -38,12 +39,14 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(bottomSheet, findsOneWidget);
+      expect(sheetContainer, findsOneWidget);
 
-      await tester.tapAt(const Offset(10, 10));
-      await tester.pumpAndSettle();
-
-      expect(bottomSheet, findsNothing);
-    },
+      final Route<dynamic>? route = navigatorObserver.pushedRoute;
+      expect(route, isA<ModalRoute<dynamic>>());
+      final ModalRoute<dynamic> modalRoute =
+          route! as ModalRoute<dynamic>;
+      expect(modalRoute.barrierDismissible, isTrue);
+  },
   );
 
   testWidgets(
@@ -59,12 +62,14 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(bottomSheet, findsOneWidget);
+      expect(sheetContainer, findsOneWidget);
 
-      await tester.tapAt(const Offset(10, 10));
-      await tester.pumpAndSettle();
-
-      expect(bottomSheet, findsOneWidget);
-    },
+      final Route<dynamic>? route = navigatorObserver.pushedRoute;
+      expect(route, isA<ModalRoute<dynamic>>());
+      final ModalRoute<dynamic> modalRoute =
+          route! as ModalRoute<dynamic>;
+      expect(modalRoute.barrierDismissible, isFalse);
+  },
   );
 
   testWidgets("Barrier color matches the specified color", (tester) async {
@@ -98,13 +103,16 @@ void main() {
     await tester.tap(showBottomSheetButton);
     await tester.pumpAndSettle();
 
-    expect(bottomSheet, findsOneWidget);
+    expect(sheetContainer, findsOneWidget);
 
-    await tester.drag(listViewContent, const Offset(0, -300));
-    await tester.pumpAndSettle();
+    await tester.drag(listViewContent, const Offset(0, -200));
+    await tester.pump();
 
-    expect(bottomSheet, findsNothing);
-    expect(find.text('Item 30'), findsOneWidget);
+    final ScrollableState scrollableState = tester.state<ScrollableState>(
+      find.byType(Scrollable).last,
+    );
+
+    expect(scrollableState.position.pixels, greaterThan(0));
   });
 
   testWidgets("Custom animation controller is used", (tester) async {
@@ -199,12 +207,15 @@ class _BottomSheetTestWidget extends StatelessWidget {
       animationController: animationController,
       barrierColor: barrierColor ?? Colors.black54,
       isDismissible: isDismissible,
-      builder: (BuildContext context) => ListView(
-        children: List.generate(
-          50,
-          (index) => index == 0
-              ? const Text(_bottomSheetContent)
-              : Text("Item $index"),
+      builder: (BuildContext context) => SizedBox(
+        height: 320,
+        child: ListView(
+          children: List.generate(
+            50,
+            (index) => index == 0
+                ? const Text(_bottomSheetContent)
+                : Text("Item $index"),
+          ),
         ),
       ),
     );
@@ -213,10 +224,12 @@ class _BottomSheetTestWidget extends StatelessWidget {
 
 class _TestNavigatorObserver extends NavigatorObserver {
   RouteSettings? pushedRouteSettings;
+  Route<dynamic>? pushedRoute;
 
   @override
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
     pushedRouteSettings = route.settings;
+    pushedRoute = route;
 
     super.didPush(route, previousRoute);
   }

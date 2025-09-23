@@ -190,7 +190,6 @@ class MoonBorder extends OutlinedBorder {
     return '${objectRuntimeType(this, 'MoonSquircleBorder')}($side, $borderRadius, $borderAlign)';
   }
 
-  @override
   MoonBorderMix toMix() => MoonBorderMix.value(this);
 }
 

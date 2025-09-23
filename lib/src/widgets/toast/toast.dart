@@ -19,7 +19,7 @@ class MoonRawToast {
     BuildContext context, {
 
     /// The style of the toast container.
-    Style? style,
+    BoxStyler? style,
 
     /// The alignment (position) of the toast.
     AlignmentGeometry toastAlignment = Alignment.bottomCenter,
@@ -109,7 +109,10 @@ class MoonRawToast {
           child: themes.wrap(
             Semantics(
               label: semanticLabel,
-              child: Box(style: style, child: child),
+              child: Box(
+                style: style ?? const BoxStyler.create(),
+                child: child,
+              ),
             ),
           ),
         );

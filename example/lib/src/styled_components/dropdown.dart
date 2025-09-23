@@ -36,34 +36,88 @@ class _StyledDropdownState extends State<StyledDropdown> {
     _Options.third: false,
   };
 
-  Style get _targetStyle => Style(
-    $box.chain
-      ..width(170)
-      ..padding(8)
-      ..borderRadius(8)
-      ..color(Colors.white)
-      ..border(color: Colors.purple),
-    $flex.mainAxisAlignment.spaceBetween(),
-    $on.disabled($with.opacity(0.2)),
-  );
+  BoxStyler get _targetStyle => BoxStyler()
+      .width(170)
+      .padding(
+        EdgeInsetsGeometryMix.symmetric(horizontal: 12, vertical: 8),
+      )
+      .borderRadius(BorderRadiusGeometryMix.circular(8))
+      .border(
+        BorderMix.all(
+          BorderSideMix.value(const BorderSide(color: Colors.purple)),
+        ),
+      )
+      .color(Colors.white)
+      .wrapDefaultTextStyle(TextStyleMix(color: Colors.black87))
+      .onHovered(BoxStyler().color(Colors.purple.shade50))
+      .onFocused(
+        BoxStyler().border(
+          BorderMix.all(
+            BorderSideMix.value(
+              const BorderSide(color: Colors.purple, width: 2),
+            ),
+          ),
+        ),
+      )
+      .animate(
+        AnimationConfig.ease(const Duration(milliseconds: 180)),
+      );
 
-  Style get _dropdownStyle => Style(
-    $box.chain
-      ..width(170)
-      ..color(Colors.white)
-      ..borderRadius(8)
-      ..border(color: Colors.purple)
-      ..padding(8),
-    $flex.crossAxisAlignment.start(),
-  );
+  FlexBoxStyler get _targetContentStyle => FlexBoxStyler()
+      .mainAxisAlignment(MainAxisAlignment.spaceBetween)
+      .crossAxisAlignment(CrossAxisAlignment.center)
+      .spacing(12);
 
-  Style get _menuItemStyle => Style(
-    $box.chain
-      ..padding(8)
-      ..borderRadius(8),
-    $on.hover($box.color(Colors.grey.withOpacity(0.2))),
-    $on.focus($box.color(Colors.purple.shade100)),
-  );
+  BoxStyler get _dropdownContainerStyle => BoxStyler()
+      .width(170)
+      .color(Colors.white)
+      .borderRadius(BorderRadiusGeometryMix.circular(8))
+      .border(
+        BorderMix.all(
+          BorderSideMix.value(const BorderSide(color: Colors.purple)),
+        ),
+      )
+      .padding(EdgeInsetsGeometryMix.all(8))
+      .shadow(
+        BoxShadowMix.value(
+          BoxShadow(
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+            color: Colors.purple.withValues(alpha: 0.12),
+          ),
+        ),
+      )
+      .animate(
+        AnimationConfig.ease(const Duration(milliseconds: 200)),
+      );
+
+  FlexBoxStyler get _menuListStyle => FlexBoxStyler()
+      .crossAxisAlignment(CrossAxisAlignment.stretch)
+      .spacing(4);
+
+  BoxStyler get _menuItemStyle => BoxStyler()
+      .padding(
+        EdgeInsetsGeometryMix.symmetric(horizontal: 12, vertical: 8),
+      )
+      .borderRadius(BorderRadiusGeometryMix.circular(8))
+      .onHovered(BoxStyler().color(Colors.purple.shade50))
+      .onFocused(BoxStyler().color(Colors.purple.shade100))
+      .animate(
+        AnimationConfig.ease(const Duration(milliseconds: 120)),
+      );
+
+  FlexBoxStyler get _menuItemContentStyle => FlexBoxStyler()
+      .mainAxisAlignment(MainAxisAlignment.spaceBetween)
+      .crossAxisAlignment(CrossAxisAlignment.center);
+
+  String get _selectedLabel {
+    final selectedEntries =
+        _options.entries.where((entry) => entry.value).toList(growable: false);
+
+    if (selectedEntries.isEmpty) return "Choose an option";
+
+    return selectedEntries.first.key.name;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,34 +128,31 @@ class _StyledDropdownState extends State<StyledDropdown> {
       target: MoonBaseInteractiveWidget(
         focusNode: FocusNode(skipTraversal: true),
         onTap: () => setState(() => _showOptions = !_showOptions),
-        child: HBox(
-          style: _targetStyle,
+        style: _targetStyle,
+        child: RowBox(
+          style: _targetContentStyle,
           children: [
-            Text(
-              _options.entries.any((e) => e.value)
-                  ? _options.entries.firstWhere((e) => e.value).key.name
-                  : "Choose an option",
-            ),
-            Center(
-              child: AnimatedRotation(
-                duration: const Duration(milliseconds: 200),
-                turns: _showOptions ? -0.5 : 0,
-                child: MoonBaseInteractiveWidget(
-                  style: getIconButtonStyle(),
-                  onTap: () => setState(() => _showOptions = !_showOptions),
-                  child: const StyledIcon(
-                    icon: Icons.keyboard_arrow_down_rounded,
-                  ),
+            StyledText(_selectedLabel),
+            AnimatedRotation(
+              duration: const Duration(milliseconds: 200),
+              turns: _showOptions ? -0.5 : 0,
+              child: MoonBaseInteractiveWidget(
+                style: getIconButtonStyle(),
+                mouseCursor: SystemMouseCursors.click,
+                onTap: () => setState(() => _showOptions = !_showOptions),
+                child: const StyledIcon(
+                  icon: Icons.keyboard_arrow_down_rounded,
                 ),
               ),
             ),
           ],
         ),
       ),
-      child: SingleChildScrollView(
-        child: VBox(
-          style: _dropdownStyle,
-          children: List.generate(3, (int index) {
+      child: Box(
+        style: _dropdownContainerStyle,
+        child: ColumnBox(
+          style: _menuListStyle,
+          children: List.generate(_options.length, (int index) {
             final _Options choice = _Options.values[index];
 
             return MoonBaseInteractiveWidget(
@@ -109,9 +160,19 @@ class _StyledDropdownState extends State<StyledDropdown> {
               onTap: () => setState(() {
                 _options.updateAll((key, value) => false);
                 _options[choice] = true;
-                _showOptions = !_showOptions;
+                _showOptions = false;
               }),
-              child: Row(children: [Expanded(child: Text(choice.name))]),
+              child: RowBox(
+                style: _menuItemContentStyle,
+                children: [
+                  StyledText(choice.name),
+                  if (_options[choice]!)
+                    StyledIcon(
+                      icon: Icons.check,
+                      style: IconStyler().color(Colors.purple).size(16),
+                    ),
+                ],
+              ),
             );
           }),
         ),

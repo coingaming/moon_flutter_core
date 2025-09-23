@@ -76,12 +76,12 @@ class _StyledSwitchState extends State<StyledSwitch> {
           onChanged: (bool newValue) => setState(() => _switchValue = newValue),
           trackDecorationTween: DecorationTween(
             begin: BoxDecoration(
-              color: Colors.purple.withOpacity(0.1),
+              color: Colors.purple.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(color: Colors.purple, width: 2),
             ),
             end: BoxDecoration(
-              color: Colors.deepPurple.withOpacity(0.1),
+              color: Colors.deepPurple.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
               border: Border.all(color: Colors.deepPurple, width: 2),
             ),

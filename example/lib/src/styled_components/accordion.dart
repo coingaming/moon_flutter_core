@@ -34,7 +34,7 @@ class _StyledAccordionState extends State<StyledAccordion> {
       .shadows([
         BoxShadowMix.value(
           BoxShadow(
-            color: Colors.purple.withOpacity(0.15),
+            color: Colors.purple.withValues(alpha: 0.15),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),

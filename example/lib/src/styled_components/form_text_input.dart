@@ -19,53 +19,72 @@ class _StyledFormTextInputState extends State<StyledFormTextInput> {
 
   bool _hidePassword = true;
 
-  Style get _inputStyle => Style(
-    $box.chain
-      ..width(300)
-      ..padding(4, 12),
-    $flex.gap(8),
-    $text.color(Colors.black),
-    $with.defaultTextStyle(style: TextStyleMix(color: Colors.grey)),
-    $with.iconTheme(color: Colors.black),
-    $with.animatedShapeDecoration(
-      bgColor: Colors.white,
-      border: _getBorder(Colors.grey, width: 1),
-      duration: const Duration(milliseconds: 400),
-    ),
-    $on.hover($with.animatedShapeDecoration(hoverColor: Colors.black12)),
-    $on.focus(
-      $with.animatedShapeDecoration(
-        hoverColor: Colors.white,
-        border: _getBorder(Colors.purple),
-      ),
-    ),
-    $on.error($with.animatedShapeDecoration(border: _getBorder(Colors.red))),
-    $on.disabled($with.opacity(0.5)),
-  );
+  BoxStyler get _inputStyle => BoxStyler()
+      .width(300)
+      .padding(
+        EdgeInsetsGeometryMix.symmetric(horizontal: 12, vertical: 6),
+      )
+      .borderRadius(BorderRadiusGeometryMix.circular(8))
+      .border(
+        BorderMix.all(
+          BorderSideMix.value(const BorderSide(color: Colors.grey, width: 1)),
+        ),
+      )
+      .color(Colors.white)
+      .wrapDefaultTextStyle(TextStyleMix(color: Colors.black))
+      .wrapIconTheme(const IconThemeData(color: Colors.black))
+      .onHovered(BoxStyler().color(Colors.grey.shade200))
+      .onFocused(
+        BoxStyler().border(
+          BorderMix.all(
+            BorderSideMix.value(
+              const BorderSide(color: Colors.purple, width: 2),
+            ),
+          ),
+        ),
+      )
+      .onError(
+        BoxStyler().border(
+          BorderMix.all(
+            BorderSideMix.value(const BorderSide(color: Colors.red, width: 2)),
+          ),
+        ),
+      )
+      .onDisabled(BoxStyler().wrapOpacity(0.4))
+      .animate(
+        AnimationConfig.ease(const Duration(milliseconds: 180)),
+      );
 
-  Style get _helperErrorStyle => Style(
-    $box.chain
-      ..padding.vertical(8)
-      ..width(300),
-    $text.chain
-      ..textAlign.center()
-      ..style.fontSize(10),
-    $on.disabled($with.opacity(0.5)),
-    $on.error($text.style(color: Colors.red), $icon.color(Colors.red)),
-  ).animate(duration: const Duration(milliseconds: 300));
+  BoxStyler get _helperErrorStyle => BoxStyler()
+      .width(300)
+      .alignment(Alignment.center)
+      .padding(EdgeInsetsGeometryMix.symmetric(vertical: 8))
+      .wrapDefaultTextStyle(
+        TextStyleMix(color: Colors.grey.shade600, fontSize: 12),
+      )
+      .wrapIconTheme(
+        IconThemeData(color: Colors.grey.shade600, size: 16),
+      )
+      .onError(
+        BoxStyler()
+            .wrapDefaultTextStyle(TextStyleMix(color: Colors.red))
+            .wrapIconTheme(const IconThemeData(color: Colors.red, size: 16)),
+      )
+      .onDisabled(BoxStyler().wrapOpacity(0.5))
+      .animate(
+        AnimationConfig.ease(const Duration(milliseconds: 200)),
+      );
 
-  Style get _trailingStyle => Style(
-    $text.chain
-      ..style.decoration.underline()
-      ..color(Colors.black),
-    $with.cursor.click(),
-    $with.align(alignment: Alignment.centerRight),
-  );
-
-  MoonBorder _getBorder(Color borderColor, {double? width}) => MoonBorder(
-    borderRadius: BorderRadius.circular(8),
-    side: BorderSide(color: borderColor, width: width ?? 2),
-  );
+  BoxStyler get _trailingStyle => BoxStyler()
+      .alignment(Alignment.centerRight)
+      .padding(EdgeInsetsGeometryMix.symmetric(horizontal: 4, vertical: 2))
+      .wrapDefaultTextStyle(
+        TextStyleMix(color: Colors.black, decoration: TextDecoration.underline),
+      )
+      .onHovered(BoxStyler().color(Colors.grey.shade200))
+      .animate(
+        AnimationConfig.ease(const Duration(milliseconds: 120)),
+      );
 
   @override
   void initState() {
@@ -85,6 +104,13 @@ class _StyledFormTextInputState extends State<StyledFormTextInput> {
 
   @override
   Widget build(BuildContext context) {
+    final BoxStyler textAreaStyle = _inputStyle.merge(
+      BoxStyler()
+          .height(200)
+          .padding(EdgeInsetsGeometryMix.all(16))
+          .alignment(Alignment.topCenter),
+    );
+
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Form(
@@ -103,16 +129,19 @@ class _StyledFormTextInputState extends State<StyledFormTextInput> {
                     trailing: MoonBaseInteractiveWidget(
                       style: getIconButtonStyle(),
                       onTap: () => _textController.clear(),
-                      child: const Icon(Icons.close, size: 20),
+                      child: StyledIcon(
+                        icon: Icons.close,
+                        style: IconStyler().size(20),
+                      ),
                     ),
-                    label: const Text("Label"),
-                    hint: const Text("Enter text (over 3 characters)"),
+                    label: const StyledText("Label"),
+                    hint: const StyledText("Enter text (over 3 characters)"),
                     helper: const StyledText("Expanding text input field."),
                   ),
                   validator: (String? value) =>
                       value != null && value.length < 3
-                      ? "The text should be longer than 3 characters."
-                      : null,
+                          ? "The text should be longer than 3 characters."
+                          : null,
                 ),
                 const SizedBox(height: 16),
                 MoonRawFormTextInput(
@@ -122,15 +151,16 @@ class _StyledFormTextInputState extends State<StyledFormTextInput> {
                     inputStyle: _inputStyle,
                     helperErrorStyle: _helperErrorStyle,
                     controller: _passwordController,
-                    leading: const Icon(Icons.pin_outlined, size: 20),
+                    leading: const StyledIcon(icon: Icons.pin_outlined),
                     trailing: MoonBaseInteractiveWidget(
                       style: _trailingStyle,
+                      mouseCursor: SystemMouseCursors.click,
                       onTap: () =>
                           setState(() => _hidePassword = !_hidePassword),
                       child: StyledText(_hidePassword ? "Show" : "Hide"),
                     ),
-                    label: const Text("Label"),
-                    hint: const Text("Enter password (abc)"),
+                    label: const StyledText("Label"),
+                    hint: const StyledText("Enter password (abc)"),
                   ),
                   validator: (String? value) =>
                       value != "abc" ? "Wrong password." : null,
@@ -142,18 +172,14 @@ class _StyledFormTextInputState extends State<StyledFormTextInput> {
                     labelTextAlignVertical: TextAlignVertical.top,
                     style: const TextStyle(fontSize: 16),
                     helperErrorStyle: _helperErrorStyle,
-                    inputStyle: _inputStyle.add(
-                      $box.chain
-                        ..height(200)
-                        ..padding(16),
-                    ),
-                    label: const Text("Label"),
-                    hint: const Text("Hint..."),
+                    inputStyle: textAreaStyle,
+                    label: const StyledText("Label"),
+                    hint: const StyledText("Hint..."),
                   ),
                   validator: (String? value) =>
-                      value?.length != null && value!.trim().isEmpty
-                      ? "The text area can't be empty."
-                      : null,
+                      value != null && value.trim().isEmpty
+                          ? "The text area can't be empty."
+                          : null,
                 ),
                 const SizedBox(height: 24),
                 MoonBaseInteractiveWidget(

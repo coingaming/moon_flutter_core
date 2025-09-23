@@ -147,17 +147,21 @@ class IconThemeModifierMix extends ModifierMix<IconThemeModifier> {
     if (other == null) return this;
 
     return IconThemeModifierMix.create(
-      color: MixOps.merge(color, other.color),
-      size: MixOps.merge(size, other.size),
-      fill: MixOps.merge(fill, other.fill),
-      weight: MixOps.merge(weight, other.weight),
-      grade: MixOps.merge(grade, other.grade),
-      opticalSize: MixOps.merge(opticalSize, other.opticalSize),
-      opacity: MixOps.merge(opacity, other.opacity),
-      shadows: MixOps.merge(shadows, other.shadows),
-      applyTextScaling: MixOps.merge(applyTextScaling, other.applyTextScaling),
-      duration: MixOps.merge(duration, other.duration),
-      curve: MixOps.merge(curve, other.curve),
+      color: MixOps.merge<Prop<Color>, Color>(color, other.color),
+      size: MixOps.merge<Prop<double>, double>(size, other.size),
+      fill: MixOps.merge<Prop<double>, double>(fill, other.fill),
+      weight: MixOps.merge<Prop<double>, double>(weight, other.weight),
+      grade: MixOps.merge<Prop<double>, double>(grade, other.grade),
+      opticalSize:
+          MixOps.merge<Prop<double>, double>(opticalSize, other.opticalSize),
+      opacity: MixOps.merge<Prop<double>, double>(opacity, other.opacity),
+      shadows:
+          MixOps.merge<Prop<List<Shadow>>, List<Shadow>>(shadows, other.shadows),
+      applyTextScaling:
+          MixOps.merge<Prop<bool>, bool>(applyTextScaling, other.applyTextScaling),
+      duration:
+          MixOps.merge<Prop<Duration>, Duration>(duration, other.duration),
+      curve: MixOps.merge<Prop<Curve>, Curve>(curve, other.curve),
     );
   }
 

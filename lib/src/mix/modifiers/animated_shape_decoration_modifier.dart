@@ -135,11 +135,14 @@ class AnimatedShapeDecorationModifierMix
     if (other == null) return this;
 
     return AnimatedShapeDecorationModifierMix.create(
-      bgColor: MixOps.merge(bgColor, other.bgColor),
-      hoverColor: MixOps.merge(hoverColor, other.hoverColor),
-      border: MixOps.merge(border, other.border),
-      duration: MixOps.merge(duration, other.duration),
-      curve: MixOps.merge(curve, other.curve),
+      bgColor: MixOps.merge<Prop<Color>, Color>(bgColor, other.bgColor),
+      hoverColor:
+          MixOps.merge<Prop<Color>, Color>(hoverColor, other.hoverColor),
+      border:
+          MixOps.merge<Prop<MoonBorder>, MoonBorder>(border, other.border),
+      duration:
+          MixOps.merge<Prop<Duration>, Duration>(duration, other.duration),
+      curve: MixOps.merge<Prop<Curve>, Curve>(curve, other.curve),
     );
   }
 

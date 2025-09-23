@@ -7,17 +7,24 @@ import 'package:moon_core/moon_core.dart';
 class StyledTag extends StatelessWidget {
   const StyledTag({super.key});
 
-  Style get _tagStyle => Style(
-    $box.chain
-      ..color(Colors.white)
-      ..borderRadius(4.0)
-      ..padding(4.0, 8.0),
-    $flex.chain
-      ..gap(2.0)
-      ..mainAxisSize.min(),
-    $icon.size(12),
-    $text.style(fontSize: 12, height: 1.0),
-  );
+  BoxStyler get _tagStyle => BoxStyler()
+      .color(Colors.white)
+      .borderRadius(BorderRadiusGeometryMix.circular(4))
+      .padding(
+        EdgeInsetsGeometryMix.symmetric(horizontal: 8, vertical: 4),
+      )
+      .wrapDefaultTextStyle(TextStyleMix(fontSize: 12, height: 1))
+      .wrapIconTheme(const IconThemeData(size: 12))
+      .animate(
+        AnimationConfig.ease(const Duration(milliseconds: 120)),
+      );
+
+  FlexBoxStyler get _tagContentStyle => FlexBoxStyler()
+      .spacing(4)
+      .mainAxisSize(MainAxisSize.min)
+      .crossAxisAlignment(CrossAxisAlignment.center);
+
+  IconStyler get _iconStyle => IconStyler().size(12);
 
   @override
   Widget build(BuildContext context) {
@@ -25,11 +32,11 @@ class StyledTag extends StatelessWidget {
       focusNode: FocusNode(skipTraversal: true),
       onTap: () {},
       style: _tagStyle,
-      child: const StyledRow(
-        inherit: true,
-        children: const [
-          StyledText("MoonTag"),
-          StyledIcon(icon: Icons.close),
+      child: RowBox(
+        style: _tagContentStyle,
+        children: [
+          const StyledText("MoonTag"),
+          StyledIcon(icon: Icons.close, style: _iconStyle),
         ],
       ),
     );

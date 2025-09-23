@@ -42,8 +42,6 @@ class AvatarCircleClipper extends CustomClipper<Path> {
         center = textDirection == TextDirection.ltr
             ? Offset(width - badgeRadius, height - badgeRadius)
             : Offset(badgeRadius, width - badgeRadius);
-      default:
-        center = Offset(width - badgeRadius, width - badgeRadius);
     }
 
     return Path()..addOval(

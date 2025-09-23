@@ -146,8 +146,8 @@ class MoonTextInputConfiguration {
   /// {@macro flutter.widgets.editableText.readOnly}
   final bool readOnly;
 
-  /// {@macro flutter.widgets.editableText.scribbleEnabled}
-  final bool scribbleEnabled;
+  /// {@macro flutter.widgets.editableText.stylusHandwritingEnabled}
+  final bool stylusHandwritingEnabled;
 
   /// {@macro flutter.widgets.editableText.showCursor}
   final bool? showCursor;
@@ -536,7 +536,7 @@ class MoonTextInputConfiguration {
     this.onTapOutside,
     this.readOnly = false,
     this.restorationId,
-    this.scribbleEnabled = true,
+    this.stylusHandwritingEnabled = true,
     this.scrollController,
     this.scrollPadding = const EdgeInsets.all(20.0),
     this.scrollPhysics,
@@ -660,7 +660,7 @@ class MoonTextInputConfiguration {
     TapRegionCallback? onTapOutside,
     bool? readOnly,
     String? restorationId,
-    bool? scribbleEnabled,
+    bool? stylusHandwritingEnabled,
     ScrollController? scrollController,
     EdgeInsets? scrollPadding,
     ScrollPhysics? scrollPhysics,
@@ -744,7 +744,8 @@ class MoonTextInputConfiguration {
       onTapOutside: onTapOutside ?? this.onTapOutside,
       readOnly: readOnly ?? this.readOnly,
       restorationId: restorationId ?? this.restorationId,
-      scribbleEnabled: scribbleEnabled ?? this.scribbleEnabled,
+      stylusHandwritingEnabled:
+          stylusHandwritingEnabled ?? this.stylusHandwritingEnabled,
       scrollController: scrollController ?? this.scrollController,
       scrollPadding: scrollPadding ?? this.scrollPadding,
       scrollPhysics: scrollPhysics ?? this.scrollPhysics,
@@ -1065,8 +1066,8 @@ void textInputDebugFillProperties(
   );
   properties.add(
     DiagnosticsProperty<bool>(
-      "scribbleEnabled",
-      textInputConfiguration.scribbleEnabled,
+      "stylusHandwritingEnabled",
+      textInputConfiguration.stylusHandwritingEnabled,
       defaultValue: true,
     ),
   );

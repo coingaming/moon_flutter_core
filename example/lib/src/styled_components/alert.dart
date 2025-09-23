@@ -69,13 +69,13 @@ class _StyledAlertState extends State<StyledAlert> {
       )
       .wrapDefaultTextStyle(TextStyleMix(color: themeColor))
       .onHovered(
-        BoxStyler().color(themeColor.withOpacity(0.08)),
+        BoxStyler().color(themeColor.withValues(alpha: 0.08)),
       )
       .onFocused(
         BoxStyler().border(
           BorderMix.all(
             BorderSideMix.value(
-              BorderSide(color: themeColor.withOpacity(0.3), width: 2),
+              BorderSide(color: themeColor.withValues(alpha: 0.3), width: 2),
             ),
           ),
         ),

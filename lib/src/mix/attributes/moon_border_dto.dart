@@ -56,9 +56,15 @@ final class MoonBorderMix extends OutlinedBorderMix<MoonBorder>
     if (other == null) return this;
 
     return MoonBorderMix.create(
-      borderRadius: MixOps.merge($borderRadius, other.$borderRadius),
-      side: MixOps.merge($side, other.$side),
-      borderAlign: MixOps.merge($borderAlign, other.$borderAlign),
+      borderRadius: MixOps.merge<Prop<BorderRadiusGeometry>, BorderRadiusGeometry>(
+        $borderRadius,
+        other.$borderRadius,
+      ),
+      side: MixOps.merge<Prop<BorderSide>, BorderSide>($side, other.$side),
+      borderAlign: MixOps.merge<Prop<BorderAlign>, BorderAlign>(
+        $borderAlign,
+        other.$borderAlign,
+      ),
     );
   }
 

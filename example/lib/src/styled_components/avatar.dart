@@ -18,52 +18,47 @@ class _StyledAvatarState extends State<StyledAvatar> {
   static const double _borderRadiusValue = 8;
   static const double _marginValue = 1;
 
-  Style get _customBadgeStyle => Style(
-    $box.chain
-      ..width(_badgeWidth)
-      ..height(_badgeHeight)
-      ..alignment.center()
-      ..color(Colors.purpleAccent)
-      ..borderRadiusDirectional.bottomEnd(_borderRadiusValue)
-      ..borderRadiusDirectional.topStart(_borderRadiusValue),
-    $text.chain
-      ..style.color(Colors.white)
-      ..style.fontSize(8),
-  );
-
-  Style get _customContentStyle => Style(
-    $box.chain
-      ..alignment.center()
-      ..shapeDecoration(
-        image: const DecorationImage(
-          image: AssetImage("assets/images/placeholder.png"),
-          fit: BoxFit.cover,
+  BoxStyler get _customBadgeStyle => BoxStyler()
+      .width(_badgeWidth)
+      .height(_badgeHeight)
+      .alignment(Alignment.center)
+      .color(Colors.purpleAccent)
+      .borderRadius(
+        BorderRadiusGeometryMix.value(
+          const BorderRadiusDirectional.only(
+            bottomEnd: Radius.circular(_borderRadiusValue),
+            topStart: Radius.circular(_borderRadiusValue),
+          ),
         ),
-      ),
-    $text.chain
-      ..style.color(Colors.white)
-      ..style.fontSize(16),
-  );
+      )
+      .wrapDefaultTextStyle(
+        TextStyleMix(color: Colors.white, fontSize: 8),
+      );
 
-  Style get _badgeStyle => Style(
-    $box.chain
-      ..decoration.color(Colors.purpleAccent)
-      ..decoration.shape.circle()
-      ..alignment.center(),
-    $text.chain
-      ..style.color(Colors.white)
-      ..style.fontSize(8),
-  );
+  BoxStyler get _customContentStyle => BoxStyler()
+      .alignment(Alignment.center)
+      .backgroundImageAsset(
+        "assets/images/placeholder.png",
+        fit: BoxFit.cover,
+      )
+      .wrapDefaultTextStyle(
+        TextStyleMix(color: Colors.white, fontSize: 16),
+      );
 
-  Style get _contentStyle => Style(
-    $box.chain
-      ..decoration.color(Colors.deepPurple)
-      ..borderRadius.circular(32),
-    $icon.chain
-      ..color(Colors.white)
-      ..size(40),
-    $text.style.fontSize(8),
-  );
+  BoxStyler get _badgeStyle => BoxStyler()
+      .alignment(Alignment.center)
+      .color(Colors.purpleAccent)
+      .shapeCircle()
+      .wrapDefaultTextStyle(TextStyleMix(color: Colors.white, fontSize: 8));
+
+  BoxStyler get _contentStyle => BoxStyler()
+      .alignment(Alignment.center)
+      .color(Colors.deepPurple)
+      .borderRadius(BorderRadiusGeometryMix.circular(32))
+      .wrapDefaultTextStyle(TextStyleMix(color: Colors.white, fontSize: 8));
+
+  IconStyler get _contentIconStyle =>
+      IconStyler().color(Colors.white).size(40);
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +101,7 @@ class _StyledAvatarState extends State<StyledAvatar> {
           badge: Box(style: _badgeStyle, child: const StyledText("3")),
           content: Box(
             style: _contentStyle,
-            child: const StyledIcon(icon: Icons.person),
+            child: StyledIcon(icon: Icons.person, style: _contentIconStyle),
           ),
         ),
       ],

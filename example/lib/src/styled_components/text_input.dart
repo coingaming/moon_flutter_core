@@ -16,68 +16,68 @@ class StyledTextInput extends StatefulWidget {
 class _StyledTextInputState extends State<StyledTextInput> {
   late final TextEditingController _searchController;
 
-  Style get _inputStyle {
-    return Style(
-      $box.chain
-        ..width(300)
-        ..padding(4, 12)
-        ..minHeight(30),
-      $flex.gap(8),
-      $with.defaultTextStyle(
-        style: TextStyleMix(color: Colors.grey),
-        duration: const Duration(milliseconds: 400),
-      ),
-      $with.iconTheme(
-        color: Colors.black,
-        duration: const Duration(milliseconds: 400),
-      ),
-      $with.animatedShapeDecoration(
-        bgColor: Colors.white,
-        border: _getBorder(Colors.grey, width: 1),
-        duration: const Duration(milliseconds: 400),
-      ),
-      $on.hover(
-        $with.defaultTextStyle(style: TextStyleMix(color: Colors.purple)),
-        $with.iconTheme(color: Colors.purple),
-        $with.animatedShapeDecoration(
-          hoverColor: Colors.black12,
-          border: _getBorder(Colors.black, width: 1),
+  BoxStyler get _inputStyle => BoxStyler()
+      .width(300)
+      .minHeight(30)
+      .padding(
+        EdgeInsetsGeometryMix.symmetric(horizontal: 12, vertical: 4),
+      )
+      .borderRadius(BorderRadiusGeometryMix.circular(8))
+      .border(
+        BorderMix.all(
+          BorderSideMix.value(const BorderSide(color: Colors.grey, width: 1)),
         ),
-      ),
-      $on.focus(
-        $with.animatedShapeDecoration(
-          hoverColor: Colors.white,
-          border: _getBorder(Colors.purple),
+      )
+      .color(Colors.white)
+      .wrapDefaultTextStyle(TextStyleMix(color: Colors.grey.shade600))
+      .wrapIconTheme(
+        IconThemeData(color: Colors.black.withValues(alpha: 0.8), size: 18),
+      )
+      .onHovered(
+        BoxStyler()
+            .wrapDefaultTextStyle(TextStyleMix(color: Colors.purple))
+            .wrapIconTheme(const IconThemeData(color: Colors.purple, size: 18))
+            .color(Colors.grey.shade200),
+      )
+      .onFocused(
+        BoxStyler().border(
+          BorderMix.all(
+            BorderSideMix.value(
+              const BorderSide(color: Colors.purple, width: 2),
+            ),
+          ),
         ),
-      ),
-      $on.error($with.animatedShapeDecoration(border: _getBorder(Colors.red))),
-      $on.disabled(
-        $with.animatedOpacity(
-          opacity: 0.5,
-          duration: const Duration(milliseconds: 200),
+      )
+      .onError(
+        BoxStyler().border(
+          BorderMix.all(
+            BorderSideMix.value(
+              const BorderSide(color: Colors.red, width: 2),
+            ),
+          ),
         ),
-      ),
-    );
-  }
+      )
+      .onDisabled(BoxStyler().wrapOpacity(0.4))
+      .animate(
+        AnimationConfig.ease(const Duration(milliseconds: 180)),
+      );
 
-  Style get _helperErrorStyle => Style(
-    $box.chain
-      ..padding.vertical(8)
-      ..width(300),
-    $text.chain
-      ..textAlign.center()
-      ..style.fontSize(10),
-    $on.disabled($with.opacity(0.5)),
-  ).animate(duration: const Duration(milliseconds: 300));
+  BoxStyler get _helperErrorStyle => BoxStyler()
+      .width(300)
+      .alignment(Alignment.center)
+      .padding(EdgeInsetsGeometryMix.symmetric(vertical: 8))
+      .wrapDefaultTextStyle(
+        TextStyleMix(color: Colors.grey.shade600, fontSize: 12),
+      )
+      .onDisabled(BoxStyler().wrapOpacity(0.5))
+      .onError(
+        BoxStyler().wrapDefaultTextStyle(TextStyleMix(color: Colors.red)),
+      )
+      .animate(
+        AnimationConfig.ease(const Duration(milliseconds: 200)),
+      );
 
-  MoonBorder _getBorder(
-    Color borderColor, {
-    BorderRadius? radius,
-    double? width,
-  }) => MoonBorder(
-    borderRadius: radius ?? BorderRadius.circular(8),
-    side: BorderSide(color: borderColor, width: width ?? 2),
-  );
+  IconStyler get _iconStyle => IconStyler().size(20);
 
   @override
   void initState() {
@@ -105,15 +105,15 @@ class _StyledTextInputState extends State<StyledTextInput> {
         leading: MoonBaseInteractiveWidget(
           style: getIconButtonStyle(),
           onTap: () => _searchController.clear(),
-          child: const Icon(Icons.close, size: 20),
+          child: StyledIcon(icon: Icons.close, style: _iconStyle),
         ),
         trailing: MoonBaseInteractiveWidget(
           style: getIconButtonStyle(),
           onTap: () => _searchController.clear(),
-          child: const Icon(Icons.close, size: 20),
+          child: StyledIcon(icon: Icons.close, style: _iconStyle),
         ),
-        label: const Text("Label"),
-        hint: const Text("Hint"),
+        label: const StyledText("Label"),
+        hint: const StyledText("Hint"),
         helper: const StyledText("Text input field with floating label."),
       ),
     );

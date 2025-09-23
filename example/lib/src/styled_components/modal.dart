@@ -9,14 +9,15 @@ import 'package:moon_core/moon_core.dart';
 class StyledModal extends StatelessWidget {
   const StyledModal({super.key});
 
-  Style get _modalStyle => Style(
-    $box.chain
-      ..height(200)
-      ..width(300)
-      ..borderRadius(16)
-      ..color(Colors.deepPurple.shade200),
-    $with.align(),
-  );
+  BoxStyler get _modalStyle => BoxStyler()
+      .height(200)
+      .width(300)
+      .borderRadius(BorderRadiusGeometryMix.circular(16))
+      .color(Colors.deepPurple.shade200)
+      .alignment(Alignment.center)
+      .animate(
+        AnimationConfig.ease(const Duration(milliseconds: 200)),
+      );
 
   @override
   Widget build(BuildContext context) {

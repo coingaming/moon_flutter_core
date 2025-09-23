@@ -201,18 +201,27 @@ class DefaultTextStyleModifierMix
     if (other == null) return this;
 
     return DefaultTextStyleModifierMix.create(
-      style: MixOps.merge(style, other.style),
-      softWrap: MixOps.merge(softWrap, other.softWrap),
-      maxLines: MixOps.merge(maxLines, other.maxLines),
-      textAlign: MixOps.merge(textAlign, other.textAlign),
-      overflow: MixOps.merge(overflow, other.overflow),
-      textWidthBasis: MixOps.merge(textWidthBasis, other.textWidthBasis),
-      textHeightBehavior: MixOps.merge(
+      style: MixOps.merge<Prop<TextStyle>, TextStyle>(style, other.style),
+      softWrap: MixOps.merge<Prop<bool>, bool>(softWrap, other.softWrap),
+      maxLines: MixOps.merge<Prop<int>, int>(maxLines, other.maxLines),
+      textAlign:
+          MixOps.merge<Prop<TextAlign>, TextAlign>(textAlign, other.textAlign),
+      overflow: MixOps.merge<Prop<TextOverflow>, TextOverflow>(
+        overflow,
+        other.overflow,
+      ),
+      textWidthBasis: MixOps.merge<Prop<TextWidthBasis>, TextWidthBasis>(
+        textWidthBasis,
+        other.textWidthBasis,
+      ),
+      textHeightBehavior:
+          MixOps.merge<Prop<TextHeightBehavior>, TextHeightBehavior>(
         textHeightBehavior,
         other.textHeightBehavior,
       ),
-      duration: MixOps.merge(duration, other.duration),
-      curve: MixOps.merge(curve, other.curve),
+      duration:
+          MixOps.merge<Prop<Duration>, Duration>(duration, other.duration),
+      curve: MixOps.merge<Prop<Curve>, Curve>(curve, other.curve),
     );
   }
 

@@ -14,63 +14,81 @@ class StyledRadio extends StatefulWidget {
 }
 
 class _StyledRadioState extends State<StyledRadio> {
+  static const double _radioSize = 16;
+  static const Duration _animationDuration = Duration(milliseconds: 150);
+
   _Choices? _valueCustom = _Choices.first;
 
-  Duration get _animationDuration => const Duration(milliseconds: 150);
+  BoxStyler get _radioStyle => BoxStyler()
+      .constraints(BoxConstraintsMix.square(_radioSize))
+      .alignment(Alignment.center)
+      .shapeCircle()
+      .border(
+        BorderMix.all(
+          BorderSideMix.value(
+            const BorderSide(color: Colors.black54, width: 1.5),
+          ),
+        ),
+      )
+      .color(Colors.transparent)
+      .onSelected(
+        BoxStyler().border(
+          BorderMix.all(
+            BorderSideMix.value(
+              const BorderSide(color: Colors.deepPurple, width: 2),
+            ),
+          ),
+        ),
+      )
+      .animate(AnimationConfig.ease(_animationDuration));
 
-  Style get _dotStyle => Style(
-    $box.chain
-      ..width(0)
-      ..color(Colors.deepPurple)
-      ..shape.circle(),
-    SelectedState.selected($box.width(7.5)),
-  ).animate(duration: _animationDuration);
-
-  Style get _baseStyle => Style(
-    $box.chain
-      ..width(16)
-      ..height(16)
-      ..border.color.black54()
-      ..alignment.center()
-      ..shape.circle(),
-    SelectedState.selected($box.border.color.deepPurple.shade600()),
-  ).animate(duration: _animationDuration);
-
-  Style get _focusStateStyle => Style(
-    $on.focus(
-      $box.chain
-        ..border.color.black12()
-        ..border.width(4)
-        ..shape.circle(),
-    ),
-  ).animate(duration: _animationDuration);
-
-  SelectedState _getVariant(_Choices? value) =>
-      value == _valueCustom ? SelectedState.selected : SelectedState.unselected;
+  BoxStyler get _focusStyle => BoxStyler()
+      .onFocused(
+        BoxStyler().border(
+          BorderMix.all(
+            BorderSideMix.value(
+              const BorderSide(
+                color: Colors.black12,
+                width: 4,
+                strokeAlign: BorderSide.strokeAlignOutside,
+              ),
+            ),
+          ),
+        ),
+      )
+      .animate(AnimationConfig.ease(_animationDuration));
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: List.generate(_Choices.values.length, (int index) {
-        final _Choices value = _Choices.values[index];
+      children: _Choices.values.map((value) {
+        final bool isSelected = value == _valueCustom;
 
-        return Column(
-          children: [
-            MoonBaseSingleSelectWidget(
-              value: value,
-              groupValue: _valueCustom,
-              toggleable: true,
-              style: _focusStateStyle,
-              onChanged: (_Choices? value) =>
-                  setState(() => _valueCustom = value),
-              child: Box(
-                style: _baseStyle.applyVariant(_getVariant(value)),
-                child: Box(style: _dotStyle.applyVariant(_getVariant(value))),
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: MoonBaseSingleSelectWidget<_Choices>(
+            value: value,
+            groupValue: _valueCustom,
+            toggleable: true,
+            style: _focusStyle,
+            onChanged: (_Choices? newValue) =>
+                setState(() => _valueCustom = newValue),
+            child: Box(
+              style: _radioStyle,
+              child: AnimatedContainer(
+                duration: _animationDuration,
+                curve: Curves.easeInOut,
+                width: isSelected ? 8 : 0,
+                height: isSelected ? 8 : 0,
+                decoration: const BoxDecoration(
+                  color: Colors.deepPurple,
+                  shape: BoxShape.circle,
+                ),
               ),
             ),
-          ],
+          ),
         );
-      }),
+      }).toList(growable: false),
     );
   }
 }

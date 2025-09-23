@@ -107,9 +107,10 @@ class AnimatedOpacityModifierMix extends ModifierMix<AnimatedOpacityModifier> {
     if (other == null) return this;
 
     return AnimatedOpacityModifierMix.create(
-      opacity: MixOps.merge(opacity, other.opacity),
-      duration: MixOps.merge(duration, other.duration),
-      curve: MixOps.merge(curve, other.curve),
+      opacity: MixOps.merge<Prop<double>, double>(opacity, other.opacity),
+      duration:
+          MixOps.merge<Prop<Duration>, Duration>(duration, other.duration),
+      curve: MixOps.merge<Prop<Curve>, Curve>(curve, other.curve),
     );
   }
 

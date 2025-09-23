@@ -16,13 +16,13 @@ class StyledPopover extends StatefulWidget {
 class _StyledPopoverState extends State<StyledPopover> {
   bool _show = false;
 
-  Style get _popoverStyle => Style(
-    $box.chain
-      ..height(100)
-      ..width(150)
-      ..borderRadius(16)
-      ..color(Colors.deepPurple.shade200),
-  );
+  BoxStyler get _popoverStyle => BoxStyler()
+      .height(100)
+      .width(150)
+      .borderRadius(BorderRadiusGeometryMix.circular(16))
+      .color(Colors.deepPurple.shade200)
+      .alignment(Alignment.center)
+      .animate(AnimationConfig.ease(const Duration(milliseconds: 200)));
 
   @override
   Widget build(BuildContext context) {

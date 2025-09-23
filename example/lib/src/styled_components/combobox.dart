@@ -42,57 +42,135 @@ class _StyledComboboxState extends State<StyledCombobox> {
     _Options.fifth: false,
   };
 
-  Style get _targetStyle => Style(
-    $box.chain
-      ..width(280)
-      ..padding(8, 8)
-      ..borderRadius(8)
-      ..color(Colors.white)
-      ..border(color: Colors.purple),
-    $flex.mainAxisAlignment.spaceBetween(),
-    $on.disabled($with.opacity(0.2)),
-  );
+  int get _selectedCount =>
+      _options.values.where((isSelected) => isSelected).length;
 
-  Style get _overlayStyle => Style(
-    $box.chain
-      ..width(280)
-      ..color(Colors.white)
-      ..borderRadius(8)
-      ..border(color: Colors.purple)
-      ..padding(8),
-  );
+  BoxStyler get _inputStyle => BoxStyler()
+      .width(280)
+      .padding(
+        EdgeInsetsGeometryMix.symmetric(horizontal: 12, vertical: 10),
+      )
+      .borderRadius(BorderRadiusGeometryMix.circular(8))
+      .border(
+        BorderMix.all(
+          BorderSideMix.value(const BorderSide(color: Colors.purple)),
+        ),
+      )
+      .color(Colors.white)
+      .wrapDefaultTextStyle(TextStyleMix(color: Colors.black87))
+      .onFocused(
+        BoxStyler().border(
+          BorderMix.all(
+            BorderSideMix.value(
+              const BorderSide(color: Colors.purple, width: 2),
+            ),
+          ),
+        ),
+      )
+      .animate(
+        AnimationConfig.ease(const Duration(milliseconds: 180)),
+      );
 
-  Style get _leadingStyle =>
-      Style($box.padding(4, 8), $box.margin(4), $icon.size(14));
+  BoxStyler get _overlayStyle => BoxStyler()
+      .width(280)
+      .color(Colors.white)
+      .borderRadius(BorderRadiusGeometryMix.circular(8))
+      .border(
+        BorderMix.all(
+          BorderSideMix.value(const BorderSide(color: Colors.purple)),
+        ),
+      )
+      .padding(EdgeInsetsGeometryMix.all(8))
+      .shadow(
+        BoxShadowMix.value(
+          BoxShadow(
+            blurRadius: 16,
+            offset: const Offset(0, 6),
+            color: Colors.purple.withValues(alpha: 0.14),
+          ),
+        ),
+      )
+      .animate(
+        AnimationConfig.ease(const Duration(milliseconds: 200)),
+      );
 
-  Style get _menuItemStyle => Style(
-    $box.chain
-      ..padding(8)
-      ..borderRadius(8),
-    $flex.mainAxisAlignment.spaceBetween(),
-  ).merge(getEffects());
+  FlexBoxStyler get _menuListStyle => FlexBoxStyler()
+      .crossAxisAlignment(CrossAxisAlignment.stretch)
+      .spacing(4);
 
-  Style get _checkboxStyle => Style(
-    $box.chain
-      ..borderRadius(4)
-      ..color(Colors.purple)
-      ..border.color(Colors.purple),
-    SelectedState.unselected(
-      $box.chain
-        ..color.transparent()
-        ..border.color.black54(),
-    ),
-  ).animate();
+  BoxStyler get _menuItemStyle => BoxStyler()
+      .padding(
+        EdgeInsetsGeometryMix.symmetric(horizontal: 12, vertical: 10),
+      )
+      .borderRadius(BorderRadiusGeometryMix.circular(8))
+      .onHovered(BoxStyler().color(Colors.purple.shade50))
+      .onFocused(BoxStyler().color(Colors.purple.shade100))
+      .animate(
+        AnimationConfig.ease(const Duration(milliseconds: 120)),
+      );
 
-  Style get _arrowStyle => Style(
-    $icon.chain
-      ..size(16)
-      ..color.white(),
-    SelectedState.unselected($with.opacity(0)),
-  ).animate(duration: const Duration(milliseconds: 300));
+  FlexBoxStyler get _menuItemContentStyle => FlexBoxStyler()
+      .mainAxisAlignment(MainAxisAlignment.spaceBetween)
+      .crossAxisAlignment(CrossAxisAlignment.center)
+      .spacing(12);
 
-  Variant _getEffectiveVariant(bool value) =>
-      value ? SelectedState.selected : SelectedState.unselected;
+  BoxStyler get _selectionBadgeStyle => BoxStyler()
+      .padding(
+        EdgeInsetsGeometryMix.symmetric(horizontal: 8, vertical: 4),
+      )
+      .borderRadius(BorderRadiusGeometryMix.circular(6))
+      .color(Colors.purple.shade50)
+      .wrapDefaultTextStyle(TextStyleMix(color: Colors.purple))
+      .wrapIconTheme(
+        IconThemeData(color: Colors.purple.shade400, size: 14),
+      )
+      .onHovered(BoxStyler().color(Colors.purple.shade100))
+      .animate(
+        AnimationConfig.ease(const Duration(milliseconds: 150)),
+      );
+
+  BoxStyler get _checkboxStyle => BoxStyler()
+      .constraints(BoxConstraintsMix.square(20))
+      .alignment(Alignment.center)
+      .borderRadius(BorderRadiusGeometryMix.circular(4))
+      .border(
+        BorderMix.all(
+          BorderSideMix.value(
+            const BorderSide(color: Colors.purple, width: 2),
+          ),
+        ),
+      )
+      .color(Colors.transparent)
+      .onSelected(
+        BoxStyler()
+            .color(Colors.purple)
+            .border(
+              BorderMix.all(
+                BorderSideMix.value(
+                  const BorderSide(color: Colors.purple, width: 2),
+                ),
+              ),
+            ),
+      )
+      .animate(
+        AnimationConfig.ease(const Duration(milliseconds: 150)),
+      );
+
+  IconStyler get _checkboxIconStyle => IconStyler().size(14).color(Colors.white);
+
+  IconStyler get _clearIconStyle =>
+      IconStyler().size(14).color(Colors.purple.shade400);
+
+  FlexBoxStyler get _badgeContentStyle =>
+      FlexBoxStyler().mainAxisSize(MainAxisSize.min).spacing(4);
+
+  void _toggleOption(_Options choice) {
+    setState(() => _options[choice] = !_options[choice]!);
+  }
+
+  void _clearSelection() {
+    setState(() => _options.updateAll((key, value) => false));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,23 +182,19 @@ class _StyledComboboxState extends State<StyledCombobox> {
         textInputConfiguration: MoonTextInputConfiguration(
           readOnly: true,
           canRequestFocus: false,
-          mouseCursor: SystemMouseCursors.click,
-          inputStyle: _targetStyle,
+          inputStyle: _inputStyle,
           onTap: () => setState(() => _showOptions = !_showOptions),
-          hint: const Text('Choose an option'),
-          leading: _options.values.any((element) => element == true)
+          hint: const StyledText('Choose an option'),
+          leading: _selectedCount > 0
               ? Center(
                   child: MoonBaseInteractiveWidget(
-                    style: getButtonStyle().merge(_leadingStyle),
-                    onTap: () => setState(
-                      () => _options.updateAll((key, value) => false),
-                    ),
-                    child: Row(
+                    style: _selectionBadgeStyle,
+                    onTap: _clearSelection,
+                    child: RowBox(
+                      style: _badgeContentStyle,
                       children: [
-                        StyledText(
-                          "${_options.values.where((element) => element == true).length}",
-                        ),
-                        const StyledIcon(icon: Icons.close),
+                        StyledText('$_selectedCount'),
+                        StyledIcon(icon: Icons.close, style: _clearIconStyle),
                       ],
                     ),
                   ),
@@ -142,39 +216,41 @@ class _StyledComboboxState extends State<StyledCombobox> {
           ),
         ),
       ),
-      child: SingleChildScrollView(
-        child: VBox(
-          style: _overlayStyle,
-          children: List.generate(5, (int index) {
-            final _Options choice = _Options.values[index];
+      child: Box(
+        style: _overlayStyle,
+        child: ColumnBox(
+          style: _menuListStyle,
+          children: _Options.values.map((choice) {
             final bool isSelected = _options[choice]!;
-            final Variant variant = _getEffectiveVariant(isSelected);
 
             return MoonBaseInteractiveWidget(
               style: _menuItemStyle,
-              onTap: () =>
-                  setState(() => _options[choice] = !_options[choice]!),
-              child: StyledRow(
-                inherit: true,
+              onTap: () => _toggleOption(choice),
+              child: RowBox(
+                style: _menuItemContentStyle,
                 children: [
-                  Text(choice.name),
-                  ExcludeFocusTraversal(
-                      child: MoonBaseMultiSelectWidget(
-                        style: _checkboxStyle.applyVariant(variant),
-                        value: isSelected,
-                        onChanged: (bool? value) =>
-                            setState(() => _options[choice] = !_options[choice]!),
-                        child: StyledIcon(
-                          icon:
-                              variant == SelectedState.selected ? Icons.check : null,
-                          style: _arrowStyle.applyVariant(variant),
-                        ),
-                      ),
+                  StyledText(choice.name),
+                  MoonBaseMultiSelectWidget(
+                    value: isSelected,
+                    style: _checkboxStyle,
+                    onChanged: (_) => _toggleOption(choice),
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 150),
+                      transitionBuilder: (child, animation) =>
+                          FadeTransition(opacity: animation, child: child),
+                      child: isSelected
+                          ? StyledIcon(
+                              key: ValueKey(choice),
+                              icon: Icons.check,
+                              style: _checkboxIconStyle,
+                            )
+                          : const SizedBox.shrink(),
+                    ),
                   ),
                 ],
               ),
             );
-          }),
+          }).toList(growable: false),
         ),
       ),
     );
