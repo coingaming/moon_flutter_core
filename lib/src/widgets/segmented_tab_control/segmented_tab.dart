@@ -23,7 +23,7 @@ class MoonRawSegmentedTab {
   final String? semanticLabel;
 
   /// The styling options for the segmented tab.
-  final Style? tabStyle;
+  final BoxStyler? tabStyle;
 
   /// The callback that returns the current selection status of the segmented tab
   /// as a boolean value.

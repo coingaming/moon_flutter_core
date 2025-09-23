@@ -29,7 +29,7 @@ class MoonRawDotIndicator extends StatefulWidget {
   final int dotCount;
 
   /// Style for the dot indicator.
-  final Style? dotIndicatorStyle;
+  final FlexBoxStyler? dotIndicatorStyle;
 
   /// Creates a Moon Design raw dot indicator.
   const MoonRawDotIndicator({
@@ -104,7 +104,7 @@ class _MoonRawDotIndicatorState extends State<MoonRawDotIndicator>
 
     return RepaintBoundary(
       child: RowBox(
-        style: widget.dotIndicatorStyle,
+        style: widget.dotIndicatorStyle ?? const FlexBoxStyler.create(),
         children: List<Widget>.generate(
           widget.dotCount,
           (int index) => AnimatedBuilder(

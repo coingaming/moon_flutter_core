@@ -86,7 +86,7 @@ class _StyledTooltipState extends State<StyledTooltip> {
                                 ? _showTappedTooltip = false
                                 : _showTappedTooltip2 = false,
                           ),
-                          child: const StyledIcon(Icons.close),
+                          child: const StyledIcon(icon: Icons.close),
                         ),
                     ],
                   ),

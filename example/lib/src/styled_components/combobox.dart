@@ -120,7 +120,7 @@ class _StyledComboboxState extends State<StyledCombobox> {
                         StyledText(
                           "${_options.values.where((element) => element == true).length}",
                         ),
-                        const StyledIcon(Icons.close),
+                        const StyledIcon(icon: Icons.close),
                       ],
                     ),
                   ),
@@ -134,7 +134,9 @@ class _StyledComboboxState extends State<StyledCombobox> {
                 style: getIconButtonStyle(),
                 mouseCursor: SystemMouseCursors.click,
                 onTap: () => setState(() => _showOptions = !_showOptions),
-                child: const StyledIcon(Icons.keyboard_arrow_down_rounded),
+                child: const StyledIcon(
+                  icon: Icons.keyboard_arrow_down_rounded,
+                ),
               ),
             ),
           ),
@@ -157,16 +159,17 @@ class _StyledComboboxState extends State<StyledCombobox> {
                 children: [
                   Text(choice.name),
                   ExcludeFocusTraversal(
-                    child: MoonBaseMultiSelectWidget(
-                      style: _checkboxStyle.applyVariant(variant),
-                      value: isSelected,
-                      onChanged: (bool? value) =>
-                          setState(() => _options[choice] = !_options[choice]!),
-                      child: StyledIcon(
-                        variant == SelectedState.selected ? Icons.check : null,
-                        style: _arrowStyle.applyVariant(variant),
+                      child: MoonBaseMultiSelectWidget(
+                        style: _checkboxStyle.applyVariant(variant),
+                        value: isSelected,
+                        onChanged: (bool? value) =>
+                            setState(() => _options[choice] = !_options[choice]!),
+                        child: StyledIcon(
+                          icon:
+                              variant == SelectedState.selected ? Icons.check : null,
+                          style: _arrowStyle.applyVariant(variant),
+                        ),
                       ),
-                    ),
                   ),
                 ],
               ),

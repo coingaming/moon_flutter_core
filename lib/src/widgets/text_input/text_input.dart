@@ -461,114 +461,136 @@ class _MoonRawTextInputState extends State<MoonRawTextInput>
         final Alignment effectiveAlignment =
             (_config.floatingLabelTextAlign ?? AlignmentDirectional.topStart)
                 .resolve(Directionality.of(context));
-        final BoxSpec? inputStyleBoxSpec = _config.inputStyle
-            ?.of(context)
-            .resolvableOf<BoxSpec, BoxSpecAttribute>();
-        final double? height = inputStyleBoxSpec?.height;
-        final EdgeInsetsGeometry effectivePadding =
-            inputStyleBoxSpec?.padding ?? EdgeInsets.zero;
-        final EdgeInsets resolvedPadding = effectivePadding.resolve(
-          Directionality.of(context),
+        _textInputStateController
+          ..disabled = !_isEnabled
+          ..focused = _hasFocus
+          ..error = _hasError;
+
+        final BoxStyler baseContainerStyle = BoxStyler()
+            .wrapDefaultTextStyle(
+              TextStyleMix.value(_config.style ?? const TextStyle()),
+            );
+        final BoxStyler effectiveContainerStyle = baseContainerStyle.merge(
+          _config.inputStyle ?? const BoxStyler.create(),
         );
-        final MouseCursor resolvedMouseCursor = _isEnabled
-            ? _config.mouseCursor ?? SystemMouseCursors.text
-            : SystemMouseCursors.forbidden;
-        final Style defaultInputStyle = Style(
-          $box.constraints(
-            minHeight: height ?? 40,
-            maxHeight: height ?? (_expands ? double.infinity : 40),
-          ),
-          $flex.crossAxisAlignment(
-            _expands ? CrossAxisAlignment.center : CrossAxisAlignment.stretch,
-          ),
-          $with.defaultTextStyle.style.as(_config.style ?? const TextStyle()),
-        );
+
         return ExcludeFocusTraversal(
           excluding: !_isEnabled,
-          child: Interactable(
-            enabled: _isEnabled,
-            controller: _textInputStateController,
+          child: Focus(
             focusNode: _inputContainerFocusNode,
-            mouseCursor: resolvedMouseCursor,
-            child: Box(
-              style: defaultInputStyle
-                  .merge(_config.inputStyle)
-                  .add($box.padding.vertical(0)),
-              child: RowBox(
-                inherit: true,
-                children: [
-                  if (_config.leading != null) _config.leading!,
-                  Expanded(
-                    child: Stack(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(
-                            top:
-                                resolvedPadding.top +
-                                _config.inputTextVerticalOffsetValue +
-                                2,
-                            bottom: resolvedPadding.bottom + 2,
-                          ),
-                          child: Align(
-                            alignment: _getTextAlignment(
-                              _config.textAlignVertical,
+            canRequestFocus: _isEnabled,
+            child: MouseRegion(
+              cursor: _isEnabled
+                  ? _config.mouseCursor ?? SystemMouseCursors.text
+                  : SystemMouseCursors.forbidden,
+              onEnter: (_) => _textInputStateController.hovered = true,
+              onExit: (_) => _textInputStateController.hovered = false,
+              child: StyleBuilder<BoxSpec>(
+                style: effectiveContainerStyle,
+                controller: _textInputStateController,
+                builder: (context, spec) {
+                  final EdgeInsets resolvedPadding =
+                      (spec.padding ?? EdgeInsets.zero)
+                          .resolve(Directionality.of(context));
+                  final BoxConstraints constraints = spec.constraints ??
+                      BoxConstraints(
+                        minHeight: 40,
+                        maxHeight: _expands ? double.infinity : 40,
+                      );
+
+                  final EdgeInsetsGeometry containerPadding = EdgeInsets.only(
+                    left: resolvedPadding.left,
+                    right: resolvedPadding.right,
+                  );
+
+                  final Widget content = Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      if (_config.leading != null) _config.leading!,
+                      Expanded(
+                        child: Stack(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(
+                                top: resolvedPadding.top +
+                                    _config.inputTextVerticalOffsetValue +
+                                    2,
+                                bottom: resolvedPadding.bottom + 2,
+                              ),
+                              child: Align(
+                                alignment: _getTextAlignment(
+                                  _config.textAlignVertical,
+                                ),
+                                child: child,
+                              ),
                             ),
-                            child: child,
-                          ),
-                        ),
-                        if (_config.label != null)
-                          Padding(
-                            padding: EdgeInsets.only(
-                              top: resolvedPadding.top,
-                              bottom: resolvedPadding.bottom,
-                            ),
-                            child: AnimatedScale(
-                              alignment: effectiveAlignment,
-                              duration: effectiveTransitionDuration,
-                              scale: _animateLabel
-                                  ? _config.floatingLabelScaleValue
-                                  : 1.0,
-                              child: AnimatedAlign(
-                                duration: effectiveTransitionDuration,
-                                alignment: _animateLabel
-                                    ? effectiveAlignment
-                                    : _getTextAlignment(
-                                        _config.labelTextAlignVertical,
-                                      ),
-                                child: AnimatedOpacity(
-                                  opacity: _showLabel ? 1.0 : 0.0,
+                            if (_config.label != null)
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  top: resolvedPadding.top,
+                                  bottom: resolvedPadding.bottom,
+                                ),
+                                child: AnimatedScale(
+                                  alignment: effectiveAlignment,
                                   duration: effectiveTransitionDuration,
-                                  curve: effectiveTransitionCurve,
-                                  child: _config.label,
+                                  scale: _animateLabel
+                                      ? _config.floatingLabelScaleValue
+                                      : 1.0,
+                                  child: AnimatedAlign(
+                                    duration: effectiveTransitionDuration,
+                                    alignment: _animateLabel
+                                        ? effectiveAlignment
+                                        : _getTextAlignment(
+                                            _config.labelTextAlignVertical,
+                                          ),
+                                    child: AnimatedOpacity(
+                                      opacity: _showLabel ? 1.0 : 0.0,
+                                      duration: effectiveTransitionDuration,
+                                      curve: effectiveTransitionCurve,
+                                      child: _config.label,
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-                        if (_config.hint != null)
-                          Padding(
-                            padding: EdgeInsets.only(
-                              top:
-                                  resolvedPadding.top +
-                                  _config.inputTextVerticalOffsetValue,
-                              bottom: resolvedPadding.bottom,
-                            ),
-                            child: Align(
-                              alignment: _getTextAlignment(
-                                _config.textAlignVertical,
+                            if (_config.hint != null)
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  top: resolvedPadding.top +
+                                      _config.inputTextVerticalOffsetValue,
+                                  bottom: resolvedPadding.bottom,
+                                ),
+                                child: Align(
+                                  alignment: _getTextAlignment(
+                                    _config.textAlignVertical,
+                                  ),
+                                  child: AnimatedOpacity(
+                                    opacity: _showHint ? 1.0 : 0.0,
+                                    duration: effectiveTransitionDuration,
+                                    curve: effectiveTransitionCurve,
+                                    child: _config.hint,
+                                  ),
+                                ),
                               ),
-                              child: AnimatedOpacity(
-                                opacity: _showHint ? 1.0 : 0.0,
-                                duration: effectiveTransitionDuration,
-                                curve: effectiveTransitionCurve,
-                                child: _config.hint,
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                  if (_config.trailing != null) _config.trailing!,
-                ],
+                          ],
+                        ),
+                      ),
+                      if (_config.trailing != null) _config.trailing!,
+                    ],
+                  );
+
+                  return Container(
+                    alignment: spec.alignment,
+                    padding: containerPadding,
+                    margin: spec.margin,
+                    decoration: spec.decoration,
+                    foregroundDecoration: spec.foregroundDecoration,
+                    constraints: constraints,
+                    transform: spec.transform,
+                    transformAlignment: spec.transformAlignment,
+                    clipBehavior: spec.clipBehavior ?? Clip.none,
+                    child: content,
+                  );
+                },
               ),
             ),
           ),
@@ -615,23 +637,45 @@ class _MoonRawTextInputState extends State<MoonRawTextInput>
         if (_config.helper != null || (_config.errorText != null))
           RepaintBoundary(
             child: ExcludeFocusTraversal(
-              child: Interactable(
-                enabled: _isEnabled,
-                controller: _helperStateController,
-                child: Box(
-                  style: _config.helperErrorStyle,
-                  child: _config.errorText != null
-                      ? _config.errorBuilder?.call(
-                              context,
-                              _config.errorText,
-                            ) ??
-                            MoonMessage(text: _config.errorText!)
-                      : _config.helper ?? const SizedBox.shrink(),
-                ),
-              ),
+              child: _buildHelper(context),
             ),
           ),
       ],
+    );
+  }
+
+  Widget _buildHelper(BuildContext context) {
+    _helperStateController
+      ..disabled = !_isEnabled
+      ..error = _hasError;
+
+    final BoxStyler? helperStyle = _config.helperErrorStyle;
+    final Widget helperContent = _config.errorText != null
+        ? _config.errorBuilder?.call(context, _config.errorText) ??
+            MoonMessage(text: _config.errorText!)
+        : _config.helper ?? const SizedBox.shrink();
+
+    if (helperStyle == null) {
+      return helperContent;
+    }
+
+    return StyleBuilder<BoxSpec>(
+      style: helperStyle,
+      controller: _helperStateController,
+      builder: (context, spec) {
+        return Container(
+          alignment: spec.alignment,
+          padding: spec.padding,
+          margin: spec.margin,
+          decoration: spec.decoration,
+          foregroundDecoration: spec.foregroundDecoration,
+          constraints: spec.constraints,
+          transform: spec.transform,
+          transformAlignment: spec.transformAlignment,
+          clipBehavior: spec.clipBehavior ?? Clip.none,
+          child: helperContent,
+        );
+      },
     );
   }
 }

@@ -21,7 +21,7 @@ BoxStyler getButtonStyle() => BoxStyler()
         ),
       ),
     )
-    .animate(AnimationConfig(duration: const Duration(milliseconds: 150)));
+    .animate(AnimationConfig.ease(const Duration(milliseconds: 150)));
 
 BoxStyler getIconButtonStyle() => BoxStyler()
     .padding(EdgeInsetsGeometryMix.all(6))
@@ -40,4 +40,4 @@ BoxStyler getIconButtonStyle() => BoxStyler()
         ),
       ),
     )
-    .animate(AnimationConfig(duration: const Duration(milliseconds: 150)));
+    .animate(AnimationConfig.ease(const Duration(milliseconds: 150)));

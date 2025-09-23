@@ -61,7 +61,7 @@ class _StyledAuthCodeState extends State<StyledAuthCode> {
             )
             .wrapDefaultTextStyle(TextStyleMix(color: Colors.red)),
       )
-      .animate(AnimationConfig(duration: const Duration(milliseconds: 200)));
+      .animate(AnimationConfig.ease(const Duration(milliseconds: 200)));
 
   @override
   Widget build(BuildContext context) {

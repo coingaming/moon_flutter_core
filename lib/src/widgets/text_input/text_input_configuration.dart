@@ -62,10 +62,10 @@ class MoonTextInputConfiguration {
   final String? initialValue;
 
   /// The style of the text input container.
-  final Style? inputStyle;
+  final BoxStyler? inputStyle;
 
   /// The style of the both helper and error based on the state.
-  final Style? helperErrorStyle;
+  final BoxStyler? helperErrorStyle;
 
   /// Defines where the floating [label] should be displayed.
   final AlignmentDirectional? floatingLabelTextAlign;
@@ -605,10 +605,10 @@ class MoonTextInputConfiguration {
     AlignmentDirectional? floatingLabelTextAlign,
     bool? hasFloatingLabel,
     Widget? helper,
-    Style? helperErrorStyle,
+    BoxStyler? helperErrorStyle,
     Widget? hint,
     String? initialValue,
-    Style? inputStyle,
+    BoxStyler? inputStyle,
     double? inputTextVerticalOffsetValue,
     TextAlignVertical? labelTextAlignVertical,
     Widget? label,

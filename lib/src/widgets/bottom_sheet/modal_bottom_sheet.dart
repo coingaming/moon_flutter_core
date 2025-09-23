@@ -19,7 +19,7 @@ Future<T?> showMoonRawModalBottomSheet<T>({
   Curve transitionCurve = const Cubic(0.0, 0.0, 0.2, 1.0),
   RouteSettings? settings,
   String? semanticLabel,
-  Style? bottomSheetStyle,
+  BoxStyler? bottomSheetStyle,
   AnimationController? animationController,
   required WidgetBuilder builder,
 }) async {
@@ -72,7 +72,7 @@ class _MoonModalBottomSheetRoute<T> extends PageRoute<T> {
   final Duration animationDuration;
   final Curve animationCurve;
   final String? semanticLabel;
-  final Style? bottomSheetStyle;
+  final BoxStyler? bottomSheetStyle;
   final AnimationController? animationController;
   final ScrollController? scrollController;
   final WidgetBuilder builder;
@@ -172,7 +172,7 @@ class _ModalBottomSheet<T> extends StatefulWidget {
   final Duration transitionDuration;
   final Curve transitionCurve;
   final String? semanticLabel;
-  final Style? bottomSheetStyle;
+  final BoxStyler? bottomSheetStyle;
   final AnimationController? animationController;
   final _MoonModalBottomSheetRoute<T> route;
 

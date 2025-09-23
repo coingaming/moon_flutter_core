@@ -39,7 +39,7 @@ class MoonRawBottomSheet extends StatefulWidget {
   final String? semanticLabel;
 
   /// The style of the bottom sheet.
-  final Style? bottomSheetStyle;
+  final BoxStyler? bottomSheetStyle;
 
   /// The callback that is called when the bottom sheet begins the closing
   /// process.
@@ -387,10 +387,7 @@ class MoonRawBottomSheetState extends State<MoonRawBottomSheet>
             child: Semantics(
               label: widget.semanticLabel,
               child: Box(
-                style: BoxStyler()
-                    .height(MediaQuery.of(context).size.height * 0.8)
-                    .color(Colors.white)
-                    .merge(widget.bottomSheetStyle),
+                style: widget.bottomSheetStyle ?? const BoxStyler.create(),
                 child: widget.child,
               ),
             ),

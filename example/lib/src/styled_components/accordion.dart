@@ -50,8 +50,8 @@ class _StyledAccordionState extends State<StyledAccordion> {
           ),
         ),
       )
-      .animate(
-        AnimationConfig(duration: const Duration(milliseconds: 200)),
+          .animate(
+        AnimationConfig.ease(const Duration(milliseconds: 200)),
       );
 
   FlexBoxStyler get _headerStyle => FlexBoxStyler()

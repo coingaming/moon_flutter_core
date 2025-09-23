@@ -52,7 +52,7 @@ class _StyledSwitchState extends State<StyledSwitch> {
         ),
       )
       .animate(
-        AnimationConfig(duration: const Duration(milliseconds: 200)),
+        AnimationConfig.ease(const Duration(milliseconds: 200)),
       );
 
   BoxStyler get _thumbStyle => BoxStyler()

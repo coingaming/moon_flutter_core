@@ -89,7 +89,9 @@ class _StyledDropdownState extends State<StyledDropdown> {
                 child: MoonBaseInteractiveWidget(
                   style: getIconButtonStyle(),
                   onTap: () => setState(() => _showOptions = !_showOptions),
-                  child: const StyledIcon(Icons.keyboard_arrow_down_rounded),
+                  child: const StyledIcon(
+                    icon: Icons.keyboard_arrow_down_rounded,
+                  ),
                 ),
               ),
             ),

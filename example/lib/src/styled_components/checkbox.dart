@@ -78,7 +78,7 @@ class _StyledCheckboxState extends State<StyledCheckbox> {
       onChanged: (bool? newValue) => setState(() => _checkboxValue = newValue),
       child: Box(
         style: _checkboxStyle,
-        child: StyledIcon(_icon, style: _checkboxIconStyle),
+        child: StyledIcon(icon: _icon, style: _checkboxIconStyle),
       ),
     );
   }

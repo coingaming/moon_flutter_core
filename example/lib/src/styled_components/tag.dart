@@ -27,7 +27,10 @@ class StyledTag extends StatelessWidget {
       style: _tagStyle,
       child: const StyledRow(
         inherit: true,
-        children: [StyledText("MoonTag"), StyledIcon(Icons.close)],
+        children: const [
+          StyledText("MoonTag"),
+          StyledIcon(icon: Icons.close),
+        ],
       ),
     );
   }

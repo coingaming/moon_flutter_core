@@ -14,35 +14,33 @@ class StyledDotIndicator extends StatefulWidget {
 class _StyledDotIndicatorState extends State<StyledDotIndicator> {
   int _selectedDot = 0;
 
-  Style get _rowStyle => Style(
-    $flex.chain
-      ..mainAxisAlignment.center()
-      ..gap(16),
-  );
+  FlexBoxStyler get _rowStyle => FlexBoxStyler()
+      .mainAxisAlignment(MainAxisAlignment.center)
+      .spacing(16);
 
-  Style get _boxStyle => Style(
-    $box.chain
-      ..height(32)
-      ..width(32)
-      ..borderRadius(4)
-      ..color(Colors.purple),
-    $text.style.color(Colors.white),
-    ($on.hover | $on.focus | $on.press | $on.longPress)(
-      $box.color(Colors.purple.shade300),
-    ),
-    SelectedState.selected($box.color(Colors.purple.shade300)),
-  ).animate(duration: const Duration(milliseconds: 400));
+  BoxStyler get _boxStyle {
+    final BoxStyler activeState = BoxStyler()
+        .color(Colors.purple.shade300)
+        .wrapDefaultTextStyle(TextStyleMix(color: Colors.white));
 
-  Style getDotStyle(Color color) => Style(
-    $box.chain
-      ..width(12)
-      ..height(12)
-      ..color(color)
-      ..shape.circle(),
-  );
+    return BoxStyler()
+        .constraints(BoxConstraintsMix.square(32))
+        .borderRadius(BorderRadiusGeometryMix.circular(4))
+        .color(Colors.purple)
+        .wrapDefaultTextStyle(TextStyleMix(color: Colors.white))
+        .onHovered(activeState)
+        .onFocused(activeState)
+        .onPressed(activeState)
+        .onSelected(activeState)
+        .animate(
+          AnimationConfig.ease(const Duration(milliseconds: 400)),
+        );
+  }
 
-  Variant _getVariant(int index) =>
-      index == _selectedDot ? SelectedState.selected : SelectedState.unselected;
+  BoxStyler getDotStyle(Color color) => BoxStyler()
+      .constraints(BoxConstraintsMix.square(12))
+      .color(color)
+      .shapeCircle();
 
   @override
   Widget build(BuildContext context) {
@@ -57,16 +55,19 @@ class _StyledDotIndicatorState extends State<StyledDotIndicator> {
           },
         ),
         const SizedBox(height: 16),
-        StyledRow(
+        RowBox(
           style: _rowStyle,
-          children: List<Widget>.generate(
-            4,
-            (int index) => MoonBaseInteractiveWidget(
-              style: _boxStyle.applyVariant(_getVariant(index)),
+          children: List<Widget>.generate(4, (int index) {
+            final WidgetStatesController controller = WidgetStatesController()
+              ..update(WidgetState.selected, index == _selectedDot);
+
+            return MoonBaseInteractiveWidget(
+              stateController: controller,
+              style: _boxStyle,
               onTap: () => setState(() => _selectedDot = index),
               child: Center(child: StyledText('$index')),
-            ),
-          ),
+            );
+          }),
         ),
       ],
     );

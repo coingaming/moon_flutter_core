@@ -9,17 +9,26 @@ import 'package:moon_core/moon_core.dart';
 class StyledBottomSheet extends StatelessWidget {
   const StyledBottomSheet({super.key});
 
-  Style get _bottomSheetStyle => Style(
-    $box.chain
-      ..borderRadius.top(24)
-      ..color(Colors.purple.shade50),
-  );
+  BoxStyler get _bottomSheetStyle => BoxStyler()
+      .borderRadius(
+        BorderRadiusGeometryMix.value(
+          const BorderRadius.only(
+            topLeft: Radius.circular(24),
+            topRight: Radius.circular(24),
+          ),
+        ),
+      )
+      .color(Colors.purple.shade50);
 
-  Style get _menuItemStyle => Style(
-    $box.padding(16.0),
-    $flex.mainAxisAlignment.spaceBetween(),
-    ($on.focus | $on.hover)($box.color(Colors.purple.shade100)),
-  );
+  BoxStyler get _menuItemStyle {
+    final BoxStyler interactionState =
+        BoxStyler().color(Colors.purple.shade100);
+
+    return BoxStyler()
+        .padding(EdgeInsetsGeometryMix.all(16))
+        .onHovered(interactionState)
+        .onFocused(interactionState);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +54,7 @@ class StyledBottomSheet extends StatelessWidget {
                 const Expanded(child: Center(child: Text("Pick your choice!"))),
                 MoonBaseInteractiveWidget(
                   style: getIconButtonStyle(),
-                  child: const StyledIcon(Icons.close),
+                  child: const StyledIcon(icon: Icons.close),
                   onTap: () => Navigator.of(context).pop(),
                 ),
               ],
@@ -60,9 +69,16 @@ class StyledBottomSheet extends StatelessWidget {
                   return MoonBaseInteractiveWidget(
                     style: _menuItemStyle,
                     onTap: () {},
-                    child: StyledRow(
-                      inherit: true,
-                      children: [const Text("Item nr:"), Text("$index")],
+                    child: RowBox(
+                      style: FlexBoxStyler().flex(
+                        FlexStyler(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        ),
+                      ),
+                      children: [
+                        const Text("Item nr:"),
+                        Text("$index"),
+                      ],
                     ),
                   );
                 },

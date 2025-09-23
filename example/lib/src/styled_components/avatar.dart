@@ -106,7 +106,7 @@ class _StyledAvatarState extends State<StyledAvatar> {
           badge: Box(style: _badgeStyle, child: const StyledText("3")),
           content: Box(
             style: _contentStyle,
-            child: const StyledIcon(Icons.person),
+            child: const StyledIcon(icon: Icons.person),
           ),
         ),
       ],

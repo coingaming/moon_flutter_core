@@ -41,7 +41,7 @@ class _StyledAlertState extends State<StyledAlert> {
       .wrapDefaultTextStyle(
         TextStyleMix(color: Colors.grey.shade700),
       )
-      .animate(AnimationConfig(duration: const Duration(milliseconds: 200)));
+      .animate(AnimationConfig.ease(const Duration(milliseconds: 200)));
 
   BoxStyler get _triggerButtonStyle => BoxStyler()
       .padding(EdgeInsetsGeometryMix.symmetric(horizontal: 16, vertical: 8))
@@ -60,7 +60,7 @@ class _StyledAlertState extends State<StyledAlert> {
           ),
         ),
       )
-      .animate(AnimationConfig(duration: const Duration(milliseconds: 150)));
+      .animate(AnimationConfig.ease(const Duration(milliseconds: 150)));
 
   BoxStyler _iconButtonStyle(Color themeColor) => BoxStyler()
       .padding(EdgeInsetsGeometryMix.all(6))
@@ -80,7 +80,7 @@ class _StyledAlertState extends State<StyledAlert> {
           ),
         ),
       )
-      .animate(AnimationConfig(duration: const Duration(milliseconds: 150)));
+      .animate(AnimationConfig.ease(const Duration(milliseconds: 150)));
 
   @override
   Widget build(BuildContext context) {

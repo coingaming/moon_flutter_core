@@ -33,7 +33,7 @@ class _StyledBreadcrumbState extends State<StyledBreadcrumb> {
             .color(Colors.grey.shade300)
             .wrapDefaultTextStyle(TextStyleMix(color: Colors.black)),
       )
-      .animate(AnimationConfig(duration: _duration));
+      .animate(AnimationConfig.ease(_duration));
 
   BoxStyler get _breadcrumbBaseStyle => BoxStyler()
       .padding(EdgeInsetsGeometryMix.symmetric(horizontal: 8, vertical: 4))
@@ -45,7 +45,7 @@ class _StyledBreadcrumbState extends State<StyledBreadcrumb> {
       .onHovered(
         BoxStyler().wrapDefaultTextStyle(TextStyleMix(color: Colors.black)),
       )
-      .animate(AnimationConfig(duration: _duration));
+      .animate(AnimationConfig.ease(_duration));
 
   BoxStyler get _breadcrumbInactiveStyle =>
       BoxStyler().wrapDefaultTextStyle(TextStyleMix(color: Colors.black54));

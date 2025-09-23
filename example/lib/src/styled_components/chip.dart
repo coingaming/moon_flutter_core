@@ -62,7 +62,10 @@ class _StyledChipState extends State<StyledChip> {
           style: _chipStyle,
           child: const StyledRow(
             inherit: true,
-            children: [StyledIcon(Icons.widgets_outlined), Text("MoonChip")],
+            children: [
+              StyledIcon(icon: Icons.widgets_outlined),
+              Text("MoonChip"),
+            ],
           ),
         ),
         const SizedBox(height: 24),
