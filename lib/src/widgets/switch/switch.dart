@@ -38,11 +38,11 @@ class MoonRawSwitch extends StatefulWidget {
   /// The semantic label for the switch.
   final String? semanticLabel;
 
-  /// The style for the switch.
-  final Style? switchStyle;
+  /// The style for the switch track container.
+  final BoxStyler? switchStyle;
 
   /// The style for the switch thumb.
-  final Style? thumbStyle;
+  final BoxStyler? thumbStyle;
 
   /// The callback that is called when the switch toggles between the
   /// active (on) and inactive (off) states.
@@ -101,6 +101,31 @@ class _MoonRawSwitchState extends State<MoonRawSwitch>
   late Animation<double> _thumbFadeAnimation;
 
   bool get _isInteractive => widget.onChanged != null;
+
+  static final DecorationTween _defaultTrackDecorationTween = DecorationTween(
+    begin: const ShapeDecorationWithPremultipliedAlpha(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(12)),
+      ),
+    ),
+    end: const ShapeDecorationWithPremultipliedAlpha(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(12)),
+      ),
+    ),
+  );
+
+  BoxStyler get _defaultSwitchStyle => BoxStyler()
+      .constraints(BoxConstraintsMix.height(24))
+      .constraints(BoxConstraintsMix.width(44));
+
+  BoxStyler get _defaultThumbStyle => BoxStyler()
+      .constraints(BoxConstraintsMix.square(16))
+      .borderRadius(
+        BorderRadiusGeometryMix.value(
+          BorderRadius.circular(8),
+        ),
+      );
 
   void _resumePositionAnimation() {
     _curvedAnimationWithOvershoot
@@ -170,22 +195,9 @@ class _MoonRawSwitchState extends State<MoonRawSwitch>
         );
 
     _trackDecorationAnimation =
-        (widget.trackDecorationTween ??
-                DecorationTween(
-                  begin: ShapeDecorationWithPremultipliedAlpha(
-                    color: Colors.grey.shade400,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  end: ShapeDecorationWithPremultipliedAlpha(
-                    color: Colors.deepPurple.shade500,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                ))
-            .animate(_curvedAnimation);
+        (widget.trackDecorationTween ?? _defaultTrackDecorationTween).animate(
+          _curvedAnimation,
+        );
   }
 
   @override
@@ -236,6 +248,10 @@ class _MoonRawSwitchState extends State<MoonRawSwitch>
       end: isLtr ? Alignment.centerRight : Alignment.centerLeft,
     ).animate(_curvedAnimationWithOvershoot);
 
+    final BoxStyler switchStyle = _defaultSwitchStyle.merge(widget.switchStyle);
+
+    final BoxStyler thumbStyle = widget.thumbStyle ?? _defaultThumbStyle;
+
     return Semantics(
       label: widget.semanticLabel,
       toggled: widget.value,
@@ -243,7 +259,7 @@ class _MoonRawSwitchState extends State<MoonRawSwitch>
         enabled: _isInteractive,
         autofocus: widget.autofocus,
         focusNode: widget.focusNode,
-        style: BoxStyler().height(24).width(44).merge(widget.switchStyle),
+        style: switchStyle,
         onTap: _handleTap,
         child: RepaintBoundary(
           child: AnimatedBuilder(
@@ -281,7 +297,7 @@ class _MoonRawSwitchState extends State<MoonRawSwitch>
                       Align(
                         alignment: alignmentAnimation.value,
                         child: Box(
-                          style: widget.thumbStyle,
+                          style: thumbStyle,
                           child: FadeTransition(
                             opacity: _thumbFadeAnimation,
                             child: _curvedAnimation.value > 0.5

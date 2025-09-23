@@ -120,9 +120,9 @@ void main() {
     });
 
     testWidgets(
-      "Accordion has content inside header, when 'hasContentOutside' is true",
+      "Accordion has content outside header when 'hasContentOutside' is true",
       (WidgetTester tester) async {
-        final Finder decoratedBox = find.byType(DecoratedBox);
+        final Finder interactive = find.byType(MoonBaseInteractiveWidget);
 
         await tester.pumpWidget(
           const _SingleAccordionTestWidget(hasContentOutside: true),
@@ -134,22 +134,22 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(content, findsOneWidget);
-        expect(decoratedBox, findsOneWidget);
+        expect(interactive, findsOneWidget);
         expect(
-          find.descendant(of: decoratedBox, matching: header),
+          find.descendant(of: interactive, matching: header),
           findsOneWidget,
         );
         expect(
-          find.descendant(of: decoratedBox, matching: content),
+          find.descendant(of: interactive, matching: content),
           findsNothing,
         );
       },
     );
 
     testWidgets(
-      "Accordion has content inside, when 'hasContentOutside' is false",
+      "Accordion keeps content inside header container when 'hasContentOutside' is false",
       (WidgetTester tester) async {
-        final Finder decoratedBox = find.byType(DecoratedBox);
+        final Finder interactive = find.byType(MoonBaseInteractiveWidget);
 
         await tester.pumpWidget(const _SingleAccordionTestWidget());
 
@@ -159,13 +159,13 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(content, findsOneWidget);
-        expect(decoratedBox, findsOneWidget);
+        expect(interactive, findsOneWidget);
         expect(
-          find.descendant(of: decoratedBox, matching: header),
+          find.descendant(of: interactive, matching: header),
           findsOneWidget,
         );
         expect(
-          find.descendant(of: decoratedBox, matching: content),
+          find.descendant(of: interactive, matching: content),
           findsOneWidget,
         );
       },

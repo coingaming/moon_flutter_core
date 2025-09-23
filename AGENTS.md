@@ -14,7 +14,6 @@ This repository is a Flutter package that provides Moon Design System headless U
 - Format code: `dart format .`
 - Run all tests: `flutter test -r expanded`
 - Coverage (optional): `flutter test --coverage`
-- Code generation (if needed): `dart run build_runner build --delete-conflicting-outputs`
 - Run example app: `cd example && flutter run` (e.g., `-d chrome` for web)
 
 ## Coding Style & Naming Conventions
@@ -24,6 +23,7 @@ This repository is a Flutter package that provides Moon Design System headless U
 - Prefer trailing commas for multi-line args to keep diffs clean.
 
 ## Testing Guidelines
+- IMPORTANT: Refer to `.llms/tests.xml`
 - Framework: `flutter_test` with `testWidgets` for UI and `group` for suites.
 - File names: `*_test.dart`; keep test names imperative and focused (e.g., "toggles on tap").
 - Aim to cover states, interactions, and accessibility. Use keys and finders for stable selectors.
@@ -39,8 +39,8 @@ This repository is a Flutter package that provides Moon Design System headless U
 - Respect SDK constraints in `pubspec.yaml` (Dart `>=3.9.0`, Flutter `>=3.35.0`).
 
 ## Agent-Specific Notes
-- Scope: these guidelines apply repo-wide. Prefer minimal, focused changes; avoid breaking the public API without discussion. When adding APIs, update exports and tests in the same PR.
+- Scope: these guidelines apply repo-wide. Since we are migrating to a modern v2 version of the `mix` package breaking changes are fine and we don't care about backwards compatibility. When adding APIs, update exports and tests in the same PR.
 
 # ESSENTIAL!!!
 - You can and should make liberal usage of the local Dart MCP!!!
-- This projects foundation is a package called `mix` which we are using as a dependency. All documentation related to usage of `mix`, it's patterns, migration paths etc are included in the `.llms` directory, especially in the file `examples.xml`. Do note that the file `tests.xml` is huge (ca 50000 lines), yet it contains all the tests in the `mix` package and thus can offer insights into more advanced patterns. 
+- This projects foundation is a package called `mix` which we are using as a GH repository dependency as it is currently in beta. All documentation related to usage of `mix`, it's patterns, migration paths etc are included in the `.llms` directory, especially in the file `examples.xml`. Do note that the file `tests.xml` is huge (ca 50000 lines), yet it contains all the tests in the `mix` package and thus can offer insights into more advanced patterns. 

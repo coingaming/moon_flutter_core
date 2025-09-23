@@ -12,36 +12,56 @@ class StyledAuthCode extends StatefulWidget {
 }
 
 class _StyledAuthCodeState extends State<StyledAuthCode> {
-  Style get _inputFieldStyle => Style(
-    $box.shapeDecoration.as(_getBorder(Colors.grey)),
-    $flex.chain
-      ..gap(12)
-      ..mainAxisAlignment(MainAxisAlignment.center),
-    $on.active(
-      $box.shapeDecoration.as(_getBorder(Colors.orange)),
-      $text.style.color(Colors.orange),
-    ),
-    $on.selected($box.shapeDecoration.as(_getBorder(Colors.purple, width: 2))),
-    $on.error(
-      $box.shapeDecoration.as(_getBorder(Colors.red)),
-      $text.style.color(Colors.red),
-    ),
-    ($on.selected & $on.error)(
-      $box.shapeDecoration.as(_getBorder(Colors.red, width: 2)),
-    ),
-    $with.defaultTextStyle(style: TextStyleMix(fontSize: 24)),
-  ).animate(duration: const Duration(milliseconds: 200));
+  FlexBoxStyler get _rowStyle =>
+      FlexBoxStyler().spacing(12).mainAxisAlignment(MainAxisAlignment.center);
 
-  ShapeDecorationWithPremultipliedAlpha _getBorder(
-    Color color, {
-    double width = 1,
-  }) => ShapeDecorationWithPremultipliedAlpha(
-    color: Colors.white,
-    shape: MoonBorder(
-      borderRadius: BorderRadius.circular(8),
-      side: BorderSide(color: color, width: width),
-    ),
-  );
+  BoxStyler get _cellStyle => BoxStyler()
+      .constraints(BoxConstraintsMix.square(56))
+      .borderRadius(
+        BorderRadiusGeometryMix.value(BorderRadius.circular(8)),
+      )
+      .color(Colors.white)
+      .border(
+        BorderMix.all(
+          BorderSideMix.value(
+            const BorderSide(color: Colors.grey, width: 1),
+          ),
+        ),
+      )
+      .wrapDefaultTextStyle(TextStyleMix(fontSize: 24, color: Colors.black))
+      .variant(
+        moonActiveContextVariant,
+        BoxStyler()
+            .border(
+              BorderMix.all(
+                BorderSideMix.value(
+                  const BorderSide(color: Colors.orange, width: 1.5),
+                ),
+              ),
+            )
+            .wrapDefaultTextStyle(TextStyleMix(color: Colors.orange)),
+      )
+      .onSelected(
+        BoxStyler().border(
+          BorderMix.all(
+            BorderSideMix.value(
+              const BorderSide(color: Colors.purple, width: 2),
+            ),
+          ),
+        ),
+      )
+      .onError(
+        BoxStyler()
+            .border(
+              BorderMix.all(
+                BorderSideMix.value(
+                  const BorderSide(color: Colors.red, width: 2),
+                ),
+              ),
+            )
+            .wrapDefaultTextStyle(TextStyleMix(color: Colors.red)),
+      )
+      .animate(AnimationConfig(duration: const Duration(milliseconds: 200)));
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +71,8 @@ class _StyledAuthCodeState extends State<StyledAuthCode> {
         authInputFieldCount: 4,
         cursorColor: Colors.orange,
         errorAnimationType: ErrorAnimationType.shake,
-        inputFieldStyle: _inputFieldStyle,
+        rowStyle: _rowStyle,
+        cellStyle: _cellStyle,
         validator: (String? pin) =>
             (pin != null && pin != "0000" && pin.length == 4)
             ? "The input must be exactly '0000'."

@@ -320,12 +320,16 @@ class _AnimatedShapeDecorationState extends State<_AnimatedShapeDecoration>
     return AnimatedBuilder(
       animation: animation,
       builder: (BuildContext context, Widget? child) {
+        final ShapeBorder resolvedBorder =
+            (_borderAnimation != null && _borderTween != null)
+                ? (_borderTween!.transform(_borderAnimation!.value) ??
+                    const MoonBorder())
+                : widget.border ?? const MoonBorder();
+
         return DecoratedBox(
           decoration: ShapeDecoration(
             color: _backgroundColor?.value ?? widget.bgColor,
-            shape: _borderAnimation != null && _borderTween != null
-                ? _borderTween!.transform(_borderAnimation!.value)
-                : widget.border ?? const MoonBorder(),
+            shape: resolvedBorder,
           ),
           child: child,
         );

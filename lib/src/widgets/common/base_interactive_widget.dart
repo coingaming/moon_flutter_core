@@ -40,7 +40,7 @@ class MoonBaseInteractiveWidget extends StatelessWidget {
   final String? semanticLabel;
 
   /// The style of the widget.
-  final Style? style;
+  final BoxStyler? style;
 
   /// The callback that is called when the widget is tapped or otherwise activated.
   ///
@@ -107,7 +107,12 @@ class MoonBaseInteractiveWidget extends StatelessWidget {
             onFocusChange: onFocusChange,
             onPress: enabled ? onTap : null,
             onLongPress: enabled ? onLongPress : null,
-            child: Box(style: style, child: child),
+            child: style != null
+                ? Box(
+                    style: style!,
+                    child: child,
+                  )
+                : child,
           ),
         ),
       ),

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:mix/mix.dart';
-
 import 'package:moon_core/moon_core.dart';
 
 const String _validatorErrorMessage = "Validator error message";

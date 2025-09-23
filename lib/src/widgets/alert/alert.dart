@@ -21,8 +21,8 @@ class MoonRawAlert extends StatefulWidget {
   ///    underlying	[Semantics] widget.
   final String? semanticLabel;
 
-  /// The style of the alert.
-  final Style? style;
+  /// The style of the alert container.
+  final BoxStyler? style;
 
   /// Called when the visibility state of the alert has changed.
   final dynamic Function(bool)? onVisibilityChanged;
@@ -75,7 +75,9 @@ class _MoonRawAlertState extends State<MoonRawAlert> {
         },
         child: Visibility(
           visible: widget.show || _isVisible,
-          child: Box(style: widget.style, child: widget.child),
+          child: widget.style != null
+              ? Box(style: widget.style!, child: widget.child)
+              : widget.child,
         ),
       ),
     );

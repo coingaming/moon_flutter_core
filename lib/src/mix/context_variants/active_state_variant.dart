@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:mix/mix.dart';
+
 class ActiveStateVariant extends InheritedWidget {
   final bool isActive;
 
@@ -21,3 +23,9 @@ class ActiveStateVariant extends InheritedWidget {
     return isActive != oldWidget.isActive;
   }
 }
+
+/// Mix context variant that activates when [ActiveStateVariant.isActive] is true.
+const moonActiveContextVariant = ContextVariant(
+  'moon.context.active',
+  ActiveStateVariant.isActiveState,
+);

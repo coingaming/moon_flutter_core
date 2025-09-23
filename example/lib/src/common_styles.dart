@@ -1,39 +1,43 @@
 import 'package:flutter/material.dart';
 
 import 'package:mix/mix.dart';
-import 'package:moon_core/moon_core.dart';
 
-Style getButtonStyle() => Style(
-  $box.chain
-    ..color(Colors.purple)
-    ..borderRadius(8)
-    ..padding(8.0, 16.0),
-  $text.style.color(Colors.white),
-  $icon.color(Colors.white),
-).merge(getEffects()).animate();
-
-Style getIconButtonStyle() => Style(
-  $box.chain
-    ..padding(2)
-    ..margin(4),
-  $icon.size(20),
-  ($on.focus | $on.hover)(
-    $box.chain
-      ..color(Colors.purple.shade100)
-      ..shape.circle(),
-  ),
-).animate();
-
-Style getEffects() => Style(
-  $on.focus(
-    $box.shapeDecoration.as(
-      ShapeDecorationWithPremultipliedAlpha(
-        shape: MoonBorder(
-          side: BorderSide(color: Colors.purple.shade100, width: 2),
-          borderRadius: BorderRadius.circular(8),
+BoxStyler getButtonStyle() => BoxStyler()
+    .padding(
+      EdgeInsetsGeometryMix.symmetric(horizontal: 16, vertical: 8),
+    )
+    .borderRadius(
+      BorderRadiusGeometryMix.value(BorderRadius.circular(8)),
+    )
+    .color(Colors.purple)
+    .wrapDefaultTextStyle(TextStyleMix(color: Colors.white))
+    .onHovered(BoxStyler().color(Colors.purple.shade600))
+    .onFocused(
+      BoxStyler().border(
+        BorderMix.all(
+          BorderSideMix.value(
+            BorderSide(color: Colors.purple.shade200, width: 2),
+          ),
         ),
       ),
-    ),
-  ),
-  $on.hover($box.color(Colors.purple.shade100)),
-).animate();
+    )
+    .animate(AnimationConfig(duration: const Duration(milliseconds: 150)));
+
+BoxStyler getIconButtonStyle() => BoxStyler()
+    .padding(EdgeInsetsGeometryMix.all(6))
+    .borderRadius(
+      BorderRadiusGeometryMix.value(BorderRadius.circular(24)),
+    )
+    .onHovered(
+      BoxStyler().color(Colors.purple.shade100),
+    )
+    .onFocused(
+      BoxStyler().border(
+        BorderMix.all(
+          BorderSideMix.value(
+            BorderSide(color: Colors.purple.shade200, width: 2),
+          ),
+        ),
+      ),
+    )
+    .animate(AnimationConfig(duration: const Duration(milliseconds: 150)));

@@ -60,13 +60,13 @@ class MoonRawAccordion<T> extends StatefulWidget {
   final String? semanticLabel;
 
   /// The style of the accordion [header] container.
-  final Style? headerStyle;
+  final FlexBoxStyler? headerStyle;
 
   /// The style of the accordion container that contains [children].
-  final Style? contentStyle;
+  final BoxStyler? contentStyle;
 
   /// The style of the accordion outer container.
-  final Style? outerContainerStyle;
+  final BoxStyler? outerContainerStyle;
 
   /// The identity value represented by this accordion.
   final T? identityValue;
@@ -244,16 +244,60 @@ class _MoonRawAccordionState<T> extends State<MoonRawAccordion<T>>
     );
   }
 
-  Widget _buildDecorationContainer({required Widget child}) {
+  Widget _buildHeaderRow(BuildContext context) {
+    final trailing =
+        widget.trailingWidget?.call(
+          context,
+          _expansionAnimationController.view,
+        ) ??
+        _buildIcon(context);
+
+    final children = <Widget>[widget.header, trailing];
+
+    if (widget.headerStyle != null) {
+      return RowBox(
+        style: widget.headerStyle!,
+        children: children,
+      );
+    }
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: children,
+    );
+  }
+
+  Widget _buildInteractiveContainer({required Widget child}) {
+    final WidgetStatesController controller = WidgetStatesController()
+      ..update(WidgetState.disabled, !widget.enabled)
+      ..update(WidgetState.selected, _isExpanded);
+
+    final BoxStyler baseStyle = BoxStyler()
+        .clipBehavior(Clip.hardEdge)
+        .merge(widget.outerContainerStyle);
+
     return MoonBaseInteractiveWidget(
       autofocus: widget.autofocus,
       focusNode: _effectiveFocusNode,
+      enableFeedback: widget.enableFeedback,
+      hitTestBehavior: widget.propagateGesturesToChild
+          ? HitTestBehavior.translucent
+          : HitTestBehavior.opaque,
+      stateController: controller,
       enabled: widget.enabled,
+      semanticLabel: widget.semanticLabel,
       onTap: widget.enabled ? _handleTap : null,
-      style: BoxStyler()
-          .decoration(BoxDecorationMix())
-          .clipBehavior(Clip.hardEdge)
-          .merge(widget.outerContainerStyle),
+      style: baseStyle,
+      child: child,
+    );
+  }
+
+  Widget _wrapContent(Widget child) {
+    if (widget.contentStyle == null) return child;
+
+    return Box(
+      style: widget.contentStyle!,
       child: child,
     );
   }
@@ -267,17 +311,7 @@ class _MoonRawAccordionState<T> extends State<MoonRawAccordion<T>>
       ),
     );
 
-    final Widget header = RowBox(
-      style: widget.headerStyle,
-      children: [
-        widget.header,
-        widget.trailingWidget?.call(
-              context,
-              _expansionAnimationController.view,
-            ) ??
-            _buildIcon(context),
-      ],
-    );
+    final Widget header = _buildHeaderRow(context);
 
     return switch (widget.hasContentOutside) {
       true => Semantics(
@@ -286,18 +320,18 @@ class _MoonRawAccordionState<T> extends State<MoonRawAccordion<T>>
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            _buildDecorationContainer(child: header),
-            childWrapper,
+            _buildInteractiveContainer(child: header),
+            _wrapContent(childWrapper),
           ],
         ),
       ),
       false => Semantics(
         label: widget.semanticLabel,
         enabled: _isExpanded,
-        child: _buildDecorationContainer(
+        child: _buildInteractiveContainer(
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: <Widget>[header, childWrapper],
+            children: <Widget>[header, _wrapContent(childWrapper)],
           ),
         ),
       ),
@@ -320,13 +354,13 @@ class _MoonRawAccordionState<T> extends State<MoonRawAccordion<T>>
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       if (widget.showDivider && !widget.hasContentOutside)
-                        widget.divider ??
-                            Container(height: 1, color: Colors.grey.shade300),
-                      ColumnBox(
-                        style: $box.alignment.topCenter().merge(
-                          widget.contentStyle,
+                        widget.divider ?? const SizedBox(height: 1),
+                      _wrapContent(
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: widget.children,
                         ),
-                        children: widget.children,
                       ),
                     ],
                   ),

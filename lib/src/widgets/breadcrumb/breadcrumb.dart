@@ -6,24 +6,21 @@ import 'package:moon_core/src/widgets/breadcrumb/breadcrumb_item.dart';
 import 'package:moon_core/src/widgets/common/base_interactive_widget.dart';
 
 class MoonRawBreadcrumb extends StatefulWidget {
-  /// The total number of the breadcrumb [items] to display.
+  /// The total number of breadcrumb [items] to display.
   final int visibleItemCount;
 
-  /// The style to apply to the breadcrumb.
-  final Style? style;
+  /// Optional style overrides for the breadcrumb container.
+  final FlexBoxStyler? style;
 
-  /// The list of breadcrumb items to display as a sequence of steps.
+  /// Breadcrumb items displayed in sequence.
   final List<MoonRawBreadcrumbItem> items;
 
-  /// The separating widget to display between the breadcrumb items.
-  /// If not provided, a [Text] widget with a '/' character is used.
+  /// Optional divider widget between items. Defaults to a locale-aware slash.
   final Widget? divider;
 
-  /// The single custom widget to replace all the breadcrumb collapsed items with.
-  /// If not provided, a [Text] widget with '...' is used.
+  /// Custom widget used when items are collapsed. Defaults to an ellipsis button.
   final MoonRawBreadcrumbItem? showMoreWidget;
 
-  /// Creates a Moon Design raw breadcrumb.
   const MoonRawBreadcrumb({
     super.key,
     this.visibleItemCount = 3,
@@ -40,9 +37,26 @@ class MoonRawBreadcrumb extends StatefulWidget {
 class _MoonBreadcrumbState extends State<MoonRawBreadcrumb> {
   bool showFullPath = false;
 
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: widget.style != null
+          ? RowBox(
+              style: widget.style!,
+              children: _buildItems(),
+            )
+          : Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: _buildItems(),
+            ),
+    );
+  }
+
   List<Widget> _buildItems() {
-    final List<MoonRawBreadcrumbItem> visibleItems = _getVisibleItems();
-    final List<Widget> itemWidgets = visibleItems
+    final visibleItems = _getVisibleItems();
+    final itemWidgets = visibleItems
         .map((item) => _buildBreadcrumbItem(item, item != visibleItems.last))
         .toList();
 
@@ -54,24 +68,28 @@ class _MoonBreadcrumbState extends State<MoonRawBreadcrumb> {
   }
 
   List<MoonRawBreadcrumbItem> _getVisibleItems() {
-    final int itemCount = showFullPath
+    final int count = showFullPath
         ? widget.items.length
         : widget.visibleItemCount;
 
-    if (itemCount == 0) return [];
+    if (count == 0) return const [];
 
-    return widget.items.length > itemCount
-        ? [
-            widget.items.first,
-            ...widget.items.sublist(widget.items.length - itemCount + 1),
-          ]
-        : widget.items;
+    if (widget.items.length <= count) {
+      return widget.items;
+    }
+
+    return [
+      widget.items.first,
+      ...widget.items.sublist(widget.items.length - count + 1),
+    ];
   }
 
   bool _hasMoreItems() => widget.items.length > widget.visibleItemCount;
 
   Widget _buildBreadcrumbItem(MoonRawBreadcrumbItem item, bool addDivider) {
     return Row(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         _BreadcrumbItemBuilder(
           onTap: () {
@@ -87,6 +105,8 @@ class _MoonBreadcrumbState extends State<MoonRawBreadcrumb> {
 
   Widget _buildShowMoreItem() {
     return Row(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         _BreadcrumbItemBuilder(
           onTap:
@@ -95,11 +115,8 @@ class _MoonBreadcrumbState extends State<MoonRawBreadcrumb> {
           item:
               widget.showMoreWidget ??
               const MoonRawBreadcrumbItem(
-                semanticLabel: "Show full path",
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8),
-                  child: Text("..."),
-                ),
+                semanticLabel: 'Show full path',
+                child: Text('...'),
               ),
         ),
         _buildDivider(),
@@ -107,16 +124,11 @@ class _MoonBreadcrumbState extends State<MoonRawBreadcrumb> {
     );
   }
 
-  Widget _buildDivider() =>
-      widget.divider ??
-      Text(Directionality.of(context) == TextDirection.ltr ? "/" : "\\");
+  Widget _buildDivider() {
+    if (widget.divider != null) return widget.divider!;
 
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: RowBox(style: widget.style, children: _buildItems()),
-    );
+    final bool isLtr = Directionality.of(context) == TextDirection.ltr;
+    return Text(isLtr ? '/' : '\\');
   }
 }
 
@@ -130,8 +142,8 @@ class _BreadcrumbItemBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return MoonBaseInteractiveWidget(
       semanticLabel: item.semanticLabel,
-      style: item.style,
       onTap: onTap,
+      style: item.style,
       child: item.child,
     );
   }

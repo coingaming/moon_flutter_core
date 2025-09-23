@@ -37,7 +37,11 @@ import 'package:mix/mix.dart';
 import 'package:moon_core/moon_core.dart';
 
 void main() {
-  runApp(const MainApp());
+  runApp(
+    MixScope.withMaterial(
+      child: const MainApp(),
+    ),
+  );
 }
 
 class MainApp extends StatelessWidget {

@@ -83,7 +83,11 @@ class MoonRawAuthCode extends StatefulWidget {
   /// The semantic label for the auth code.
   final String? semanticLabel;
 
-  final Style? inputFieldStyle;
+  /// Optional style overrides for an individual auth code cell.
+  final BoxStyler? cellStyle;
+
+  /// Optional style for the auth code row container.
+  final FlexBoxStyler? rowStyle;
 
   /// The action to perform by the text input control.
   final TextInputAction textInputAction;
@@ -156,7 +160,8 @@ class MoonRawAuthCode extends StatefulWidget {
     this.inputFormatters,
     this.obscuringCharacter = '•',
     this.semanticLabel,
-    this.inputFieldStyle,
+    this.cellStyle,
+    this.rowStyle,
     this.textInputAction = TextInputAction.done,
     this.keyboardType = TextInputType.visiblePassword,
     this.errorText,
@@ -534,7 +539,11 @@ class _MoonRawAuthCodeState extends State<MoonRawAuthCode>
 
   @override
   Widget build(BuildContext context) {
-    final Style authCodeRowStyle = widget.inputFieldStyle ?? FlexBoxStyler();
+    final FlexBoxStyler authCodeRowStyle =
+        widget.rowStyle ??
+        FlexBoxStyler().mainAxisAlignment(
+          MainAxisAlignment.center,
+        );
 
     return Semantics(
       label: widget.semanticLabel,
@@ -553,7 +562,7 @@ class _MoonRawAuthCodeState extends State<MoonRawAuthCode>
                     left: 0,
                     right: 0,
                     child: RowBox(
-                      style: authCodeRowStyle as Style<FlexBoxSpec>,
+                      style: authCodeRowStyle,
                       children: List.generate(
                         _inputFieldCount,
                         (int index) => Focus(
@@ -583,17 +592,19 @@ class _MoonRawAuthCodeState extends State<MoonRawAuthCode>
                                 isActive: _selectedIndex > index,
                                 child: Builder(
                                   builder: (BuildContext context) {
-                                    // TODO: Extract text style and height from inputFieldStyle in Mix v2
+                                    // TODO: Extract text style and height from cellStyle in Mix v2
                                     _effectiveTextStyle = const TextStyle(
                                       fontSize: 24,
                                     );
                                     _effectiveHeight = 56;
 
+                                    final BoxStyler cellStyle = BoxStyler()
+                                        .height(_effectiveHeight)
+                                        .width(48)
+                                        .merge(widget.cellStyle);
+
                                     return Box(
-                                      style: BoxStyler()
-                                          .height(_effectiveHeight)
-                                          .width(48)
-                                          .merge(widget.inputFieldStyle),
+                                      style: cellStyle,
                                       child: Center(child: _buildChild(index)),
                                     );
                                   },

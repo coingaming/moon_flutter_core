@@ -1,401 +1,121 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<migration_action_plan>
-  <metadata>
-    <description>Comprehensive migration plan from Mix v1 to Mix v2 for Moon Flutter Core</description>
-    <target>Mix v2 (beta from GitHub repository)</target>
-    <current_issues>~890 analyzer errors</current_issues>
-    <breaking_changes>true</breaking_changes>
-  </metadata>
-
-  <phase id="1" name="CLEANUP_AND_PREPARATION" priority="critical">
-    <step order="1">
-      <action>Remove generated files</action>
-      <command>rm -f lib/src/mix/attributes/icon_theme_data_dto.g.dart</command>
-      <reason>Mix v2 doesn't use code generation with mix_generator</reason>
-    </step>
-    
-    <step order="2">
-      <action>Clean pubspec dependencies</action>
-      <files>
-        <file>pubspec.yaml</file>
-        <file>example/pubspec.yaml</file>
-      </files>
-      <changes>
-        <remove>mix_annotations dependency</remove>
-        <remove>mix_generator dev dependency</remove>
-        <remove>build_runner dev dependency (if only used for mix)</remove>
-      </changes>
-    </step>
-    
-    <step order="3">
-      <action>Run flutter clean and pub get</action>
-      <commands>
-        <command>flutter clean</command>
-        <command>flutter pub get</command>
-        <command>cd example && flutter pub get</command>
-      </commands>
-    </step>
-  </phase>
-
-  <phase id="2" name="CORE_API_MIGRATION" priority="critical">
-    <step order="1">
-      <action>Replace Style constructor pattern</action>
-      <pattern>
-        <old>Style($box.color(Colors.blue), $text.style(someStyle))</old>
-        <new>$box.color(Colors.blue).text.style(someStyle)</new>
-        <alternative>BoxStyler().color(Colors.blue) for box-only styles</alternative>
-      </pattern>
-      <files_pattern>**/*.dart</files_pattern>
-      <note>Style() constructor with multiple attributes is deprecated. Use chained methods or specific stylers.</note>
-    </step>
-
-    <step order="2">
-      <action>Replace Spec-based patterns</action>
-      <replacements>
-        <replace>
-          <old>BoxSpec</old>
-          <new>BoxMix</new>
-        </replace>
-        <replace>
-          <old>IconSpec</old>
-          <new>IconMix</new>
-        </replace>
-        <replace>
-          <old>TextSpec</old>
-          <new>TextMix</new>
-        </replace>
-        <replace>
-          <old>FlexSpec</old>
-          <new>FlexBoxMix</new>
-        </replace>
-        <replace>
-          <old>BoxSpecAttribute</old>
-          <new>BoxMix</new>
-        </replace>
-        <replace>
-          <old>TextSpecAttribute</old>
-          <new>TextMix</new>
-        </replace>
-        <replace>
-          <old>FlexSpecAttribute</old>
-          <new>FlexBoxMix</new>
-        </replace>
-      </replacements>
-      <note>Spec pattern is replaced with Mix pattern in v2</note>
-    </step>
-
-    <step order="3">
-      <action>Update widget imports and names</action>
-      <replacements>
-        <replace>
-          <old>HBox</old>
-          <new>RowBox</new>
-        </replace>
-        <replace>
-          <old>VBox</old>
-          <new>ColumnBox</new>
-        </replace>
-      </replacements>
-    </step>
-
-    <step order="4">
-      <action>Update chain getter usage</action>
-      <pattern>
-        <old>$box.chain</old>
-        <new>$box</new>
-      </pattern>
-      <note>The chain getter is no longer needed in v2</note>
-    </step>
-  </phase>
-
-  <phase id="3" name="STYLER_PATTERN_MIGRATION" priority="high">
-    <step order="1">
-      <action>Replace Style() constructors with Styler patterns</action>
-      <patterns>
-        <pattern>
-          <old>Style($box.color(color), $box.padding.all(16))</old>
-          <new>BoxStyler().color(color).paddingAll(16)</new>
-        </pattern>
-        <pattern>
-          <old>Style($text.style(textStyle))</old>
-          <new>TextStyler().style(textStyle)</new>
-        </pattern>
-        <pattern>
-          <old>Style($icon.size(24))</old>
-          <new>IconStyler().size(24)</new>
-        </pattern>
-      </patterns>
-    </step>
-
-    <step order="2">
-      <action>Update variant application patterns</action>
-      <pattern>
-        <old>$on.hover(Style(...))</old>
-        <new>.onHovered(BoxStyler()...)</new>
-      </pattern>
-      <variants>
-        <variant old="$on.hover" new=".onHovered"/>
-        <variant old="$on.press" new=".onPressed"/>
-        <variant old="$on.focus" new=".onFocused"/>
-        <variant old="$on.disabled" new=".onDisabled"/>
-        <variant old="$on.selected" new=".onSelected"/>
-      </variants>
-    </step>
-
-    <step order="3">
-      <action>Update animation patterns</action>
-      <pattern>
-        <old>style.animate(duration: 200.ms)</old>
-        <new>style.animate(AnimationConfig.easeInOut(200.ms))</new>
-      </pattern>
-      <note>Animation now requires AnimationConfig objects</note>
-    </step>
-  </phase>
-
-  <phase id="4" name="TOKEN_SYSTEM_MIGRATION" priority="high">
-    <step order="1">
-      <action>Update token imports and types</action>
-      <note>All tokens are now in package:mix/mix.dart</note>
-    </step>
-
-    <step order="2">
-      <action>Create token definitions using new types</action>
-      <example>
-        <old>const token = MixToken&lt;Color&gt;('primary')</old>
-        <new>const token = ColorToken('primary')</new>
-      </example>
-      <token_types>
-        <type>ColorToken for colors</type>
-        <type>SpaceToken for spacing/sizing (double)</type>
-        <type>TextStyleToken for text styles</type>
-        <type>RadiusToken for border radius</type>
-        <type>BoxShadowToken for shadows (List&lt;BoxShadow&gt;)</type>
-      </token_types>
-    </step>
-
-    <step order="3">
-      <action>Update MixScope usage</action>
-      <pattern>
-        <old>
-          MixScope(
-            data: MixScopeData.static(tokens: {...}),
-            child: widget,
-          )
-        </old>
-        <new>
-          MixScope(
-            colors: {colorToken: Colors.blue},
-            spaces: {spaceToken: 16.0},
-            textStyles: {textToken: TextStyle(...)},
-            radii: {radiusToken: Radius.circular(8)},
-            child: widget,
-          )
-        </new>
-      </pattern>
-    </step>
-
-    <step order="4">
-      <action>Update token usage in styles</action>
-      <pattern>
-        <old>$box.color.token(colorToken)</old>
-        <new>$box.color(colorToken())</new>
-        <alternative>$box.color.token(colorToken) // still valid</alternative>
-      </pattern>
-      <note>Token call() method returns refs for direct use</note>
-    </step>
-  </phase>
-
-  <phase id="5" name="DEPRECATED_API_CLEANUP" priority="medium">
-    <step order="1">
-      <action>Replace deprecated color methods</action>
-      <replacements>
-        <replace pattern="\.withOpacity\(([\d.]+)\)" replacement=".withValues(alpha: $1)"/>
-        <replace pattern="\.shade(\d+)" replacement=".grey($1)"/>
-        <replace pattern="\.alpha" replacement="(color.a * 255.0).round() &amp; 0xff"/>
-        <replace pattern="\.red" replacement="(color.r * 255.0).round() &amp; 0xff"/>
-        <replace pattern="\.green" replacement="(color.g * 255.0).round() &amp; 0xff"/>
-        <replace pattern="\.blue" replacement="(color.b * 255.0).round() &amp; 0xff"/>
-        <replace pattern="\.opacity" replacement=".a"/>
-      </replacements>
-    </step>
-
-    <step order="2">
-      <action>Update FlexBox properties</action>
-      <replacements>
-        <replace old="gap" new="spacing"/>
-        <replace old=".spaceBetween" new="(MainAxisAlignment.spaceBetween)"/>
-        <replace old=".center" new="(MainAxisAlignment.center)"/>
-        <replace old=".start" new="(CrossAxisAlignment.start)"/>
-      </replacements>
-    </step>
-
-    <step order="3">
-      <action>Update deprecated Mix utilities</action>
-      <replacements>
-        <replace old="MixableDto" new="MixableType"/>
-        <replace old="OnContextVariantUtility" new="direct variant methods"/>
-        <replace old="scribbleEnabled" new="stylusHandwritingEnabled"/>
-      </replacements>
-    </step>
-  </phase>
-
-  <phase id="6" name="ATTRIBUTE_PATTERN_UPDATE" priority="medium">
-    <step order="1">
-      <action>Remove attributeOf and resolvableOf patterns</action>
-      <pattern>
-        <old>style.of(context).attributeOf&lt;BoxSpecAttribute&gt;()</old>
-        <new>style.of(context) // returns resolved Mix directly</new>
-      </pattern>
-    </step>
-
-    <step order="2">
-      <action>Update decoration patterns</action>
-      <pattern>
-        <old>foregroundDecoration/shapeDecoration methods</old>
-        <new>decoration(BoxDecorationMix(...))</new>
-      </pattern>
-    </step>
-
-    <step order="3">
-      <action>Update gradient patterns</action>
-      <example>
-        <old>$box.linearGradient(colors: [...], stops: [...])</old>
-        <new>
-          BoxStyler().foregroundLinearGradient(
-            colors: [...],
-            stops: [...],
-          )
-        </new>
-      </example>
-    </step>
-  </phase>
-
-  <phase id="7" name="ANIMATION_SYSTEM_UPDATE" priority="low">
-    <step order="1">
-      <action>Update animation configurations</action>
-      <patterns>
-        <pattern>
-          <old>animate(duration: Duration(milliseconds: 200))</old>
-          <new>animate(AnimationConfig.easeInOut(200.ms))</new>
-        </pattern>
-        <pattern name="spring">
-          <new>AnimationConfig.springWithDampingRatio(duration, ratio: 0.5)</new>
-        </pattern>
-        <pattern name="curve">
-          <new>CurveAnimationConfig(duration: 200.ms, curve: Curves.easeOut)</new>
-        </pattern>
-      </patterns>
-    </step>
-
-    <step order="2">
-      <action>Update keyframe animations</action>
-      <note>Use keyframeAnimation() with KeyframeTrack for complex animations</note>
-    </step>
-
-    <step order="3">
-      <action>Update phase animations</action>
-      <note>Use phaseAnimation() for state-based multi-phase animations</note>
-    </step>
-  </phase>
-
-  <phase id="8" name="TESTING_AND_VALIDATION" priority="critical">
-    <step order="1">
-      <action>Run analyzer after each phase</action>
-      <command>flutter analyze</command>
-      <expected>Decreasing error count after each phase</expected>
-    </step>
-
-    <step order="2">
-      <action>Run tests</action>
-      <commands>
-        <command>flutter test</command>
-        <command>cd example && flutter test</command>
-      </commands>
-    </step>
-
-    <step order="3">
-      <action>Test example app</action>
-      <commands>
-        <command>cd example && flutter run</command>
-      </commands>
-      <validate>All components render correctly with Mix v2</validate>
-    </step>
-
-    <step order="4">
-      <action>Format code</action>
-      <command>dart format .</command>
-    </step>
-  </phase>
-
-  <best_practices>
-    <practice>
-      <name>Use Styler pattern over Style constructor</name>
-      <example>BoxStyler().color(Colors.blue) instead of Style($box.color(Colors.blue))</example>
-    </practice>
-    
-    <practice>
-      <name>Prefer typed token classes</name>
-      <example>ColorToken('primary') instead of MixToken&lt;Color&gt;('primary')</example>
-    </practice>
-    
-    <practice>
-      <name>Use typed MixScope parameters</name>
-      <example>MixScope(colors: {...}, spaces: {...}) instead of tokens: {...}</example>
-    </practice>
-    
-    <practice>
-      <name>Chain style methods fluently</name>
-      <example>BoxStyler().color(Colors.blue).padding(16).borderRounded(8)</example>
-    </practice>
-    
-    <practice>
-      <name>Use AnimationConfig for all animations</name>
-      <example>AnimationConfig.easeInOut(200.ms) instead of raw duration</example>
-    </practice>
-  </best_practices>
-
-  <common_patterns>
-    <pattern name="Box styling">
-      <v1>Style($box.color(Colors.blue), $box.padding.all(16))</v1>
-      <v2>BoxStyler().color(Colors.blue).paddingAll(16)</v2>
-    </pattern>
-    
-    <pattern name="Text styling">
-      <v1>Style($text.style(TextStyle(...)))</v1>
-      <v2>TextStyler().style(TextStyle(...))</v2>
-    </pattern>
-    
-    <pattern name="Flex styling">
-      <v1>Style($flex.gap(8), $flex.mainAxisAlignment.spaceBetween())</v1>
-      <v2>FlexBoxStyler().spacing(8).mainAxisAlignment(MainAxisAlignment.spaceBetween)</v2>
-    </pattern>
-    
-    <pattern name="Variants">
-      <v1>$on.hover(Style(...))</v1>
-      <v2>.onHovered(BoxStyler()...)</v2>
-    </pattern>
-    
-    <pattern name="Animations">
-      <v1>.animate(duration: 200.ms)</v1>
-      <v2>.animate(AnimationConfig.easeInOut(200.ms))</v2>
-    </pattern>
-  </common_patterns>
-
-  <notes>
-    <note priority="high">
-      The $on variant utility is completely removed in v2. Use direct methods like .onHovered(), .onPressed() etc.
-    </note>
-    <note priority="high">
-      The chain getter is removed. Use $box directly instead of $box.chain
-    </note>
-    <note priority="medium">
-      Shadow tokens now use List types (List&lt;BoxShadow&gt; instead of BoxShadow)
-    </note>
-    <note priority="medium">
-      Consider removing historical cruft and simplifying widget implementations during migration
-    </note>
-    <note priority="low">
-      Extension methods on Duration (like 200.ms) are available from Mix
-    </note>
-  </notes>
-</migration_action_plan>
+<actionPlan createdAt="2025-09-22T21:01:11Z" owner="agent">
+  <meta>
+    <objective>Migrate moon_flutter_core to Mix v2 patterns while keeping the core headless, minimal, and analyzer-clean.</objective>
+    <references>
+      <doc path="AGENTS.md" purpose="Repository rules and agent expectations" />
+      <doc path=".llms/mix-scope-and-theming.md" purpose="MixScope usage and token provisioning" />
+      <doc path=".llms/token-migration-guide.md" purpose="Mix v2 token APIs and migration notes" />
+      <doc path=".llms/examples.xml" purpose="Authoritative Mix v2 widget/style examples" />
+      <doc path=".llms/tests.xml" purpose="Reference behaviours and advanced patterns from Mix core" />
+    </references>
+    <currentState>
+      <analyzerIssues count="808" source="dart analyze" sampleFile="example/lib/src/common_styles.dart" summary="Style() constructor removed, $on.* API deprecated, gap/withOpacity/shade helpers deprecated, widespread mix v1 usage." />
+      <dependency name="mix" source="git" revision="e745fd834914ceefe101e7c3746b1fa0dc3fe87a" version="2.0.0-dev.2" note="New fluent stylers, MixScope tokens, RowBox/FlexBox widgets, state variants like onHovered." />
+      <constraint>Keep Dart style (2-space indent, 80 column) and ASCII output.</constraint>
+      <constraint>Use Mix v2 fluent APIs (BoxStyler(), TextStyler(), $box.color...) and variant helpers (.onHovered, .onFocused, etc.).</constraint>
+      <constraint>Initial cleanup must delete generated *.g.dart files before other refactors.</constraint>
+    </currentState>
+  </meta>
+  <tasks>
+    <task id="T0" title="Confirm Mix v2 foundations" status="todo">
+      <description>Digest Mix v2 API surface and align migration strategy before touching code.</description>
+      <todo>Re-read .llms/mix-scope-and-theming.md and token-migration-guide.md; note MixScope wiring expectations while reaffirming that Moon core stays token-agnostic.</todo>
+      <todo>Skim relevant sections of .llms/examples.xml (components, fluent API, RowBox/FlexBox, Pressable) to capture canonical patterns.</todo>
+      <todo>Document key deltas vs Mix v1 (no Style(), deprecated $on, gap → spacing, Color.withValues) in a short internal note (docs/mix_v2_notes.md) to guide later tasks.</todo>
+      <definitionOfDone>Reference note committed alongside migration outlining MixScope setup, fluent styler usage, and variant conversion rules.</definitionOfDone>
+    </task>
+    <task id="T1" title="Repository hygiene & generated file purge" status="todo" dependsOn="T0">
+      <description>Remove stale generated assets and baseline tool state ahead of refactors.</description>
+      <todo>Locate and delete all *.g.dart (and other stale generated artifacts) across repo; ensure .gitignore prevents regeneration.</todo>
+      <todo>Remove obsolete build/ outputs or cached analyzer JSON that will be regenerated (verify necessity with maintainers if uncertain).</todo>
+      <todo>Run flutter pub get to refresh dependency graph after deletions.</todo>
+      <definitionOfDone>Working tree free of generated files, pubspec.lock unchanged aside from dependency resolution, flutter pub get succeeds.</definitionOfDone>
+    </task>
+    <task id="T2" title="Baseline diagnostics snapshot" status="todo" dependsOn="T1">
+      <description>Capture current analyzer/test output to track migration progress.</description>
+      <todo>Run dart analyze --format json and store results at tools/reports/analyze.pre_migration.json for comparison.</todo>
+      <todo>Attempt flutter test -r expanded; save failing summary (even if failing) to tools/reports/tests.pre_migration.txt.</todo>
+      <definitionOfDone>Pre-migration analyzer and test snapshots stored under tools/reports/.</definitionOfDone>
+    </task>
+    <task id="T3" title="Headless core guardrails" status="todo" dependsOn="T0">
+      <description>Establish guardrails that keep lib/ free of opinionated styling while adopting Mix v2.</description>
+      <todo>Audit existing components for baked-in colors, spacing, or typography and document extraction targets for the example layer.</todo>
+      <todo>Outline the "component trio" workflow (core widget, tests, example) to apply consistently through the migration.</todo>
+      <definitionOfDone>Guidelines committed detailing headless expectations and trio workflow; core components limited to structural defaults only.</definitionOfDone>
+    </task>
+    <task id="T4" title="Upgrade custom Mix infrastructure" status="todo" dependsOn="T3">
+      <description>Align Moon-specific mix utilities/modifiers with Mix v2 core semantics.</description>
+      <todo>Audit lib/src/mix/attributes (MoonBorderMix, variants) to ensure they extend Style&lt;Spec&gt; correctly and expose fluent APIs matching Mix v2 (Prop.maybeMix, .onHovered, etc.).</todo>
+      <todo>Refactor lib/src/mix/modifiers/* to new WidgetModifier APIs (ensure utilities return MixUtility&lt;T, ModifierMix&gt; and expose wrap helpers).</todo>
+      <todo>Replace deprecated helpers ($with.*, Interactable) with Mix v2 equivalents (wrapOpacity, WidgetModifierConfig, Pressable) across mix extensions.</todo>
+      <todo>Add regression tests (if feasible) covering Moon modifiers resolving correctly via StyleSpecBuilder (lib or test/mix_modifiers_test.dart).</todo>
+      <definitionOfDone>Custom mix utilities compile against Mix v2, expose fluent builder surface, and are covered by sanity tests.</definitionOfDone>
+    </task>
+    <task id="T5" title="Refactor base interactive primitives" status="todo" dependsOn="T4">
+      <description>Migrate MoonBaseInteractiveWidget, selection widgets, and overlay primitives to typed stylers.</description>
+      <todo>Change style-typed properties from Style? to BoxStyler?/FlexBoxStyler? as appropriate; add generic type params if needed.</todo>
+      <todo>Replace Interactable usages with Pressable or Mix widget state controllers; ensure WidgetStatesController wiring remains intact.</todo>
+      <todo>Ensure base widgets expose style hooks without introducing default padding, colors, or typography.</todo>
+      <todo>Update unit tests (base_interactive_widget_test, base_single_select_widget_test, base_multi_select_widget_test, base_overlay_widget_test) to assert headless behaviour and state wiring.</todo>
+      <definitionOfDone>Base primitives compile with Mix v2 stylers, tests updated and passing.</definitionOfDone>
+    </task>
+    <task id="T6" title="Component migration: interactive & surface widgets" status="todo" dependsOn="T5">
+      <description>Port buttons, chips, tags, avatars, breadcrumb, menu item, segmented tab control, carousel to Mix v2 fluent APIs.</description>
+      <todo>Rewrite component style builders to use BoxStyler()/FlexBoxStyler() fluent chains (no Style() constructor, no $on.* pipes).</todo>
+      <todo>Replace StyledRow/StyledColumn with RowBox/ColumnBox (or FlexBox.createWidget) and update spacing() usage instead of gap().</todo>
+      <todo>Ensure components rely on passed stylers/state rather than hard-coded colors or spacing.</todo>
+      <todo>Update public APIs to return typed stylers (e.g., MoonButtonStyle builder returns BoxStyler) or builder delegates as needed and adjust exports.</todo>
+      <todo>Refresh component tests (button, chip, tag, avatar, breadcrumb, segmented_tab_control, carousel) to assert new style wiring.</todo>
+      <definitionOfDone>All interactive surface widgets compile with new stylers, remain headless, and have tests covering primary states.</definitionOfDone>
+    </task>
+    <task id="T7" title="Component migration: inputs & form controls" status="todo" dependsOn="T5">
+      <description>Migrate text inputs, form inputs, auth code, progress pin, radio, checkbox, switch to Mix v2.</description>
+      <todo>Refactor text input style pipeline: replace Style.merge/add with BoxStyler().merge, RowBox, wrapDefaultTextStyle, onFocused/onError variants.</todo>
+      <todo>Rewrite form/auth code containers to use BoxStyler.wrap* and expose border builders without embedding palette choices.</todo>
+      <todo>Update selection controls (radio, checkbox, switch) to use WidgetStatesController + onSelected/onDisabled stylers, cleaning up toggle logic.</todo>
+      <todo>Revisit MoonMessage/validation error rendering to rely on TextStyler hooks and structural spacing only.</todo>
+      <todo>Update associated widget tests (text_input_test, form_text_input_test, auth_code_test, switch_test, base_single_select_widget_test, base_multi_select_widget_test, progress_pin tests) to reflect new stylers and states.</todo>
+      <definitionOfDone>Form controls fully migrated, tests green, no remaining Style() usage in input stack.</definitionOfDone>
+    </task>
+    <task id="T8" title="Component migration: feedback & overlays" status="todo" dependsOn="T6,T7">
+      <description>Migrate alerts, toasts, modals, bottom sheets, popovers, tooltips, loaders, progress indicators.</description>
+      <todo>Update container stylers to BoxStyler fluent API (wrapOpacity, wrapPadding, animate(AnimationConfig)).</todo>
+      <todo>Ensure transitions use Mix v2 animation helpers (AnimationConfig.easeInOut, keyframes where relevant).</todo>
+      <todo>Replace deprecated Color.withOpacity/shade access with withValues() or consumer-supplied colors.</todo>
+      <todo>Update tests (alert_test, toast_test, modal_test, bottom_sheet_test, tooltip_test, linear_progress_indicator_test, circular_progress_indicator_test, loaders) to new stylers.</todo>
+      <definitionOfDone>Feedback/overlay widgets compile, remain headless, pass tests, and no deprecated APIs remain.</definitionOfDone>
+    </task>
+    <task id="T9" title="Example app & documentation refresh" status="todo" dependsOn="T6,T7,T8">
+      <description>Bring example/ and docs in sync with new API.</description>
+      <todo>Rewrite example/src/common_styles.dart and styled_components/* to use fluent $box/$flex APIs, RowBox, BoxStyler.onHovered, etc.</todo>
+      <todo>Swap StyledRow/StyledColumn for RowBox/ColumnBox and replace gap() with spacing().</todo>
+      <todo>Provide example-level MixScope/token wiring (outside of lib/) and ensure the sample still runs.</todo>
+      <todo>Refresh README usage snippets to demonstrate Mix v2 pattern (e.g., BoxStyler().color($brandPrimary()), onHovered).</todo>
+      <todo>Add MIGRATION.md summarising breaking changes for downstream consumers.</todo>
+      <definitionOfDone>Example app builds, docs updated, MIGRATION.md present.</definitionOfDone>
+    </task>
+    <task id="T10" title="Deprecated API & color cleanup" status="todo" dependsOn="T6,T7,T8">
+      <description>Eliminate lingering deprecated Flutter or Mix API usage.</description>
+      <todo>Replace Color.withOpacity -> withValues(), Color.alpha/red/green/blue -> .a/.r/.g/.b per flutter lint guidance.</todo>
+      <todo>Swap Colors.grey.shade* to ColorScheme or Colors.grey(*).</todo>
+      <todo>Ensure no references to gap, $with, Interactable, StyledRow remain (use ripgrep audit).</todo>
+      <definitionOfDone>rg checks confirm absence of deprecated symbols, analyzer reports zero deprecated_member_use.</definitionOfDone>
+    </task>
+    <task id="T11" title="Test suite expansion & stabilization" status="todo" dependsOn="T6,T7,T8">
+      <description>Strengthen automated coverage for Mix-driven components.</description>
+      <todo>Add golden/widget tests for key stylers (e.g., BoxStyler resolves expected colors when provided) referencing .llms/tests.xml patterns.</todo>
+      <todo>Create integration test verifying example-level theming flows through MixScope across components (flutter_test using WidgetTester).</todo>
+      <todo>Ensure tests run deterministically with WidgetStatesController; add helpers under test/utils/.</todo>
+      <definitionOfDone>New/updated tests in place, flutter test -r expanded passes locally.</definitionOfDone>
+    </task>
+    <task id="T12" title="Project polish & CI readiness" status="todo" dependsOn="T9,T10,T11">
+      <description>Finalize migration, ensure quality gates, and document release.</description>
+      <todo>Run dart format . and dart analyze (expect zero issues).</todo>
+      <todo>Run flutter test -r expanded; ensure widget goldens updated if needed.</todo>
+      <todo>Update CHANGELOG.md with breaking Mix v2 migration notes and instructions.</todo>
+      <todo>Prepare release checklist (docs/release_notes/mix_v2_migration.md) summarising key API changes, testing performed, known follow-ups.</todo>
+      <definitionOfDone>Analyser/test suites green, docs updated, release notes ready.</definitionOfDone>
+    </task>
+  </tasks>
+</actionPlan>

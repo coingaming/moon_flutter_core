@@ -76,13 +76,7 @@ flutter pub get
 
 ### Core Dependencies
 - **mix**: Git dependency from https://github.com/btwld/mix.git (styling system)
-- **mix_annotations**: Version 1.7.0 (code generation annotations)
 - **collection**: Standard Dart collection utilities
-
-### Dev Dependencies
-- **mix_generator**: For Mix-related code generation
-- **build_runner**: For running code generation
-- **flutter_lints**: For code analysis
 
 ## Important Notes
 
